@@ -6,7 +6,6 @@
   <title>Kusou-Aristotle 公式サイト</title>
 
   <style>
-    /* ===== 基本 ===== */
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto,
@@ -31,7 +30,6 @@
     a { color: #3b5cff; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    /* ===== ヘッダー ===== */
     .header {
       display: flex;
       justify-content: space-between;
@@ -50,9 +48,10 @@
       border: none;
       cursor: pointer;
       padding: 8px 10px;
+      line-height: 1;
     }
 
-    /* ===== 右スライドメニュー ===== */
+    /* 右スライド */
     .menu {
       position: fixed;
       top: 0;
@@ -63,18 +62,16 @@
       border-left: 1px solid #e6e6e6;
       padding: 24px 16px;
       box-sizing: border-box;
-
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
 
-      /* ← これ超重要（スワイプ有効化） */
+      /* スワイプ拾いやすくする */
       touch-action: pan-y;
+      overflow-y: auto;
     }
 
-    .menu.open {
-      transform: translateX(0);
-    }
+    .menu.open { transform: translateX(0); }
 
     .menu a {
       display: block;
@@ -83,7 +80,7 @@
       border-bottom: 1px solid #f0f0f0;
     }
 
-    /* ===== 背景の暗幕 ===== */
+    /* 背景暗幕 */
     .overlay {
       position: fixed;
       inset: 0;
@@ -102,41 +99,57 @@
 </head>
 
 <body>
-
-  <!-- 暗幕（タップで閉じる） -->
-  <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-
   <div class="box">
 
     <header class="header">
       <div class="site-title">Kusou-Aristotle</div>
-      <button class="menu-btn" onclick="toggleMenu()" aria-label="メニューを開く">☰</button>
+      <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
     </header>
-
-    <nav id="menu" class="menu">
-      <a href="index.html" onclick="toggleMenu()">Home</a>
-      <a href="character.html" onclick="toggleMenu()">Character</a>
-      <a href="story.html" onclick="toggleMenu()">Story</a>
-      <a href="guide.html" onclick="toggleMenu()">Guide</a>
-    </nav>
 
     <h1>Kusou-Aristotle</h1>
     <p>公式サイト準備中。</p>
     <p><small>Powered by GitHub Pages.</small></p>
-
   </div>
 
-  <!-- ===== JS（全部入り）===== -->
+  <!-- 暗幕とメニューは body直下に置く（クリック吸われ事故防止） -->
+  <div id="overlay" class="overlay"></div>
+
+  <nav id="menu" class="menu">
+    <a href="index.html">Home</a>
+    <a href="character.html">Character</a>
+    <a href="story.html">Story</a>
+    <a href="guide.html">Guide</a>
+  </nav>
+
   <script>
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
+    const btn = document.getElementById("menuBtn");
 
-    function toggleMenu() {
-      menu.classList.toggle("open");
-      overlay.classList.toggle("open");
+    function openMenu() {
+      menu.classList.add("open");
+      overlay.classList.add("open");
     }
 
-    /* ===== 左スワイプで閉じる ===== */
+    function closeMenu() {
+      menu.classList.remove("open");
+      overlay.classList.remove("open");
+    }
+
+    function toggleMenu() {
+      if (menu.classList.contains("open")) closeMenu();
+      else openMenu();
+    }
+
+    btn.addEventListener("click", toggleMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    // リンク押したら閉じる（遷移前に閉じて見た目良くする）
+    menu.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => closeMenu());
+    });
+
+    // ===== 左スワイプで閉じる =====
     let startX = 0;
     let startY = 0;
     let tracking = false;
@@ -155,22 +168,17 @@
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
 
-      // 横方向が優勢なときだけ処理
+      // 横が優勢ならスクロールを止めてスワイプ扱い
       if (Math.abs(dx) > Math.abs(dy)) {
         e.preventDefault();
-
-        // 左に一定以上スワイプで閉じる
         if (dx < -60 && menu.classList.contains("open")) {
-          toggleMenu();
+          closeMenu();
           tracking = false;
         }
       }
     }, { passive: false });
 
-    menu.addEventListener("touchend", () => {
-      tracking = false;
-    }, { passive: true });
+    menu.addEventListener("touchend", () => { tracking = false; }, { passive: true });
   </script>
-
 </body>
 </html>
