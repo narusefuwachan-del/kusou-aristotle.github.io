@@ -4,12 +4,65 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kusou-Aristotle 公式サイト</title>
+ <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kusou-Aristotle 公式サイト</title>
+
   <style>
-    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;margin:0;padding:40px;line-height:1.7}
-    .box{max-width:720px;margin:auto}
-    h1{margin:0 0 8px}
-    p{margin:0 0 16px}
-    a{word-break:break-all}
+    /* ===== 基本 ===== */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto,
+        "Hiragino Kaku Gothic ProN",
+        "Noto Sans JP",
+        "Yu Gothic",
+        "Meiryo",
+        sans-serif;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .box {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    h1 { margin: 16px 0 8px; }
+    p { margin: 0 0 16px; }
+
+    a { color: #3b5cff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+    }
+
+    .site-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .menu-btn {
+      font-size: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .menu { display: none; margin-bottom: 16px; }
+    .menu.open { display: block; }
+
+    .menu a {
+      display: block;
+      padding: 8px 0;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
