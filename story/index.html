@@ -4,124 +4,47 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Story | Kusou-Aristotle</title>
-
   <style>
     body{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto,
-        "Hiragino Kaku Gothic ProN",
-        "Noto Sans JP",
-        "Yu Gothic",
-        "Meiryo",
-        sans-serif;
-      margin: 0;
-      line-height: 1.7;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+        "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
+      margin:0; line-height:1.7;
     }
+    .box{max-width:720px;margin:0 auto;padding:16px;}
+    h1{margin:16px 0 8px;} p{margin:0 0 16px;}
+    a{color:#3b5cff;text-decoration:none;} a:hover{text-decoration:underline;}
 
-    .box{
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 16px;
-    }
+    .header{display:flex;justify-content:space-between;align-items:center;padding:12px 0;}
+    .site-title{font-weight:700;font-size:18px;}
+    .menu-btn{font-size:22px;background:none;border:none;cursor:pointer;padding:8px 10px;}
 
-    h1{ margin: 16px 0 8px; }
-    p{ margin: 0 0 16px; }
-
-    a{ color:#3b5cff; text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-
-    .header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:12px 0;
-    }
-
-    .site-title{
-      font-weight:700;
-      font-size:18px;
-      letter-spacing: .2px;
-    }
-
-    .menu-btn{
-      font-size:22px;
-      background:none;
-      border:none;
-      cursor:pointer;
-      line-height:1;
-      padding:8px 10px;
-      border-radius:10px;
-    }
-
-    /* 背景の暗幕 */
     .overlay{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.35);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .25s ease;
-      z-index: 1000;
+      position:fixed; inset:0; background:rgba(0,0,0,.35);
+      opacity:0; pointer-events:none; transition:.25s; z-index:1000;
     }
-    .overlay.open{
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .overlay.open{opacity:1; pointer-events:auto;}
 
-    /* 右スライドメニュー */
     .menu{
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: min(78vw, 340px);
-      height: 100vh;
-      background: #fff;
-      border-left: 1px solid #e6e6e6;
-      padding: 18px 16px;
-      box-sizing: border-box;
-
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1001;
-
-      touch-action: pan-y;
+      position:fixed; top:0; right:0;
+      width:min(78vw,340px); height:100vh;
+      background:#fff; border-left:1px solid #e6e6e6;
+      padding:18px 16px; box-sizing:border-box;
+      transform:translateX(100%); transition:.25s; z-index:1001;
+      touch-action:pan-y;
     }
-    .menu.open{
-      transform: translateX(0);
-    }
+    .menu.open{transform:translateX(0);}
 
     .menu-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #f0f0f0;
-      margin-bottom: 8px;
+      display:flex; justify-content:space-between; align-items:center;
+      border-bottom:1px solid #f0f0f0; padding-bottom:8px; margin-bottom:8px;
     }
-
-    .menu-title{
-      font-weight: 800;
-      letter-spacing: .3px;
-    }
-
-    .close-btn{
-      font-size:20px;
-      background:none;
-      border:none;
-      cursor:pointer;
-      padding:8px 10px;
-      border-radius:10px;
-    }
-
     .menu a{
-      display:block;
-      padding: 14px 6px;
-      font-weight: 700;
-      border-bottom: 1px solid #f5f5f5;
+      display:block; padding:14px 6px; font-weight:700;
+      border-bottom:1px solid #f5f5f5;
     }
+    .close-btn{font-size:20px;background:none;border:none;cursor:pointer;}
   </style>
 </head>
-
 <body>
   <div id="overlay" class="overlay"></div>
 
@@ -137,11 +60,9 @@
 
   <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
-      <div class="menu-title">MENU</div>
-      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
+      <strong>MENU</strong>
+      <button class="close-btn" id="closeBtn" aria-label="閉じる">✕</button>
     </div>
-
-    <!-- フォルダ構成なのでリンクはこれが正解 -->
     <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
@@ -154,51 +75,29 @@
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    function openMenu(){
-      menu.classList.add("open");
-      overlay.classList.add("open");
-      menu.setAttribute("aria-hidden","false");
-    }
-    function closeMenu(){
-      menu.classList.remove("open");
-      overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden","true");
-    }
-    function toggleMenu(){
-      if(menu.classList.contains("open")) closeMenu();
-      else openMenu();
-    }
+    const openMenu = () => { menu.classList.add("open"); overlay.classList.add("open"); menu.setAttribute("aria-hidden","false"); };
+    const closeMenu = () => { menu.classList.remove("open"); overlay.classList.remove("open"); menu.setAttribute("aria-hidden","true"); };
 
-    menuBtn.addEventListener("click", toggleMenu);
+    menuBtn.addEventListener("click", openMenu);
     closeBtn.addEventListener("click", closeMenu);
     overlay.addEventListener("click", closeMenu);
+    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // リンク押したら閉じる
-    menu.querySelectorAll("a").forEach(a=>{
-      a.addEventListener("click", closeMenu);
-    });
-
-    // 左スワイプで閉じる
-    let startX = 0, startY = 0, tracking = false;
-
-    menu.addEventListener("touchstart",(e)=>{
-      const t=e.touches[0];
-      startX=t.clientX; startY=t.clientY; tracking=true;
+    // 左スワイプで閉じる（menuを左に払う）
+    let sx=0, sy=0, tracking=false;
+    menu.addEventListener("touchstart", e=>{
+      const t=e.touches[0]; sx=t.clientX; sy=t.clientY; tracking=true;
     },{passive:true});
-
-    menu.addEventListener("touchmove",(e)=>{
+    menu.addEventListener("touchmove", e=>{
       if(!tracking) return;
       const t=e.touches[0];
-      const dx=t.clientX-startX;
-      const dy=t.clientY-startY;
-
-      if(Math.abs(dx) > Math.abs(dy)){
+      const dx=t.clientX-sx, dy=t.clientY-sy;
+      if(Math.abs(dx)>Math.abs(dy)){
         e.preventDefault();
-        if(dx < -60) { closeMenu(); tracking=false; }
+        if(dx>60){ closeMenu(); tracking=false; } // 右へスワイプで閉じる
       }
     },{passive:false});
-
-    menu.addEventListener("touchend",()=>{ tracking=false; },{passive:true});
+    menu.addEventListener("touchend", ()=>{tracking=false;},{passive:true});
   </script>
 </body>
 </html>
