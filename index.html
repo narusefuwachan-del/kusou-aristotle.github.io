@@ -6,7 +6,7 @@
   <title>Kusou-Aristotle 公式サイト</title>
 
   <style>
-    body {
+    body{
       font-family: system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto,
         "Hiragino Kaku Gothic ProN",
@@ -18,70 +18,44 @@
       line-height: 1.7;
     }
 
-    .box {
+    .box{
       max-width: 720px;
       margin: 0 auto;
       padding: 16px;
     }
 
-    h1 { margin: 16px 0 8px; }
-    p { margin: 0 0 16px; }
+    h1{ margin: 16px 0 8px; }
+    p{ margin: 0 0 16px; }
 
-    a { color: #3b5cff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    a{ color:#3b5cff; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 0;
     }
 
-    .site-title {
-      font-weight: 700;
-      font-size: 18px;
+    .site-title{
+      font-weight:700;
+      font-size:18px;
+      letter-spacing: .2px;
     }
 
-    .menu-btn {
-      font-size: 22px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px 10px;
-      line-height: 1;
+    .menu-btn{
+      font-size:22px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      line-height:1;
+      padding:8px 10px;
+      border-radius:10px;
     }
+    .menu-btn:active{ transform: scale(.98); }
 
-    /* 右スライド */
-    .menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: min(78vw, 320px);
-      height: 100vh;
-      background: #fff;
-      border-left: 1px solid #e6e6e6;
-      padding: 24px 16px;
-      box-sizing: border-box;
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1001;
-
-      /* スワイプ拾いやすくする */
-      touch-action: pan-y;
-      overflow-y: auto;
-    }
-
-    .menu.open { transform: translateX(0); }
-
-    .menu a {
-      display: block;
-      padding: 14px 6px;
-      font-weight: 600;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    /* 背景暗幕 */
-    .overlay {
+    /* 背景の暗幕 */
+    .overlay{
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.35);
@@ -90,17 +64,70 @@
       transition: opacity .25s ease;
       z-index: 1000;
     }
-
-    .overlay.open {
+    .overlay.open{
       opacity: 1;
       pointer-events: auto;
+    }
+
+    /* 右スライドメニュー */
+    .menu{
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(78vw, 340px);
+      height: 100vh;
+      background: #fff;
+      border-left: 1px solid #e6e6e6;
+      padding: 18px 16px;
+      box-sizing: border-box;
+
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      z-index: 1001;
+
+      /* スワイプ判定中にスクロール暴発しにくくする */
+      touch-action: pan-y;
+    }
+    .menu.open{
+      transform: translateX(0);
+    }
+
+    .menu-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 8px;
+    }
+
+    .menu-title{
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .close-btn{
+      font-size:20px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius:10px;
+    }
+
+    .menu a{
+      display:block;
+      padding: 14px 6px;
+      font-weight: 700;
+      border-bottom: 1px solid #f5f5f5;
     }
   </style>
 </head>
 
 <body>
-  <div class="box">
+  <div id="overlay" class="overlay"></div>
 
+  <div class="box">
     <header class="header">
       <div class="site-title">Kusou-Aristotle</div>
       <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
@@ -111,10 +138,13 @@
     <p><small>Powered by GitHub Pages.</small></p>
   </div>
 
-  <!-- 暗幕とメニューは body直下に置く（クリック吸われ事故防止） -->
-  <div id="overlay" class="overlay"></div>
+  <nav id="menu" class="menu" aria-hidden="true">
+    <div class="menu-top">
+      <div class="menu-title">MENU</div>
+      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
+    </div>
 
-  <nav id="menu" class="menu">
+    <!-- ★リンクは先頭 / なし（相対パス）で統一 -->
     <a href="index.html">Home</a>
     <a href="character.html">Character</a>
     <a href="story.html">Story</a>
@@ -124,61 +154,70 @@
   <script>
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
-    const btn = document.getElementById("menuBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
 
-    function openMenu() {
+    function openMenu(){
       menu.classList.add("open");
       overlay.classList.add("open");
+      menu.setAttribute("aria-hidden", "false");
     }
 
-    function closeMenu() {
+    function closeMenu(){
       menu.classList.remove("open");
       overlay.classList.remove("open");
+      menu.setAttribute("aria-hidden", "true");
     }
 
-    function toggleMenu() {
-      if (menu.classList.contains("open")) closeMenu();
+    function toggleMenu(){
+      if(menu.classList.contains("open")) closeMenu();
       else openMenu();
     }
 
-    btn.addEventListener("click", toggleMenu);
+    menuBtn.addEventListener("click", toggleMenu);
+    closeBtn.addEventListener("click", closeMenu);
     overlay.addEventListener("click", closeMenu);
 
-    // リンク押したら閉じる（遷移前に閉じて見た目良くする）
-    menu.querySelectorAll("a").forEach(a => {
-      a.addEventListener("click", () => closeMenu());
+    // メニュー内リンク押したら閉じる（遷移はそのまま）
+    menu.querySelectorAll("a").forEach(a=>{
+      a.addEventListener("click", closeMenu);
     });
 
-    // ===== 左スワイプで閉じる =====
+    // ---- 左スワイプで閉じる（右→左に払う）----
     let startX = 0;
     let startY = 0;
     let tracking = false;
 
-    menu.addEventListener("touchstart", (e) => {
+    menu.addEventListener("touchstart", (e)=>{
       const t = e.touches[0];
       startX = t.clientX;
       startY = t.clientY;
       tracking = true;
-    }, { passive: true });
+    }, {passive:true});
 
-    menu.addEventListener("touchmove", (e) => {
-      if (!tracking) return;
+    menu.addEventListener("touchmove", (e)=>{
+      if(!tracking) return;
 
       const t = e.touches[0];
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
 
-      // 横が優勢ならスクロールを止めてスワイプ扱い
-      if (Math.abs(dx) > Math.abs(dy)) {
+      // 横が強い動きのときだけスワイプ扱い
+      if(Math.abs(dx) > Math.abs(dy)){
+        // iOS/Androidで閉じ判定が効くように
         e.preventDefault();
-        if (dx < -60 && menu.classList.contains("open")) {
+
+        // 左に60px以上で閉じる
+        if(dx < -60){
           closeMenu();
           tracking = false;
         }
       }
-    }, { passive: false });
+    }, {passive:false});
 
-    menu.addEventListener("touchend", () => { tracking = false; }, { passive: true });
+    menu.addEventListener("touchend", ()=>{
+      tracking = false;
+    }, {passive:true});
   </script>
 </body>
 </html>
