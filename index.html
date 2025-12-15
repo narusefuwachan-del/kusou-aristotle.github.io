@@ -16,6 +16,7 @@
         sans-serif;
       margin: 0;
       line-height: 1.7;
+      color:#111;
     }
 
     .box{
@@ -54,7 +55,6 @@
     }
     .menu-btn:active{ transform: scale(.98); }
 
-    /* 背景の暗幕 */
     .overlay{
       position: fixed;
       inset: 0;
@@ -69,24 +69,23 @@
       pointer-events: auto;
     }
 
-    /* 右スライドメニュー */
     .menu{
       position: fixed;
       top: 0;
       right: 0;
-      width: min(78vw, 340px);
+      width: 340px;
+      max-width: 78vw;
       height: 100vh;
       background: #fff;
       border-left: 1px solid #e6e6e6;
       padding: 18px 16px;
       box-sizing: border-box;
-
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
-
-      /* スワイプ判定中にスクロール暴発しにくくする */
       touch-action: pan-y;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
     }
     .menu.open{
       transform: translateX(0);
@@ -120,6 +119,7 @@
       padding: 14px 6px;
       font-weight: 700;
       border-bottom: 1px solid #f5f5f5;
+      color:#111;
     }
   </style>
 </head>
@@ -138,18 +138,17 @@
     <p><small>Powered by GitHub Pages.</small></p>
   </div>
 
+  <!-- ✅ menuは1個だけ！ -->
   <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
       <div class="menu-title">MENU</div>
       <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
     </div>
 
-    <!-- ★リンクは先頭 / なし（相対パス）で統一 -->
-    <nav id="menu" class="menu">
-  <a href="/">Home</a>
-  <a href="/character/">Character</a>
-  <a href="/story/">Story</a>
-  <a href="/guide/">Guide</a>
+    <a href="/">Home</a>
+    <a href="/character/">Character</a>
+    <a href="/story/">Story</a>
+    <a href="/guide/">Guide</a>
   </nav>
 
   <script>
@@ -179,15 +178,13 @@
     closeBtn.addEventListener("click", closeMenu);
     overlay.addEventListener("click", closeMenu);
 
-    // メニュー内リンク押したら閉じる（遷移はそのまま）
+    // メニュー内リンク押したら閉じる
     menu.querySelectorAll("a").forEach(a=>{
       a.addEventListener("click", closeMenu);
     });
 
-    // ---- 左スワイプで閉じる（右→左に払う）----
-    let startX = 0;
-    let startY = 0;
-    let tracking = false;
+    // 左スワイプで閉じる
+    let startX = 0, startY = 0, tracking = false;
 
     menu.addEventListener("touchstart", (e)=>{
       const t = e.touches[0];
@@ -198,17 +195,12 @@
 
     menu.addEventListener("touchmove", (e)=>{
       if(!tracking) return;
-
       const t = e.touches[0];
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
 
-      // 横が強い動きのときだけスワイプ扱い
       if(Math.abs(dx) > Math.abs(dy)){
-        // iOS/Androidで閉じ判定が効くように
         e.preventDefault();
-
-        // 左に60px以上で閉じる
         if(dx < -60){
           closeMenu();
           tracking = false;
@@ -216,9 +208,7 @@
       }
     }, {passive:false});
 
-    menu.addEventListener("touchend", ()=>{
-      tracking = false;
-    }, {passive:true});
+    menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
   </script>
 </body>
 </html>
