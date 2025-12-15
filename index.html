@@ -44,13 +44,11 @@
       font-size: 18px;
     }
 
-    /* ===== メニューボタン ===== */
     .menu-btn {
       font-size: 22px;
       background: none;
       border: none;
       cursor: pointer;
-      line-height: 1;
       padding: 8px 10px;
     }
 
@@ -69,6 +67,9 @@
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
+
+      /* ← これ超重要（スワイプ有効化） */
+      touch-action: pan-y;
     }
 
     .menu.open {
@@ -102,7 +103,7 @@
 
 <body>
 
-  <!-- 暗幕 -->
+  <!-- 暗幕（タップで閉じる） -->
   <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
   <div class="box">
@@ -125,40 +126,51 @@
 
   </div>
 
-  <!-- ★ JSは必ず body の一番下 ★ -->
+  <!-- ===== JS（全部入り）===== -->
   <script>
+    const menu = document.getElementById("menu");
+    const overlay = document.getElementById("overlay");
+
     function toggleMenu() {
-      const menu = document.getElementById("menu");
-      const overlay = document.getElementById("overlay");
       menu.classList.toggle("open");
       overlay.classList.toggle("open");
     }
+
+    /* ===== 左スワイプで閉じる ===== */
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    menu.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+      tracking = true;
+    }, { passive: true });
+
+    menu.addEventListener("touchmove", (e) => {
+      if (!tracking) return;
+
+      const t = e.touches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+
+      // 横方向が優勢なときだけ処理
+      if (Math.abs(dx) > Math.abs(dy)) {
+        e.preventDefault();
+
+        // 左に一定以上スワイプで閉じる
+        if (dx < -60 && menu.classList.contains("open")) {
+          toggleMenu();
+          tracking = false;
+        }
+      }
+    }, { passive: false });
+
+    menu.addEventListener("touchend", () => {
+      tracking = false;
+    }, { passive: true });
   </script>
-<script>
-  let startX = null;
 
-  const menu = document.getElementById("menu");
-
-  menu.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-  });
-
-  menu.addEventListener("touchmove", (e) => {
-    if (startX === null) return;
-
-    const currentX = e.touches[0].clientX;
-    const diffX = currentX - startX;
-
-    // 左に一定以上スワイプしたら閉じる
-    if (diffX < -60) {
-      toggleMenu();
-      startX = null;
-    }
-  });
-
-  menu.addEventListener("touchend", () => {
-    startX = null;
-  });
-                        </script>
 </body>
 </html>
