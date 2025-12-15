@@ -7,12 +7,6 @@
 
   <style>
     /* ===== 基本 ===== */
-    <script>
-  function toggleMenu() {
-    const menu = document.getElementById("menu");
-    menu.classList.toggle("open");
-  }
-</script>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto,
@@ -61,64 +55,68 @@
     }
 
     /* ===== 右スライドメニュー ===== */
-.menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: min(78vw, 320px);
-  height: 100vh;
-  background: #fff;
-  border-left: 1px solid #e6e6e6;
-  padding: 18px 16px;
-  box-sizing: border-box;
+    .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(78vw, 320px);
+      height: 100vh;
+      background: #fff;
+      border-left: 1px solid #e6e6e6;
+      padding: 24px 16px;
+      box-sizing: border-box;
 
-  transform: translateX(100%);
-  transition: transform .25s ease;
-  z-index: 1001;
-}
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      z-index: 1001;
+    }
 
-.menu.open {
-  transform: translateX(0);
-}
+    .menu.open {
+      transform: translateX(0);
+    }
 
-.menu a {
-  display: block;
-  padding: 12px 6px;
-  font-weight: 600;
-  border-bottom: 1px solid #f0f0f0;
-}
+    .menu a {
+      display: block;
+      padding: 14px 6px;
+      font-weight: 600;
+      border-bottom: 1px solid #f0f0f0;
+    }
 
-/* 背景の暗い幕 */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.35);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease;
-  z-index: 1000;
-}
+    /* ===== 背景の暗幕 ===== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 1000;
+    }
 
-.overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
+    .overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- 暗幕 -->
+  <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
   <div class="box">
 
     <header class="header">
       <div class="site-title">Kusou-Aristotle</div>
-      <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="メニューを開く">☰</button>
     </header>
 
     <nav id="menu" class="menu">
-      <a href="index.html">Home</a>
-      <a href="character.html">Character</a>
-      <a href="story.html">Story</a>
-      <a href="guide.html">Guide</a>
+      <a href="index.html" onclick="toggleMenu()">Home</a>
+      <a href="character.html" onclick="toggleMenu()">Character</a>
+      <a href="story.html" onclick="toggleMenu()">Story</a>
+      <a href="guide.html" onclick="toggleMenu()">Guide</a>
     </nav>
 
     <h1>Kusou-Aristotle</h1>
@@ -127,13 +125,15 @@
 
   </div>
 
+  <!-- ★ JSは必ず body の一番下 ★ -->
   <script>
-    const btn = document.getElementById("menuBtn");
-    const menu = document.getElementById("menu");
-
-    btn.addEventListener("click", () => {
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      const overlay = document.getElementById("overlay");
       menu.classList.toggle("open");
-    });
+      overlay.classList.toggle("open");
+    }
   </script>
+
 </body>
 </html>
