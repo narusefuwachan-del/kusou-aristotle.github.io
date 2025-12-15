@@ -134,6 +134,31 @@
       overlay.classList.toggle("open");
     }
   </script>
+<script>
+  let startX = null;
 
+  const menu = document.getElementById("menu");
+
+  menu.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  menu.addEventListener("touchmove", (e) => {
+    if (startX === null) return;
+
+    const currentX = e.touches[0].clientX;
+    const diffX = currentX - startX;
+
+    // 左に一定以上スワイプしたら閉じる
+    if (diffX < -60) {
+      toggleMenu();
+      startX = null;
+    }
+  });
+
+  menu.addEventListener("touchend", () => {
+    startX = null;
+  });
+                        </script>
 </body>
 </html>
