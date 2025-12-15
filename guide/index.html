@@ -6,7 +6,6 @@
   <title>Guide | Kusou-Aristotle</title>
 
   <style>
-    /* ===== 基本レイアウト ===== */
     body{
       font-family: system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto,
@@ -17,6 +16,7 @@
         sans-serif;
       margin: 0;
       line-height: 1.7;
+      color: #111; /* ← 明示（真っ白対策） */
     }
 
     .box{
@@ -32,11 +32,8 @@
       color: #3b5cff;
       text-decoration: none;
     }
-    a:hover{
-      text-decoration: underline;
-    }
+    a:hover{ text-decoration: underline; }
 
-    /* ===== ヘッダー ===== */
     .header{
       display: flex;
       justify-content: space-between;
@@ -55,9 +52,10 @@
       border: none;
       cursor: pointer;
       padding: 8px 10px;
+      line-height: 1;
     }
 
-    /* ===== 背景の暗幕 ===== */
+    /* 暗幕 */
     .overlay{
       position: fixed;
       inset: 0;
@@ -72,12 +70,13 @@
       pointer-events: auto;
     }
 
-    /* ===== 右スライドメニュー ===== */
+    /* 右スライドメニュー（min()をやめて確実に） */
     .menu{
       position: fixed;
       top: 0;
       right: 0;
-      width: min(78vw, 340px);
+      width: 340px;      /* ← まず固定 */
+      max-width: 78vw;   /* ← スマホはこれで縮む */
       height: 100vh;
       background: #fff;
       border-left: 1px solid #e6e6e6;
@@ -88,6 +87,8 @@
       transition: transform .25s ease;
       z-index: 1001;
 
+      overflow-y: auto;  /* ← 中身が見切れてもスクロールできる */
+      -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
     }
     .menu.open{
@@ -99,8 +100,8 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #f0f0f0;
-      padding-bottom: 8px;
-      margin-bottom: 8px;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
     }
 
     .menu a{
@@ -108,6 +109,7 @@
       padding: 14px 6px;
       font-weight: 700;
       border-bottom: 1px solid #f5f5f5;
+      color: #111; /* ← 明示（リンク消える対策） */
     }
 
     .close-btn{
@@ -115,13 +117,14 @@
       background: none;
       border: none;
       cursor: pointer;
+      line-height: 1;
+      padding: 8px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- 暗幕 -->
   <div id="overlay" class="overlay"></div>
 
   <div class="box">
@@ -134,8 +137,7 @@
     <p>とりあえず思いつきで Guide ってタブ作ったけど、たぶんそのうち中身決めます。（準備中）</p>
   </div>
 
-  <!-- スライドメニュー -->
-  <nav id="menu" class="menu">
+  <nav id="menu" class="menu" aria-label="サイトメニュー">
     <div class="menu-top">
       <strong>MENU</strong>
       <button class="close-btn" id="closeBtn" aria-label="閉じる">✕</button>
@@ -166,12 +168,7 @@
     closeBtn.addEventListener("click", closeMenu);
     overlayEl.addEventListener("click", closeMenu);
 
-    // メニュー内リンクを押したら閉じる
-    menuEl.querySelectorAll("a").forEach(a => {
-      a.addEventListener("click", closeMenu);
-    });
-
-    // 左スワイプで閉じる（モバイル）
+    // 左スワイプで閉じる
     let sx = 0, sy = 0, tracking = false;
 
     menuEl.addEventListener("touchstart", e => {
@@ -200,5 +197,6 @@
       tracking = false;
     }, { passive:true });
   </script>
+
 </body>
 </html>
