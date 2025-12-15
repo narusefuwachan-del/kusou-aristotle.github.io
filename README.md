@@ -1,1 +1,0 @@
-# kusou-aristotle.github.io
