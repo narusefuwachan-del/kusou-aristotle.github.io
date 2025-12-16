@@ -239,6 +239,16 @@
 </head>
 
 <body>
+  <!-- BGM本体（自動再生しない） -->
+<audio id="bgm" preload="auto" loop>
+  <source src="audio/bgm.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 右下ボタン -->
+<button id="bgmBtn" class="bgm-btn" type="button" aria-label="BGMの切り替え">
+  <span class="bgm-dot" aria-hidden="true"></span>
+  <small id="bgmLabel">BGM OFF</small>
+</button>
   <!-- splash -->
   <div id="splash" class="splash" aria-label="読み込み中">
     <div class="splash-inner">
