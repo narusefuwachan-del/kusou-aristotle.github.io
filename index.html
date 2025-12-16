@@ -24,7 +24,7 @@
     a{ color:#3b5cff; text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    /* ===== ヘッダー（上固定）===== */
+    /* ===== ヘッダー（固定）===== */
     .header{
       display:flex;
       justify-content:space-between;
@@ -36,7 +36,6 @@
       right: 0;
       z-index: 60;
 
-      /* 背景画像の上でも見やすいように */
       background: rgba(255,255,255,0.82);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -87,9 +86,11 @@
       border-left: 1px solid #e6e6e6;
       padding: 18px 16px;
       box-sizing: border-box;
+
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
+
       touch-action: pan-y;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
@@ -104,7 +105,6 @@
       border-bottom: 1px solid #f0f0f0;
       margin-bottom: 8px;
     }
-
     .menu-title{ font-weight: 800; letter-spacing: .3px; }
 
     .close-btn{
@@ -124,7 +124,7 @@
       color:#111;
     }
 
-    /* ===== Home 背景（余白なしで全画面）===== */
+    /* ===== Home 背景（余白なし）===== */
     .hero{
       width: 100%;
       height: 100vh;
@@ -133,19 +133,14 @@
       background-position: center;
       background-repeat: no-repeat;
       position: relative;
-    }
 
-    /* ヘッダー固定分だけ上が欠けないように（見た目用） */
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      /* うっすら上だけ白くしてヘッダー馴染ませる（不要なら消してOK） */
-      background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0));
+      /* スプラッシュ後に出す */
+      opacity: 0;
+      transition: opacity 600ms ease;
     }
+    .hero.show{ opacity: 1; }
 
-    /* ===== 起動スプラッシュ（ロゴアニメ）===== */
+    /* ===== スプラッシュ（Transition方式）===== */
     .splash{
       position: fixed;
       inset: 0;
@@ -154,57 +149,44 @@
       place-items: center;
       z-index: 9999;
     }
-    .splash.hide{ pointer-events:none; }
 
-    /* 表示時：フェードイン */
+    /* ロゴ本体：初期状態（透明＆ちょい拡大） */
     .splash-inner{
       opacity: 0;
-      transform: scale(0.98);
-      animation: splashIn 520ms ease-out forwards;
+      transform: scale(1.06);
+      transition: opacity 650ms ease, transform 650ms ease;
       will-change: opacity, transform;
     }
-    @keyframes splashIn{
-      to{ opacity: 1; transform: scale(1); }
+
+    /* 表示（フェードイン＆等倍へ） */
+    .splash.show .splash-inner{
+      opacity: 1;
+      transform: scale(1);
     }
 
-    /* ロゴサイズ（スマホでもデカめ） */
+    /* 消える（縮小しながらフェードアウト） */
+    .splash.hide .splash-inner{
+      opacity: 0;
+      transform: scale(0.82);
+    }
+
+    /* ロゴサイズ（スマホで大きめ） */
     .splash-inner img{
       width: min(86vw, 560px);
       height: auto;
       display: block;
     }
 
-    /* 消える：縮小＋フェードアウト */
-    .splash.hide .splash-inner{
-      animation: splashOut 820ms ease-in-out forwards;
-    }
-    @keyframes splashOut{
-      to{ opacity: 0; transform: scale(0.82); }
-    }
-
-    /* ===== 背景（hero）をスプラッシュ後にふわっと出す ===== */
-    .hero{
-      opacity: 0;
-    }
-    .hero.show{
-      animation: heroIn 650ms ease forwards;
-    }
-    @keyframes heroIn{
-      to{ opacity: 1; }
-    }
-
-    /* 動き軽減設定 */
+    /* 動き軽減 */
     @media (prefers-reduced-motion: reduce){
-      .splash-inner{ animation: none; opacity: 1; transform: none; }
-      .splash.hide .splash-inner{ animation: none; opacity: 0; }
-      .hero{ opacity: 1; }
-      .hero.show{ animation: none; }
+      .splash-inner{ transition: none; opacity: 1; transform: none; }
+      .hero{ transition: none; opacity: 1; }
     }
   </style>
 </head>
 
 <body>
-  <!-- 起動スプラッシュ -->
+  <!-- スプラッシュ -->
   <div id="splash" class="splash" aria-label="読み込み中">
     <div class="splash-inner">
       <img src="images/logo.png" alt="Kusou-Aristotle">
@@ -217,13 +199,13 @@
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
   </header>
 
-  <!-- Home 背景 -->
+  <!-- 背景 -->
   <main id="hero" class="hero" aria-label="ホーム背景"></main>
 
-  <!-- ハンバーガー暗幕 -->
+  <!-- 暗幕 -->
   <div id="overlay" class="overlay"></div>
 
-  <!-- メニュー（1個だけ） -->
+  <!-- メニュー -->
   <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
       <div class="menu-title">MENU</div>
@@ -289,36 +271,36 @@
         }
       }
     }, {passive:false});
-
     menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
 
 
-    // ===== 起動スプラッシュ制御 =====
+    // ===== スプラッシュ（Transition方式）制御 =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const hero   = document.getElementById("hero");
       if(!splash || !hero) return;
 
-      // 1) ロゴ表示の余韻（短すぎると「パッ」になる）
-      const hold = 900;
+      const hold = 800;     // ロゴ表示の余韻
+      const fade = 650;     // CSSのtransition時間と合わせる
 
-      // 2) fadeout時間（CSSのsplashOut: 820msと合わせる）
-      const outMs = 820;
+      // ★確実にtransitionを発火させるコツ：1フレーム待ってから show
+      requestAnimationFrame(() => {
+        splash.classList.add("show");
+      });
 
-      // 3) まず背景は出しておく（透明→showでフェードイン）
-      //    ※スプラッシュが消える直前に出すと気持ちいい
+      // 一定時間後に消す
       setTimeout(() => {
         splash.classList.add("hide");
 
-        // splashOut が終わったらスプラッシュを消す
+        // フェードアウトが終わったら消して背景表示
         setTimeout(() => {
           splash.remove();
           hero.classList.add("show");
-        }, outMs + 40);
+        }, fade + 50);
 
       }, hold);
 
-      // 保険：何かあっても3秒後には必ず表示
+      // 保険
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
