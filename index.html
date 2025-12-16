@@ -6,6 +6,7 @@
   <title>Kusou-Aristotle 公式サイト</title>
 
   <style>
+    /* ===== 基本 ===== */
     body{
       font-family: system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto,
@@ -20,23 +21,79 @@
       background:#fff;
     }
 
-    .box{
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    h1{ margin: 16px 0 8px; }
-    p{ margin: 0 0 16px; }
-
     a{ color:#3b5cff; text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
+    /* ===== 起動スプラッシュ（← 触らない聖域） ===== */
+    .splash{
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+    }
+
+    .splash-inner{
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 700ms ease, transform 700ms ease;
+      will-change: opacity, transform;
+    }
+
+    .splash.show .splash-inner{
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .splash.hide .splash-inner{
+      opacity: 0;
+      transform: scale(0.82);
+    }
+
+    .splash-inner img{
+      width: min(72vw, 520px);
+      height: auto;
+      display:block;
+    }
+    @media (max-width:600px){
+      .splash-inner img{
+        width: 90vw;
+        max-width:520px;
+      }
+    }
+
+    /* ===== Home 背景 ===== */
+    .home-bg{
+      position: fixed;
+      inset: 0;
+      background-image: url("images/home.png"); /* ★ここ */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 600ms ease;
+      z-index: -1; /* 常に一番後ろ */
+    }
+    .home-bg.show{
+      opacity: 1;
+    }
+
+    /* ===== ヘッダー ===== */
     .header{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:12px 0;
+      padding:12px 16px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
 
     .site-title{
@@ -116,53 +173,16 @@
       color:#111;
     }
 
-    /* ===== 起動スプラッシュ（transition版） ===== */
-    .splash{
-      position: fixed;
-      inset: 0;
-      background: #f5f7fb;
-      display: grid;
-      place-items: center;
-      z-index: 9999;
-    }
-
-    .splash-inner{
-      opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 700ms ease, transform 700ms ease;
-      will-change: opacity, transform;
-    }
-
-    /* フェードイン */
-    .splash.show .splash-inner{
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* フェードアウト＋縮小 */
-    .splash.hide .splash-inner{
-      opacity: 0;
-      transform: scale(0.82);
-    }
-
-    /* ロゴサイズ */
-    .splash-inner img{
-      width: min(72vw, 520px);
-      height: auto;
-      display:block;
-    }
-    @media (max-width:600px){
-      .splash-inner img{
-        width: 90vw;
-        max-width:520px;
-      }
-    }
-
-    /* ===== 本文フェードイン ===== */
+    /* ===== 本文 ===== */
     .page{
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 96px 16px 24px; /* ヘッダー分余白 */
       opacity: 0;
       transform: translateY(6px);
       transition: opacity 600ms ease, transform 600ms ease;
+      position: relative;
+      z-index: 10;
     }
     .page.show{
       opacity: 1;
@@ -179,20 +199,24 @@
     </div>
   </div>
 
+  <!-- 背景 -->
+  <div id="home-bg" class="home-bg"></div>
+
+  <!-- ヘッダー -->
+  <header class="header">
+    <div class="site-title">Kusou-Aristotle</div>
+    <button class="menu-btn" id="menuBtn">☰</button>
+  </header>
+
   <!-- overlay -->
   <div id="overlay" class="overlay"></div>
 
   <!-- 本文 -->
-  <div class="box page" id="page">
-    <header class="header">
-      <div class="site-title">Kusou-Aristotle</div>
-      <button class="menu-btn" id="menuBtn">☰</button>
-    </header>
-
+  <main class="page" id="page">
     <h1>Kusou-Aristotle</h1>
     <p>公式サイト準備中。</p>
     <p><small>Powered by GitHub Pages.</small></p>
-  </div>
+  </main>
 
   <!-- menu -->
   <nav id="menu" class="menu" aria-hidden="true">
@@ -229,13 +253,14 @@
       a.addEventListener("click", closeMenu);
     });
 
-    // ===== スプラッシュ制御（確実にフェード） =====
+    // ===== スプラッシュ制御（← 動いたコードそのまま） =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const page   = document.getElementById("page");
-      if(!splash || !page) return;
+      const bg     = document.getElementById("home-bg");
+      if(!splash || !page || !bg) return;
 
-      // 一旦描画 → show
+      // 一旦描画 → フェードイン
       requestAnimationFrame(() => {
         splash.classList.add("show");
       });
@@ -249,6 +274,7 @@
         setTimeout(() => {
           splash.remove();
           page.classList.add("show");
+          bg.classList.add("show"); // ★背景をここで出す
         }, 750);
       }, hold);
 
@@ -256,6 +282,7 @@
       setTimeout(() => {
         if (document.getElementById("splash")) splash.remove();
         page.classList.add("show");
+        bg.classList.add("show");
       }, 3000);
     });
   </script>
