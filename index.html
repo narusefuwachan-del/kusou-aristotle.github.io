@@ -294,6 +294,22 @@ window.addEventListener("load", () => {
     }, 750);
   }, 900);
 });
+    <script>
+  window.addEventListener("load", () => {
+    const splash = document.getElementById("splash");
+    const page = document.querySelector(".box");
+
+    // 少し待ってから消す（800ms）
+    setTimeout(() => {
+      splash.classList.add("hide");
+      page.classList.add("show");
+
+      // 完全に消す
+      setTimeout(() => {
+        splash.style.display = "none";
+      }, 800);
+    }, 600);
+  });
   </script>
 </body>
 </html>
