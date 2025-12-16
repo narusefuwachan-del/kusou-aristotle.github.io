@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guide | Kusou-Aristotle</title>
+  <title>Kusou-Aristotle 公式サイト</title>
 
   <style>
     body{
@@ -16,7 +16,7 @@
         sans-serif;
       margin: 0;
       line-height: 1.7;
-      color: #111; /* ← 明示（真っ白対策） */
+      color:#111;
     }
 
     .box{
@@ -28,34 +28,33 @@
     h1{ margin: 16px 0 8px; }
     p{ margin: 0 0 16px; }
 
-    a{
-      color: #3b5cff;
-      text-decoration: none;
-    }
-    a:hover{ text-decoration: underline; }
+    a{ color:#3b5cff; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
 
     .header{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 0;
     }
 
     .site-title{
-      font-weight: 700;
-      font-size: 18px;
+      font-weight:700;
+      font-size:18px;
+      letter-spacing: .2px;
     }
 
     .menu-btn{
-      font-size: 22px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px 10px;
-      line-height: 1;
+      font-size:22px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      line-height:1;
+      padding:8px 10px;
+      border-radius:10px;
     }
+    .menu-btn:active{ transform: scale(.98); }
 
-    /* 暗幕 */
     .overlay{
       position: fixed;
       inset: 0;
@@ -70,77 +69,163 @@
       pointer-events: auto;
     }
 
-    /* 右スライドメニュー（min()をやめて確実に） */
     .menu{
       position: fixed;
       top: 0;
       right: 0;
-      width: 340px;      /* ← まず固定 */
-      max-width: 78vw;   /* ← スマホはこれで縮む */
+      width: 340px;
+      max-width: 78vw;
       height: 100vh;
       background: #fff;
       border-left: 1px solid #e6e6e6;
       padding: 18px 16px;
       box-sizing: border-box;
-
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
-
-      overflow-y: auto;  /* ← 中身が見切れてもスクロールできる */
-      -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
     }
     .menu.open{
       transform: translateX(0);
     }
 
     .menu-top{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #f0f0f0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       padding-bottom: 10px;
-      margin-bottom: 10px;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 8px;
     }
 
-    .menu a{
-      display: block;
-      padding: 14px 6px;
-      font-weight: 700;
-      border-bottom: 1px solid #f5f5f5;
-      color: #111; /* ← 明示（リンク消える対策） */
+    .menu-title{
+      font-weight: 800;
+      letter-spacing: .3px;
     }
 
     .close-btn{
-      font-size: 20px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      line-height: 1;
-      padding: 8px;
+      font-size:20px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius:10px;
+    }
+
+    .menu a{
+      display:block;
+      padding: 14px 6px;
+      font-weight: 700;
+      border-bottom: 1px solid #f5f5f5;
+      color:#111;
+    }
+
+    /* ===== 起動スプラッシュ ===== */
+    .splash{
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;  /* 明るめ */
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+    }
+
+    /* hide中は操作できないようにする（事故防止） */
+    .splash.hide{ pointer-events:none; }
+
+    /* まずフェードイン（表示時） */
+    .splash-inner{
+      opacity: 0;
+      transform: scale(0.98);
+      animation: splashIn 520ms ease-out forwards;
+    }
+
+    @keyframes splashIn{
+      to{
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* ロゴサイズ：PCは上品、スマホは大きめ */
+    .splash-inner img{
+      width: min(72vw, 520px); /* PCでも小さすぎないように520px */
+      height: auto;
+      display: block;
+    }
+    @media (max-width: 600px){
+      .splash-inner img{
+        width: 90vw;  /* スマホは大きく */
+        max-width: 520px;
+      }
+    }
+
+    /* 消える：縮小＋フェードアウト */
+    .splash.hide .splash-inner{
+      animation: splashOut 700ms ease-in-out forwards;
+    }
+
+    @keyframes splashOut{
+      to{
+        opacity: 0;
+        transform: scale(0.82);
+      }
+    }
+
+    /* ===== 本文フェードイン ===== */
+    .page{
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    .page.show{
+      animation: pageIn 600ms ease forwards;
+    }
+    @keyframes pageIn{
+      to{
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 動き軽減設定 */
+    @media (prefers-reduced-motion: reduce){
+      .splash-inner{ animation: none; opacity: 1; transform: none; }
+      .splash.hide .splash-inner{ animation: none; opacity: 0; }
+      .page{ opacity: 1; transform: none; }
     }
   </style>
 </head>
 
 <body>
+  <!-- 起動スプラッシュ -->
+  <div id="splash" class="splash" aria-label="読み込み中">
+    <div class="splash-inner">
+      <img src="images/logo.png" alt="空想世界アリストテレス">
+    </div>
+  </div>
 
+  <!-- ハンバーガーの暗幕 -->
   <div id="overlay" class="overlay"></div>
 
-  <div class="box">
+  <!-- 本文（最初は透明→あとで show を付けて表示） -->
+  <div class="box page" id="page">
     <header class="header">
       <div class="site-title">Kusou-Aristotle</div>
       <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
     </header>
 
-    <h1>Guide</h1>
-    <p>とりあえず思いつきで Guide ってタブ作ったけど、guideって正味要らんくね？まあ〜いつか消えるかもこのタブ（準備中）</p>
+    <h1>Kusou-Aristotle</h1>
+    <p>公式サイト準備中。</p>
+    <p><small>Powered by GitHub Pages.</small></p>
   </div>
 
-  <nav id="menu" class="menu" aria-label="サイトメニュー">
+  <!-- menuは1個だけ -->
+  <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
-      <strong>MENU</strong>
-      <button class="close-btn" id="closeBtn" aria-label="閉じる">✕</button>
+      <div class="menu-title">MENU</div>
+      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
     </div>
 
     <a href="/">Home</a>
@@ -150,53 +235,91 @@
   </nav>
 
   <script>
-    const menuEl    = document.getElementById("menu");
-    const overlayEl = document.getElementById("overlay");
-    const menuBtn   = document.getElementById("menuBtn");
-    const closeBtn  = document.getElementById("closeBtn");
+    // ===== ハンバーガーメニュー =====
+    const menu = document.getElementById("menu");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
 
     function openMenu(){
-      menuEl.classList.add("open");
-      overlayEl.classList.add("open");
+      menu.classList.add("open");
+      overlay.classList.add("open");
+      menu.setAttribute("aria-hidden", "false");
     }
     function closeMenu(){
-      menuEl.classList.remove("open");
-      overlayEl.classList.remove("open");
+      menu.classList.remove("open");
+      overlay.classList.remove("open");
+      menu.setAttribute("aria-hidden", "true");
+    }
+    function toggleMenu(){
+      if(menu.classList.contains("open")) closeMenu();
+      else openMenu();
     }
 
-    menuBtn.addEventListener("click", openMenu);
+    menuBtn.addEventListener("click", toggleMenu);
     closeBtn.addEventListener("click", closeMenu);
-    overlayEl.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    menu.querySelectorAll("a").forEach(a=>{
+      a.addEventListener("click", closeMenu);
+    });
 
     // 左スワイプで閉じる
-    let sx = 0, sy = 0, tracking = false;
+    let startX = 0, startY = 0, tracking = false;
 
-    menuEl.addEventListener("touchstart", e => {
+    menu.addEventListener("touchstart", (e)=>{
       const t = e.touches[0];
-      sx = t.clientX;
-      sy = t.clientY;
+      startX = t.clientX;
+      startY = t.clientY;
       tracking = true;
-    }, { passive:true });
+    }, {passive:true});
 
-    menuEl.addEventListener("touchmove", e => {
-      if (!tracking) return;
-      const t  = e.touches[0];
-      const dx = t.clientX - sx;
-      const dy = t.clientY - sy;
+    menu.addEventListener("touchmove", (e)=>{
+      if(!tracking) return;
+      const t = e.touches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
 
-      if (Math.abs(dx) > Math.abs(dy)) {
+      if(Math.abs(dx) > Math.abs(dy)){
         e.preventDefault();
-        if (dx < -60) {
+        if(dx < -60){
           closeMenu();
           tracking = false;
         }
       }
-    }, { passive:false });
+    }, {passive:false});
 
-    menuEl.addEventListener("touchend", () => {
-      tracking = false;
-    }, { passive:true });
+    menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
+
+
+    // ===== 起動スプラッシュ制御（フェードイン→待つ→縮小フェードアウト→本文表示） =====
+    window.addEventListener("load", () => {
+      const splash = document.getElementById("splash");
+      const page   = document.getElementById("page");
+      if(!splash || !page) return;
+
+      // 表示の余韻（ここ調整OK：短くしたいなら小さく）
+      const hold = 700;
+
+      setTimeout(() => {
+        splash.classList.add("hide");
+
+        // splashOut(700ms)の後に消して本文表示
+        setTimeout(() => {
+          splash.remove();
+          page.classList.add("show");
+        }, 750);
+
+      }, hold);
+
+      // 保険：何かあっても3秒後に強制的に本文表示
+      setTimeout(() => {
+        if (document.getElementById("splash")) {
+          splash.remove();
+          page.classList.add("show");
+        }
+      }, 3000);
+    });
   </script>
-
 </body>
 </html>
