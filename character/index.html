@@ -123,7 +123,7 @@
       position: fixed;
       inset: 0;
       display: grid;
-      place-items: end center; /* 下から出す */
+      place-items: end center;
       pointer-events: none;
       z-index: 2001;
     }
@@ -176,11 +176,48 @@
       border-radius: 10px;
     }
 
+    /* ===== 1期/2期タブ ===== */
+    .tabs{
+      display:flex;
+      gap:10px;
+      padding: 12px 14px 0;
+    }
+    .tab{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      font-family: inherit;
+      font-weight:700;
+      letter-spacing:.03em;
+      cursor:pointer;
+    }
+    .tab.active{
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.35);
+    }
+
+    /* ===== プロフ画像：フェード切替（transition） ===== */
     .psheet{
       width: 100%;
       height: auto;
       display: block;
       background: rgba(255,255,255,.04);
+      border-top: 1px solid rgba(255,255,255,.06);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .28s ease, transform .28s ease;
+    }
+    .psheet.show{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .psheet{ transition:none; opacity:1; transform:none; }
+      .pOverlay{ transition:none; }
+      .modal-inner{ transition:none; }
     }
   </style>
 </head>
@@ -222,6 +259,14 @@
         <div class="modal-title" id="ptitle">PROFILE</div>
         <button class="mclose" id="charClose" aria-label="閉じる">✕</button>
       </div>
+
+      <!-- ✅ 1期/2期タブ -->
+      <div class="tabs" role="tablist" aria-label="期の切り替え">
+        <button type="button" class="tab active" data-season="s1" role="tab" aria-selected="true">1期</button>
+        <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
+      </div>
+
+      <!-- ✅ プロフィール画像 -->
       <img id="psheet" class="psheet" src="" alt="">
     </div>
   </section>
@@ -229,98 +274,27 @@
   <script>
     // ====== 1) キャラデータ（ここだけ増やせばOK） ======
     // icon: 一覧に出すアイコン画像
-    // sheet: 立ち絵＋プロフィールが描かれた“画像1枚”
+    // sheetS1: 1期の“画像1枚”
+    // sheetS2: 2期の“画像1枚”
     const characters = [
-      {
-        id: "sui",
-        name: "翠",
-        icon: "/images/characters/sui_icon.png",
-        sheet: "/images/characters/sui_sheet.png"
-      },
-      {
-        id: "rei",
-        name: "零",
-        icon: "/images/characters/rei_icon.png",
-        sheet: "/images/characters/rei_sheet.png"
-      },
-      {
-        id: "kiire",
-        name: "季依恋",
-        icon: "/images/characters/kiire_icon.png",
-        sheet: "/images/characters/kiire_sheet.png"
-      },
-      {
-        id: "hari",
-        name: "羽璃",
-        icon: "/images/characters/hari_icon.png",
-        sheet: "images/characters/hari_sheet.png"
-      },
-      {
-        id: "yuugi",
-        name: "夕霧",
-        icon: "/images/characters/yuugi_icon.png",
-        sheet: "images/characters/yuugi_sheet.png"
-      },
-      {
-        id: "reine",
-        name: "零音",
-        icon: "/images/characters/reine_icon.png",
-        sheet: "images/characters/reine_sheet.png"
-      },
-      {
-        id: "yuri",
-        name: "結莉",
-        icon: "/images/characters/yuri_icon.png",
-        sheet: "images/characters/yuri_sheet.png"
-      },
-      {
-        id: "yume",
-        name: "優芽",
-        icon: "/images/characters/yume_icon.png",
-        sheet: "images/characters/yume_sheet.png"
-      },
-      {
-        id: "reto",
-        name: "怜冬",
-        icon: "/images/characters/reto_icon.png",
-        sheet: "images/characters/reto_sheet.png"
-      },
-      {
-        id: "hana",
-        name: "白花",
-        icon: "/images/characters/hana_icon.png",
-        sheet: "images/characters/hana_sheet.png"
-      },
-      {
-        id: "yukina",
-        name: "雪那",
-        icon: "/images/characters/yukina_icon.png",
-        sheet: "images/characters/yukina_sheet.png"
-      },
-      {
-        id: "anjela",
-        name: "アンジェラ",
-        icon: "/images/characters/anjela_icon.png",
-        sheet: "images/characters/anjela_sheet.png"
-      },
-      {
-        id: "nemuru",
-        name: "ねむる",
-        icon: "/images/characters/nemuru_icon.png",
-        sheet: "images/characters/nemuru_sheet.png"
-      },
-      {
-        id: "akiha",
-        name: "あきは",
-        icon: "/images/characters/akiha_icon.png",
-        sheet: "images/characters/akiha_sheet.png"
-      }
-     // ↑ここに追加していくだけ
+      { id:"sui",    name:"翠",     icon:"/images/characters/sui_icon.png",    sheetS1:"/images/characters/sui_sheet_s1.png",    sheetS2:"/images/characters/sui_sheet_s2.png" },
+      { id:"rei",    name:"零",     icon:"/images/characters/rei_icon.png",    sheetS1:"/images/characters/rei_sheet_s1.png",    sheetS2:"/images/characters/rei_sheet_s2.png" },
+      { id:"kiire",  name:"季依恋", icon:"/images/characters/kiire_icon.png",  sheetS1:"/images/characters/kiire_sheet_s1.png",  sheetS2:"/images/characters/kiire_sheet_s2.png" },
+      { id:"hari",   name:"羽璃",   icon:"/images/characters/hari_icon.png",   sheetS1:"/images/characters/hari_sheet_s1.png",   sheetS2:"/images/characters/hari_sheet_s2.png" },
+      { id:"yuugi",  name:"夕霧",   icon:"/images/characters/yuugi_icon.png",  sheetS1:"/images/characters/yuugi_sheet_s1.png",  sheetS2:"/images/characters/yuugi_sheet_s2.png" },
+      { id:"reine",  name:"零音",   icon:"/images/characters/reine_icon.png",  sheetS1:"/images/characters/reine_sheet_s1.png",  sheetS2:"/images/characters/reine_sheet_s2.png" },
+      { id:"yuri",   name:"結莉",   icon:"/images/characters/yuri_icon.png",   sheetS1:"/images/characters/yuri_sheet_s1.png",   sheetS2:"/images/characters/yuri_sheet_s2.png" },
+      { id:"yume",   name:"優芽",   icon:"/images/characters/yume_icon.png",   sheetS1:"/images/characters/yume_sheet_s1.png",   sheetS2:"/images/characters/yume_sheet_s2.png" },
+      { id:"reto",   name:"怜冬",   icon:"/images/characters/reto_icon.png",   sheetS1:"/images/characters/reto_sheet_s1.png",   sheetS2:"/images/characters/reto_sheet_s2.png" },
+      { id:"hana",   name:"白花",   icon:"/images/characters/hana_icon.png",   sheetS1:"/images/characters/hana_sheet_s1.png",   sheetS2:"/images/characters/hana_sheet_s2.png" },
+      { id:"yukina", name:"雪那",   icon:"/images/characters/yukina_icon.png", sheetS1:"/images/characters/yukina_sheet_s1.png", sheetS2:"/images/characters/yukina_sheet_s2.png" },
+      { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png", sheetS1:"/images/characters/anjela_sheet_s1.png", sheetS2:"/images/characters/anjela_sheet_s2.png" },
+      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png", sheetS1:"/images/characters/nemuru_sheet_s1.png", sheetS2:"/images/characters/nemuru_sheet_s2.png" },
+      { id:"akiha",  name:"あきは", icon:"/images/characters/akiha_icon.png",  sheetS1:"/images/characters/akiha_sheet_s1.png",  sheetS2:"/images/characters/akiha_sheet_s2.png" },
     ];
 
     // ====== 2) アイコン一覧を生成 ======
     const grid = document.getElementById("grid");
-
     grid.innerHTML = characters.map((c, i) => `
       <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${c.name}のプロフィールを開く">
         <img class="avatar" src="${c.icon}" alt="${c.name}">
@@ -336,10 +310,45 @@
     const ptitle = document.getElementById("ptitle");
     const charClose = document.getElementById("charClose");
 
+    const tabs = document.querySelectorAll(".tab");
+    let currentChar = null;
+    let currentSeason = "s1";
+
+    const setActiveTab = (season) => {
+      tabs.forEach(t => {
+        const on = (t.dataset.season === season);
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    };
+
+    const setSheet = (season) => {
+      if(!currentChar) return;
+      currentSeason = season;
+
+      setActiveTab(season);
+
+      // フェード切替：一旦消す→src差し替え→読み込み後にshow
+      psheet.classList.remove("show");
+
+      const nextSrc = (season === "s2") ? currentChar.sheetS2 : currentChar.sheetS1;
+      psheet.alt = currentChar.name + (season === "s2" ? " 2期プロフィール" : " 1期プロフィール");
+
+      setTimeout(() => {
+        psheet.src = nextSrc;
+
+        psheet.onload = () => {
+          psheet.classList.add("show");
+        };
+
+        // 画像がキャッシュ等で onload が飛ばない事故の保険
+        setTimeout(() => psheet.classList.add("show"), 220);
+      }, 20);
+    };
+
     const openProfile = (c) => {
+      currentChar = c;
       ptitle.textContent = c.name;
-      psheet.src = c.sheet;
-      psheet.alt = c.name + " プロフィール";
 
       pOverlay.classList.add("open");
       charModal.classList.add("open");
@@ -348,6 +357,9 @@
 
       document.body.style.overflow = "hidden";
       modalInner.scrollTop = 0;
+
+      // ★初期は必ず1期
+      setSheet("s1");
     };
 
     const closeProfile = () => {
@@ -356,9 +368,12 @@
       pOverlay.setAttribute("aria-hidden","true");
       charModal.setAttribute("aria-hidden","true");
 
-      // 画像を外して読み込みを止める（重い画像対策）
+      psheet.classList.remove("show");
       psheet.src = "";
       document.body.style.overflow = "";
+      currentChar = null;
+      currentSeason = "s1";
+      setActiveTab("s1");
     };
 
     // クリックで開く
@@ -369,7 +384,7 @@
       openProfile(characters[idx]);
     });
 
-    // Enterキーでも開ける（アクセシビリティ）
+    // Enterキーでも開ける
     grid.addEventListener("keydown", (e) => {
       if(e.key !== "Enter") return;
       const card = e.target.closest(".card");
@@ -378,11 +393,15 @@
       openProfile(characters[idx]);
     });
 
+    // タブ切替
+    tabs.forEach(t => {
+      t.addEventListener("click", () => setSheet(t.dataset.season));
+    });
+
     // 閉じる操作
     charClose.addEventListener("click", closeProfile);
     pOverlay.addEventListener("click", closeProfile);
 
-    // ESCで閉じる（PC）
     window.addEventListener("keydown", (e) => {
       if(e.key === "Escape" && charModal.classList.contains("open")){
         closeProfile();
@@ -399,8 +418,6 @@
     modalInner.addEventListener("touchmove", (e) => {
       if(!dragging) return;
       const dy = e.touches[0].clientY - sy;
-
-      // 上でスクロールできるように：一番上にいるときだけ閉じ判定
       if(modalInner.scrollTop === 0 && dy > 80){
         closeProfile();
         dragging = false;
@@ -408,7 +425,6 @@
     }, {passive:true});
 
     modalInner.addEventListener("touchend", ()=>{ dragging=false; }, {passive:true});
-
 
     // ====== 4) ハンバーガーメニュー（元のまま） ======
     const menu = document.getElementById("menu");
