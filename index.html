@@ -42,7 +42,7 @@
     .site-title{
       font-weight:700;
       font-size:18px;
-      letter-spacing: .2px;
+      letter-spacing:.2px;
     }
 
     .menu-btn{
@@ -50,11 +50,9 @@
       background:none;
       border:none;
       cursor:pointer;
-      line-height:1;
       padding:8px 10px;
       border-radius:10px;
     }
-    .menu-btn:active{ transform: scale(.98); }
 
     /* ===== overlay ===== */
     .overlay{
@@ -86,46 +84,39 @@
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
-      touch-action: pan-y;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
+      touch-action: pan-y;
     }
-    .menu.open{
-      transform: translateX(0);
-    }
+    .menu.open{ transform: translateX(0); }
 
     .menu-top{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #f0f0f0;
-      margin-bottom: 8px;
+      align-items:center;
+      padding-bottom:10px;
+      border-bottom:1px solid #f0f0f0;
+      margin-bottom:8px;
     }
 
-    .menu-title{
-      font-weight: 800;
-      letter-spacing: .3px;
-    }
-
+    .menu-title{ font-weight:800; }
     .close-btn{
       font-size:20px;
       background:none;
       border:none;
       cursor:pointer;
       padding:8px 10px;
-      border-radius:10px;
     }
 
     .menu a{
       display:block;
-      padding: 14px 6px;
-      font-weight: 700;
-      border-bottom: 1px solid #f5f5f5;
+      padding:14px 6px;
+      font-weight:700;
+      border-bottom:1px solid #f5f5f5;
       color:#111;
     }
 
-    /* ===== 起動スプラッシュ（show→hide方式） ===== */
+    /* ===== 起動スプラッシュ（transition版） ===== */
     .splash{
       position: fixed;
       inset: 0;
@@ -135,46 +126,35 @@
       z-index: 9999;
     }
 
-    /* 透明スタート（JSで show を付けて初めて入る） */
     .splash-inner{
       opacity: 0;
       transform: scale(1.08);
+      transition: opacity 700ms ease, transform 700ms ease;
+      will-change: opacity, transform;
     }
 
     /* フェードイン */
     .splash.show .splash-inner{
-      animation: splashIn 700ms ease-out forwards;
+      opacity: 1;
+      transform: scale(1);
     }
 
     /* フェードアウト＋縮小 */
     .splash.hide .splash-inner{
-      animation: splashOut 700ms ease-in forwards;
+      opacity: 0;
+      transform: scale(0.82);
     }
 
-    @keyframes splashIn{
-      to{
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes splashOut{
-      to{
-        opacity: 0;
-        transform: scale(0.82);
-      }
-    }
-
-    /* ロゴサイズ：スマホは大きめ */
+    /* ロゴサイズ */
     .splash-inner img{
       width: min(72vw, 520px);
       height: auto;
-      display: block;
+      display:block;
     }
-    @media (max-width: 600px){
+    @media (max-width:600px){
       .splash-inner img{
         width: 90vw;
-        max-width: 520px;
+        max-width:520px;
       }
     }
 
@@ -182,43 +162,31 @@
     .page{
       opacity: 0;
       transform: translateY(6px);
+      transition: opacity 600ms ease, transform 600ms ease;
     }
     .page.show{
-      animation: pageIn 600ms ease forwards;
-    }
-    @keyframes pageIn{
-      to{
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* 動き軽減設定 */
-    @media (prefers-reduced-motion: reduce){
-      .splash-inner{ opacity: 1; transform: none; }
-      .splash.show .splash-inner{ animation: none; }
-      .splash.hide .splash-inner{ animation: none; opacity: 0; }
-      .page{ opacity: 1; transform: none; }
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 
 <body>
   <!-- 起動スプラッシュ -->
-  <div id="splash" class="splash" aria-label="読み込み中">
+  <div id="splash" class="splash">
     <div class="splash-inner">
       <img src="images/logo.png" alt="空想世界アリストテレス">
     </div>
   </div>
 
-  <!-- ハンバーガーの暗幕 -->
+  <!-- overlay -->
   <div id="overlay" class="overlay"></div>
 
   <!-- 本文 -->
   <div class="box page" id="page">
     <header class="header">
       <div class="site-title">Kusou-Aristotle</div>
-      <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
+      <button class="menu-btn" id="menuBtn">☰</button>
     </header>
 
     <h1>Kusou-Aristotle</h1>
@@ -226,13 +194,12 @@
     <p><small>Powered by GitHub Pages.</small></p>
   </div>
 
-  <!-- menuは1個だけ -->
+  <!-- menu -->
   <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
       <div class="menu-title">MENU</div>
-      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
+      <button class="close-btn" id="closeBtn">✕</button>
     </div>
-
     <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
@@ -240,92 +207,54 @@
   </nav>
 
   <script>
-    // ===== ハンバーガーメニュー =====
+    // ===== ハンバーガー =====
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    function openMenu(){
+    const openMenu = () => {
       menu.classList.add("open");
       overlay.classList.add("open");
-      menu.setAttribute("aria-hidden", "false");
-    }
-    function closeMenu(){
+    };
+    const closeMenu = () => {
       menu.classList.remove("open");
       overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden", "true");
-    }
-    function toggleMenu(){
-      if(menu.classList.contains("open")) closeMenu();
-      else openMenu();
-    }
+    };
 
-    menuBtn.addEventListener("click", toggleMenu);
+    menuBtn.addEventListener("click", openMenu);
     closeBtn.addEventListener("click", closeMenu);
     overlay.addEventListener("click", closeMenu);
-
     menu.querySelectorAll("a").forEach(a=>{
       a.addEventListener("click", closeMenu);
     });
 
-    // 左スワイプで閉じる
-    let startX = 0, startY = 0, tracking = false;
-
-    menu.addEventListener("touchstart", (e)=>{
-      const t = e.touches[0];
-      startX = t.clientX;
-      startY = t.clientY;
-      tracking = true;
-    }, {passive:true});
-
-    menu.addEventListener("touchmove", (e)=>{
-      if(!tracking) return;
-      const t = e.touches[0];
-      const dx = t.clientX - startX;
-      const dy = t.clientY - startY;
-
-      if(Math.abs(dx) > Math.abs(dy)){
-        e.preventDefault();
-        if(dx < -60){
-          closeMenu();
-          tracking = false;
-        }
-      }
-    }, {passive:false});
-
-    menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
-
-
-    // ===== 起動スプラッシュ制御（show→待つ→hide→本文表示） =====
+    // ===== スプラッシュ制御（確実にフェード） =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const page   = document.getElementById("page");
       if(!splash || !page) return;
 
-      // ① フェードイン開始
-      splash.classList.add("show");
+      // 一旦描画 → show
+      requestAnimationFrame(() => {
+        splash.classList.add("show");
+      });
 
-      // ② ロゴを見せる時間（好みで調整）
-      const hold = 1200;
+      const hold = 1200; // 表示時間
 
       setTimeout(() => {
-        // ③ フェードアウト開始
-        splash.classList.remove("show");
         splash.classList.add("hide");
+        splash.classList.remove("show");
 
-        // ④ 消えたら本文表示
         setTimeout(() => {
           splash.remove();
           page.classList.add("show");
-        }, 700);
-
+        }, 750);
       }, hold);
 
-      // 保険：何かあっても3秒後に強制的に本文表示
+      // 保険
       setTimeout(() => {
-        const sp = document.getElementById("splash");
-        if (sp) sp.remove();
+        if (document.getElementById("splash")) splash.remove();
         page.classList.add("show");
       }, 3000);
     });
