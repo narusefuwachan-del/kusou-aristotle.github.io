@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kusou-Aristotle 公式サイト</title>
 
+  <!-- Google Fonts：Shippori Mincho -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     /* ===== base ===== */
     *{ box-sizing:border-box; }
@@ -15,18 +20,33 @@
       height:100%;
     }
     body{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto,
-        "Hiragino Kaku Gothic ProN",
-        "Noto Sans JP",
-        "Yu Gothic",
-        "Meiryo",
-        sans-serif;
+      font-family:
+        "Shippori Mincho",
+        "Hiragino Mincho ProN",
+        "Yu Mincho",
+        "MS Mincho",
+        serif;
+      line-height: 1.8;
+      color:#fff;
       background:#000;
       overflow-x:hidden;
     }
 
-    /* ===== header ===== */
+    /* ===== background (fade-in) ===== */
+    .home-bg{
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: url("images/home.png") center / cover no-repeat;
+
+      opacity: 0;
+      transition: opacity 900ms ease;
+    }
+    body.loaded .home-bg{
+      opacity: 1;
+    }
+
+    /* ===== header (no white bar) ===== */
     .header{
       position: fixed;
       top: 0;
@@ -44,9 +64,11 @@
     }
 
     .site-title{
-      font-weight:700;
-      font-size:18px;
-      color:#fff;
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: .04em;
+      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      user-select:none;
     }
 
     .menu-btn{
@@ -55,13 +77,17 @@
       border:none;
       cursor:pointer;
       color:#fff;
+      padding:8px 10px;
+      border-radius:10px;
+      text-shadow: 0 2px 18px rgba(0,0,0,.35);
     }
+    .menu-btn:active{ transform: scale(.98); }
 
     /* ===== overlay ===== */
     .overlay{
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.35);
+      background: rgba(0,0,0,.55);
       opacity: 0;
       pointer-events: none;
       transition: opacity .25s ease;
@@ -72,7 +98,7 @@
       pointer-events: auto;
     }
 
-    /* ===== menu ===== */
+    /* ===== menu (black + slightly transparent) ===== */
     .menu{
       position: fixed;
       top: 0;
@@ -80,12 +106,21 @@
       width: 340px;
       max-width: 78vw;
       height: 100vh;
-      background: #fff;
+
+      background: rgba(0,0,0,.86);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
       padding: 18px 16px;
+      box-sizing: border-box;
+
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
+
       overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      touch-action: pan-y;
     }
     .menu.open{ transform: translateX(0); }
 
@@ -94,28 +129,38 @@
       justify-content:space-between;
       align-items:center;
       padding-bottom:10px;
-      border-bottom:1px solid #eee;
+      border-bottom: 1px solid rgba(255,255,255,.14);
       margin-bottom:8px;
     }
 
-    .menu-title{ font-weight:800; }
+    .menu-title{
+      font-weight: 700;
+      letter-spacing: .06em;
+      color:#fff;
+    }
+
     .close-btn{
       font-size:20px;
       background:none;
       border:none;
       cursor:pointer;
+      padding:8px 10px;
+      border-radius:10px;
+      color:#fff;
     }
 
     .menu a{
       display:block;
       padding:14px 6px;
       font-weight:700;
-      border-bottom:1px solid #f5f5f5;
-      color:#111;
+      letter-spacing:.03em;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      color:#fff;
       text-decoration:none;
     }
+    .menu a:active{ opacity:.85; }
 
-    /* ===== splash (transition方式・確定動作) ===== */
+    /* ===== splash (transition方式：確実に動くやつ) ===== */
     .splash{
       position: fixed;
       inset: 0;
@@ -132,11 +177,13 @@
       will-change: opacity, transform;
     }
 
+    /* フェードイン */
     .splash.show .splash-inner{
       opacity: 1;
       transform: scale(1);
     }
 
+    /* フェードアウト＋縮小 */
     .splash.hide .splash-inner{
       opacity: 0;
       transform: scale(0.82);
@@ -148,44 +195,37 @@
       display:block;
     }
 
-    /* ===== background image ===== */
-    .home-bg{
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      background: url("images/home.png") center / cover no-repeat;
-    }
-
+    /* （テキストは消してるので、本文は置かない） */
   </style>
 </head>
 
 <body>
-
   <!-- splash -->
-  <div id="splash" class="splash">
+  <div id="splash" class="splash" aria-label="読み込み中">
     <div class="splash-inner">
       <img src="images/logo.png" alt="空想世界アリストテレス">
     </div>
   </div>
 
   <!-- background -->
-  <div class="home-bg"></div>
+  <div class="home-bg" aria-hidden="true"></div>
 
   <!-- header -->
   <header class="header">
     <div class="site-title">Kusou-Aristotle</div>
-    <button class="menu-btn" id="menuBtn">☰</button>
+    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
   </header>
 
   <!-- overlay -->
-  <div id="overlay" class="overlay"></div>
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <!-- menu -->
-  <nav id="menu" class="menu">
+  <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
       <div class="menu-title">MENU</div>
-      <button class="close-btn" id="closeBtn">✕</button>
+      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
     </div>
+
     <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
@@ -193,28 +233,42 @@
   </nav>
 
   <script>
-    // menu
+    // ===== menu =====
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    menuBtn.onclick = () => {
+    const openMenu = () => {
       menu.classList.add("open");
       overlay.classList.add("open");
+      menu.setAttribute("aria-hidden", "false");
     };
-    closeBtn.onclick = overlay.onclick = () => {
+    const closeMenu = () => {
       menu.classList.remove("open");
       overlay.classList.remove("open");
+      menu.setAttribute("aria-hidden", "true");
     };
 
-    // splash（transition方式・確定）
+    menuBtn.addEventListener("click", openMenu);
+    closeBtn.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+
+    // ===== splash（transition方式：確実にフェード） + 背景フェードイン =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
+      if(!splash) return;
 
+      // 背景は body.loaded でフェードイン
+      document.body.classList.add("loaded");
+
+      // 一旦描画 → show（フェードイン開始）
       requestAnimationFrame(() => {
         splash.classList.add("show");
       });
+
+      const hold = 1200;
 
       setTimeout(() => {
         splash.classList.add("hide");
@@ -223,16 +277,15 @@
         setTimeout(() => {
           splash.remove();
         }, 750);
-      }, 1200);
 
-      // safety
+      }, hold);
+
+      // 保険：何があっても消す
       setTimeout(() => {
-        if(document.getElementById("splash")){
-          splash.remove();
-        }
+        const s = document.getElementById("splash");
+        if (s) s.remove();
       }, 3000);
     });
   </script>
-
 </body>
 </html>
