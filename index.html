@@ -276,6 +276,24 @@
     }, {passive:false});
 
     menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
+  // ===== 起動スプラッシュ制御 =====
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  const page   = document.getElementById("page");
+
+  if(!splash || !page) return;
+
+  // ちょい見せてから消す（時間は好みでOK）
+  setTimeout(() => {
+    splash.classList.add("hide");
+
+    // スプラッシュが消えたら本文を表示
+    setTimeout(() => {
+      splash.remove();
+      page.classList.add("show");
+    }, 750);
+  }, 900);
+});
   </script>
 </body>
 </html>
