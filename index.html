@@ -18,30 +18,28 @@
       margin: 0;
       line-height: 1.7;
       color:#111;
+      background:#fff;
     }
 
     a{ color:#3b5cff; text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    /* 中身の幅（2枚目以降のセクション用） */
-    .box{
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    /* ===== ヘッダー ===== */
+    /* ===== ヘッダー（上固定）===== */
     .header{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:12px 16px; /* ヒーロー上で見えるようにbox外でもOKにする */
-      position: sticky; /* 上に固定 */
+      padding:12px 16px;
+      position: fixed;
       top: 0;
-      z-index: 50;
-      background: rgba(255,255,255,0.85); /* 背景が透ける */
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      left: 0;
+      right: 0;
+      z-index: 60;
+
+      /* 背景画像の上でも見やすいように */
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0,0,0,0.06);
     }
 
@@ -96,9 +94,7 @@
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
     }
-    .menu.open{
-      transform: translateX(0);
-    }
+    .menu.open{ transform: translateX(0); }
 
     .menu-top{
       display:flex;
@@ -109,10 +105,7 @@
       margin-bottom: 8px;
     }
 
-    .menu-title{
-      font-weight: 800;
-      letter-spacing: .3px;
-    }
+    .menu-title{ font-weight: 800; letter-spacing: .3px; }
 
     .close-btn{
       font-size:20px;
@@ -131,81 +124,101 @@
       color:#111;
     }
 
-    /* ===== Home ヒーロー（背景画像）===== */
+    /* ===== Home 背景（余白なしで全画面）===== */
     .hero{
       width: 100%;
-      height: 100vh;                 /* 画面いっぱい */
+      height: 100vh;
       background-image: url("images/home.png");
-      background-size: cover;        /* 余白ゼロで敷き詰め */
-      background-position: center;   /* 真ん中基準 */
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
       position: relative;
-      overflow: hidden;
     }
 
-    /* 雰囲気調整：うっすら暗幕（不要なら消してOK） */
-    .hero::before{
+    /* ヘッダー固定分だけ上が欠けないように（見た目用） */
+    .hero::after{
       content:"";
       position:absolute;
       inset:0;
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.25),
-        rgba(255,255,255,0.05),
-        rgba(0,0,0,0.18)
-      );
       pointer-events:none;
+      /* うっすら上だけ白くしてヘッダー馴染ませる（不要なら消してOK） */
+      background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0));
     }
 
-    /* 文字を乗せたいとき用（いらなければ丸ごと消してOK） */
-    .hero-text{
-      position: absolute;
-      left: 14px;
-      top: 120px; /* sticky headerの下あたり */
-      writing-mode: vertical-rl;
-      background: rgba(0,0,0,0.78);
-      color: #fff;
-      padding: 12px 8px;
-      font-size: 16px;
-      letter-spacing: 0.15em;
-      border-radius: 10px;
+    /* ===== 起動スプラッシュ（ロゴアニメ）===== */
+    .splash{
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+    }
+    .splash.hide{ pointer-events:none; }
+
+    /* 表示時：フェードイン */
+    .splash-inner{
+      opacity: 0;
+      transform: scale(0.98);
+      animation: splashIn 520ms ease-out forwards;
+      will-change: opacity, transform;
+    }
+    @keyframes splashIn{
+      to{ opacity: 1; transform: scale(1); }
     }
 
-    /* 2枚目以降のセクション例 */
-    .section-title{
-      font-size: 22px;
-      margin: 18px 0 8px;
+    /* ロゴサイズ（スマホでもデカめ） */
+    .splash-inner img{
+      width: min(86vw, 560px);
+      height: auto;
+      display: block;
     }
-    .muted{ color:#555; }
 
-    @media (max-width: 600px){
-      .hero-text{
-        top: 110px;
-        font-size: 14px;
-      }
+    /* 消える：縮小＋フェードアウト */
+    .splash.hide .splash-inner{
+      animation: splashOut 820ms ease-in-out forwards;
+    }
+    @keyframes splashOut{
+      to{ opacity: 0; transform: scale(0.82); }
+    }
+
+    /* ===== 背景（hero）をスプラッシュ後にふわっと出す ===== */
+    .hero{
+      opacity: 0;
+    }
+    .hero.show{
+      animation: heroIn 650ms ease forwards;
+    }
+    @keyframes heroIn{
+      to{ opacity: 1; }
+    }
+
+    /* 動き軽減設定 */
+    @media (prefers-reduced-motion: reduce){
+      .splash-inner{ animation: none; opacity: 1; transform: none; }
+      .splash.hide .splash-inner{ animation: none; opacity: 0; }
+      .hero{ opacity: 1; }
+      .hero.show{ animation: none; }
     }
   </style>
 </head>
 
 <body>
-  <!-- ヘッダー（上固定） -->
+  <!-- 起動スプラッシュ -->
+  <div id="splash" class="splash" aria-label="読み込み中">
+    <div class="splash-inner">
+      <img src="images/logo.png" alt="Kusou-Aristotle">
+    </div>
+  </div>
+
+  <!-- ヘッダー -->
   <header class="header">
     <div class="site-title">Kusou-Aristotle</div>
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
   </header>
 
-  <!-- ヒーロー（背景画像） -->
-  <section class="hero" aria-label="ホーム画像">
-    <!-- 文字いらなければこのdiv消してOK -->
-    <div class="hero-text">空想世界アリストテレスへようこそ</div>
-  </section>
-
-  <!-- 下の本文（例） -->
-  <main class="box">
-    <h1 class="section-title">Kusou-Aristotle</h1>
-    <p class="muted">公式サイト準備中。</p>
-    <p><small>Powered by GitHub Pages.</small></p>
-  </main>
+  <!-- Home 背景 -->
+  <main id="hero" class="hero" aria-label="ホーム背景"></main>
 
   <!-- ハンバーガー暗幕 -->
   <div id="overlay" class="overlay"></div>
@@ -255,7 +268,6 @@
 
     // 左スワイプで閉じる
     let startX = 0, startY = 0, tracking = false;
-
     menu.addEventListener("touchstart", (e)=>{
       const t = e.touches[0];
       startX = t.clientX;
@@ -279,6 +291,40 @@
     }, {passive:false});
 
     menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
+
+
+    // ===== 起動スプラッシュ制御 =====
+    window.addEventListener("load", () => {
+      const splash = document.getElementById("splash");
+      const hero   = document.getElementById("hero");
+      if(!splash || !hero) return;
+
+      // 1) ロゴ表示の余韻（短すぎると「パッ」になる）
+      const hold = 900;
+
+      // 2) fadeout時間（CSSのsplashOut: 820msと合わせる）
+      const outMs = 820;
+
+      // 3) まず背景は出しておく（透明→showでフェードイン）
+      //    ※スプラッシュが消える直前に出すと気持ちいい
+      setTimeout(() => {
+        splash.classList.add("hide");
+
+        // splashOut が終わったらスプラッシュを消す
+        setTimeout(() => {
+          splash.remove();
+          hero.classList.add("show");
+        }, outMs + 40);
+
+      }, hold);
+
+      // 保険：何かあっても3秒後には必ず表示
+      setTimeout(() => {
+        const s = document.getElementById("splash");
+        if (s) s.remove();
+        hero.classList.add("show");
+      }, 3000);
+    });
   </script>
 </body>
 </html>
