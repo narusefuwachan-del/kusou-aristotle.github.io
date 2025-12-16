@@ -17,6 +17,7 @@
       margin: 0;
       line-height: 1.7;
       color:#111;
+      background:#fff;
     }
 
     .box{
@@ -55,6 +56,7 @@
     }
     .menu-btn:active{ transform: scale(.98); }
 
+    /* ===== overlay ===== */
     .overlay{
       position: fixed;
       inset: 0;
@@ -69,6 +71,7 @@
       pointer-events: auto;
     }
 
+    /* ===== menu ===== */
     .menu{
       position: fixed;
       top: 0;
@@ -122,24 +125,30 @@
       color:#111;
     }
 
-    /* ===== 起動スプラッシュ ===== */
+    /* ===== 起動スプラッシュ（show→hide方式） ===== */
     .splash{
       position: fixed;
       inset: 0;
-      background: #f5f7fb;  /* 明るめ */
+      background: #f5f7fb;
       display: grid;
       place-items: center;
       z-index: 9999;
     }
 
-    /* hide中は操作できないようにする（事故防止） */
-    .splash.hide{ pointer-events:none; }
-
-    /* まずフェードイン（表示時） */
+    /* 透明スタート（JSで show を付けて初めて入る） */
     .splash-inner{
       opacity: 0;
-      transform: scale(0.98);
-      animation: splashIn 520ms ease-out forwards;
+      transform: scale(1.08);
+    }
+
+    /* フェードイン */
+    .splash.show .splash-inner{
+      animation: splashIn 700ms ease-out forwards;
+    }
+
+    /* フェードアウト＋縮小 */
+    .splash.hide .splash-inner{
+      animation: splashOut 700ms ease-in forwards;
     }
 
     @keyframes splashIn{
@@ -149,28 +158,23 @@
       }
     }
 
-    /* ロゴサイズ：PCは上品、スマホは大きめ */
+    @keyframes splashOut{
+      to{
+        opacity: 0;
+        transform: scale(0.82);
+      }
+    }
+
+    /* ロゴサイズ：スマホは大きめ */
     .splash-inner img{
-      width: min(72vw, 520px); /* PCでも小さすぎないように520px */
+      width: min(72vw, 520px);
       height: auto;
       display: block;
     }
     @media (max-width: 600px){
       .splash-inner img{
-        width: 90vw;  /* スマホは大きく */
+        width: 90vw;
         max-width: 520px;
-      }
-    }
-
-    /* 消える：縮小＋フェードアウト */
-    .splash.hide .splash-inner{
-      animation: splashOut 700ms ease-in-out forwards;
-    }
-
-    @keyframes splashOut{
-      to{
-        opacity: 0;
-        transform: scale(0.82);
       }
     }
 
@@ -191,7 +195,8 @@
 
     /* 動き軽減設定 */
     @media (prefers-reduced-motion: reduce){
-      .splash-inner{ animation: none; opacity: 1; transform: none; }
+      .splash-inner{ opacity: 1; transform: none; }
+      .splash.show .splash-inner{ animation: none; }
       .splash.hide .splash-inner{ animation: none; opacity: 0; }
       .page{ opacity: 1; transform: none; }
     }
@@ -209,7 +214,7 @@
   <!-- ハンバーガーの暗幕 -->
   <div id="overlay" class="overlay"></div>
 
-  <!-- 本文（最初は透明→あとで show を付けて表示） -->
+  <!-- 本文 -->
   <div class="box page" id="page">
     <header class="header">
       <div class="site-title">Kusou-Aristotle</div>
@@ -292,32 +297,36 @@
     menu.addEventListener("touchend", ()=>{ tracking = false; }, {passive:true});
 
 
-    // ===== 起動スプラッシュ制御（フェードイン→待つ→縮小フェードアウト→本文表示） =====
+    // ===== 起動スプラッシュ制御（show→待つ→hide→本文表示） =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const page   = document.getElementById("page");
       if(!splash || !page) return;
 
-      // 表示の余韻（ここ調整OK：短くしたいなら小さく）
-      const hold = 700;
+      // ① フェードイン開始
+      splash.classList.add("show");
+
+      // ② ロゴを見せる時間（好みで調整）
+      const hold = 1200;
 
       setTimeout(() => {
+        // ③ フェードアウト開始
+        splash.classList.remove("show");
         splash.classList.add("hide");
 
-        // splashOut(700ms)の後に消して本文表示
+        // ④ 消えたら本文表示
         setTimeout(() => {
           splash.remove();
           page.classList.add("show");
-        }, 750);
+        }, 700);
 
       }, hold);
 
       // 保険：何かあっても3秒後に強制的に本文表示
       setTimeout(() => {
-        if (document.getElementById("splash")) {
-          splash.remove();
-          page.classList.add("show");
-        }
+        const sp = document.getElementById("splash");
+        if (sp) sp.remove();
+        page.classList.add("show");
       }, 3000);
     });
   </script>
