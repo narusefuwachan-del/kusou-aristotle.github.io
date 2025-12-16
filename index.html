@@ -11,6 +11,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ===== BGMボタン（右下固定） ===== */
+.bgm-btn{
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 1200; /* メニュー/overlayより上 */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 999px;
+  background: rgba(20,20,20,.72);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.bgm-btn:active{ transform: scale(.98); }
+
+.bgm-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.35);
+}
+.bgm-btn.on .bgm-dot{
+  background: rgba(120,255,180,.95); /* ONっぽい点灯 */
+}
+
+.bgm-btn small{
+  font-weight: 700;
+  opacity: .92;
+}
     /* ===== base ===== */
     *{ box-sizing:border-box; }
     html,body{
