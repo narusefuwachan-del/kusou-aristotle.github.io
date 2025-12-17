@@ -32,14 +32,23 @@
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; }
-    .menu-btn{ font-size:22px; background:none; border:none; cursor:pointer; color:#fff; padding:8px 10px; border-radius:10px; }
+    .menu-btn{
+      font-size:22px; background:none; border:none; cursor:pointer;
+      color:#fff; padding:8px 10px; border-radius:10px;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     .box{ max-width:920px; margin:0 auto; padding:18px 16px 56px; }
     h1{ margin:18px 0 10px; font-size:26px; font-weight:700; letter-spacing:.03em; color:#fff; }
     p{ margin:0 0 14px; color: rgba(255,255,255,.86); }
+    a{ color:#b7c6ff; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
 
     /* ===== ハンバーガー用 overlay/menu ===== */
-    .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:1000; }
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.55);
+      opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:1000;
+    }
     .overlay.open{ opacity:1; pointer-events:auto; }
 
     .menu{
@@ -57,10 +66,21 @@
       touch-action: pan-y;
     }
     .menu.open{ transform:translateX(0); }
-    .menu-top{ display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.14); margin-bottom:8px; color:#fff; }
+    .menu-top{
+      display:flex; justify-content:space-between; align-items:center;
+      padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.14);
+      margin-bottom:8px; color:#fff;
+    }
     .menu-title{ font-weight:700; letter-spacing:.06em; }
-    .close-btn{ font-size:20px; background:none; border:none; cursor:pointer; padding:8px 10px; border-radius:10px; color:#fff; }
-    .menu a{ display:block; padding:14px 6px; font-weight:700; letter-spacing:.03em; border-bottom:1px solid rgba(255,255,255,.10); color:#fff; text-decoration:none; }
+    .close-btn{
+      font-size:20px; background:none; border:none; cursor:pointer;
+      padding:8px 10px; border-radius:10px; color:#fff;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .menu a{
+      display:block; padding:14px 6px; font-weight:700; letter-spacing:.03em;
+      border-bottom:1px solid rgba(255,255,255,.10); color:#fff;
+    }
 
     /* ===== キャラ一覧（アイコン） ===== */
     .grid{
@@ -115,7 +135,10 @@
       transition: opacity .22s ease;
       z-index: 2000;
     }
-    .pOverlay.open{ opacity: 1; pointer-events: auto; }
+    .pOverlay.open{
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .modal{
       position: fixed;
@@ -125,7 +148,6 @@
       pointer-events: none;
       z-index: 2001;
     }
-    .modal.open{ pointer-events:auto; }
 
     .modal-inner{
       width: min(92vw, 720px);
@@ -134,14 +156,16 @@
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 18px 18px 0 0;
 
-      overflow-y: scroll;              /* ←スクロール病のために常にscroll */
-      overscroll-behavior: contain;
+      overflow-y: scroll;           /* ←短くてもスクロールできる */
+      overscroll-behavior: contain; /* ←変な跳ね防止 */
       -webkit-overflow-scrolling: touch;
 
       transform: translateY(16px);
       opacity: 0;
       transition: transform .22s ease, opacity .22s ease;
+      pointer-events: auto;
     }
+    .modal.open{ pointer-events: auto; }
     .modal.open .modal-inner{
       transform: translateY(0);
       opacity: 1;
@@ -158,10 +182,13 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255,255,255,.10);
-      z-index: 3;
+      z-index: 2;
       color:#fff;
     }
-    .modal-title{ font-weight: 700; letter-spacing: .06em; }
+    .modal-title{
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
     .mclose{
       font-size: 20px;
       background: none;
@@ -170,18 +197,21 @@
       color:#fff;
       padding: 6px 10px;
       border-radius: 10px;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* ===== 1期/2期タブ ===== */
+    /* ===== 1期/2期/縺偵ｓ縺倥▽ タブ ===== */
     .tabs{
       position: sticky;
-      top: 52px;
+      top: 52px; /* modal-topの下に追従 */
+      z-index: 1;
       display:flex;
       gap:10px;
       padding: 12px 14px 10px;
       background: rgba(10,10,14,.92);
       border-bottom: 1px solid rgba(255,255,255,.08);
-      z-index: 2;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     .tab{
       padding:10px 14px;
@@ -189,33 +219,132 @@
       border:1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.06);
       color:#fff;
-      font: inherit;
+      font-family: inherit;
       font-weight:700;
       letter-spacing:.03em;
       cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease, background .12s ease;
+      white-space: nowrap;
     }
+    .tab:active{ transform: scale(.98); }
     .tab.active{
       background: rgba(255,255,255,.14);
       border-color: rgba(255,255,255,.35);
     }
 
-    /* ===== プロフ画像：フェード切替 ===== */
+    /* ★ 縺偵ｓ縺倥▽だけ赤文字 */
+    .tab.spoiler{ color:#ff6a6a; border-color: rgba(255,75,75,.45); }
+    .tab.spoiler.active{ background: rgba(255,75,75,.14); border-color: rgba(255,75,75,.65); }
+
+    /* ===== プロフ画像：フェード切替（transition） ===== */
+    .modal-body{
+      min-height: 120vh;     /* スクロール病対策（好みで調整OK） */
+      padding-bottom: 40vh;  /* 下余白 */
+    }
     .psheet{
       width: 100%;
       height: auto;
       display: block;
       background: rgba(255,255,255,.04);
       border-top: 1px solid rgba(255,255,255,.06);
+
       opacity: 0;
       transform: translateY(6px);
       transition: opacity .28s ease, transform .28s ease;
     }
-    .psheet.show{ opacity:1; transform: translateY(0); }
-
-    .modal-body{
-      min-height: 120vh;
-      padding-bottom: 40vh;
+    .psheet.show{
+      opacity: 1;
+      transform: translateY(0);
     }
+
+    @media (prefers-reduced-motion: reduce){
+      .psheet{ transition:none; opacity:1; transform:none; }
+      .pOverlay{ transition:none; }
+      .modal-inner{ transition:none; }
+    }
+
+    /* ===== ネタバレ確認ダイアログ ===== */
+    .spoilerOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+      z-index: 3000;
+    }
+    .spoilerOverlay.open{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .spoilerModal{
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      z-index: 3001;
+    }
+
+    .spoilerBox{
+      width: min(92vw, 520px);
+      background: rgba(10,10,14,.94);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 16px 16px 14px;
+      color: #fff;
+
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform .22s ease, opacity .22s ease;
+      pointer-events: auto;
+    }
+
+    .spoilerModal.open{ pointer-events: auto; }
+    .spoilerModal.open .spoilerBox{
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .spoilerTitle{
+      font-weight: 700;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+
+    .spoilerText{
+      margin: 0 0 14px;
+      color: rgba(255,255,255,.88);
+      line-height: 1.8;
+    }
+
+    .spoilerBtns{
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .spoilerBtn{
+      font-family: inherit;
+      font-weight: 700;
+      letter-spacing: .04em;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .spoilerBtn.yes{
+      border-color: rgba(255,75,75,.65);
+      color: #ff6a6a;
+    }
+    .spoilerBtn.yes:active{ transform: scale(.98); }
+    .spoilerBtn.no:active{ transform: scale(.98); }
   </style>
 </head>
 
@@ -228,9 +357,12 @@
   <div class="box">
     <h1>Character</h1>
     <p>キャラクター一覧</p>
+
+    <!-- ✅ キャラのアイコン一覧 -->
     <div id="grid" class="grid" aria-label="キャラクター一覧"></div>
   </div>
 
+  <!-- ===== ハンバーガーのoverlay ===== -->
   <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <nav id="menu" class="menu" aria-hidden="true">
@@ -244,6 +376,7 @@
     <a href="/guide/">Guide</a>
   </nav>
 
+  <!-- ===== プロフィール画像モーダル ===== -->
   <div id="pOverlay" class="pOverlay" aria-hidden="true"></div>
 
   <section id="charModal" class="modal" aria-hidden="true">
@@ -253,9 +386,11 @@
         <button class="mclose" id="charClose" aria-label="閉じる">✕</button>
       </div>
 
-      <div class="tabs" role="tablist" aria-label="期の切り替え">
+      <!-- ✅ タブ領域（JSで必要なら縺偵ｓ縺倥▽を出す） -->
+      <div class="tabs" id="tabs" role="tablist" aria-label="期の切り替え">
         <button type="button" class="tab active" data-season="s1" role="tab" aria-selected="true">1期</button>
         <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
+        <!-- s3はJSで必要なキャラの時だけ追加 -->
       </div>
 
       <div class="modal-body" id="modalBody">
@@ -264,160 +399,278 @@
     </div>
   </section>
 
+  <!-- ===== ネタバレ確認ダイアログ ===== -->
+  <div id="spoilerOverlay" class="spoilerOverlay" aria-hidden="true"></div>
+
+  <section id="spoilerModal" class="spoilerModal" aria-hidden="true">
+    <div class="spoilerBox" role="dialog" aria-modal="true" aria-labelledby="spoilerTitle">
+      <div id="spoilerTitle" class="spoilerTitle">確認</div>
+      <p class="spoilerText">空想世界アリストテレス1期のネタバレを含む内容ですが、よろしいですか？</p>
+      <div class="spoilerBtns">
+        <button type="button" id="spoilerYes" class="spoilerBtn yes">はい</button>
+        <button type="button" id="spoilerNo" class="spoilerBtn no">いいえ</button>
+      </div>
+    </div>
+  </section>
+
   <script>
-    (() => {
-      // 変な状態で残ってたら解除（万が一の“スクロール死”保険）
-      document.body.style.overflow = "";
+    // ====== 1) キャラデータ ======
+    // icon: 一覧アイコン
+    // sheetS1 / sheetS2: 1期/2期
+    // sheetS3: 「縺偵ｓ縺倥▽」（必要キャラだけ入れる）
+    const characters = [
+      { id:"sui",    name:"翠",     icon:"/images/characters/sui_icon.png",    sheetS1:"/images/characters/sui_sheet_s1.png",    sheetS2:"/images/characters/sui_sheet_s2.png" },
+      { id:"rei",    name:"零",     icon:"/images/characters/rei_icon.png",    sheetS1:"/images/characters/rei_sheet_s1.png",    sheetS2:"/images/characters/rei_sheet_s2.png" },
+      { id:"kiire",  name:"季依恋", icon:"/images/characters/kiire_icon.png",  sheetS1:"/images/characters/kiire_sheet_s1.png",  sheetS2:"/images/characters/kiire_sheet_s2.png" },
+      { id:"hari",   name:"羽璃",   icon:"/images/characters/hari_icon.png",   sheetS1:"/images/characters/hari_sheet_s1.png",   sheetS2:"/images/characters/hari_sheet_s2.png" },
+      { id:"yuugi",  name:"夕霧",   icon:"/images/characters/yuugi_icon.png",  sheetS1:"/images/characters/yuugi_sheet_s1.png",  sheetS2:"/images/characters/yuugi_sheet_s2.png" },
+      { id:"reine",  name:"零音",   icon:"/images/characters/reine_icon.png",  sheetS1:"/images/characters/reine_sheet_s1.png",  sheetS2:"/images/characters/reine_sheet_s2.png" },
+      { id:"yuri",   name:"結莉",   icon:"/images/characters/yuri_icon.png",   sheetS1:"/images/characters/yuri_sheet_s1.png",   sheetS2:"/images/characters/yuri_sheet_s2.png" },
+      { id:"yume",   name:"優芽",   icon:"/images/characters/yume_icon.png",   sheetS1:"/images/characters/yume_sheet_s1.png",   sheetS2:"/images/characters/yume_sheet_s2.png" },
+      { id:"reto",   name:"怜冬",   icon:"/images/characters/reto_icon.png",   sheetS1:"/images/characters/reto_sheet_s1.png",   sheetS2:"/images/characters/reto_sheet_s2.png" },
+      { id:"hana",   name:"白花",   icon:"/images/characters/hana_icon.png",   sheetS1:"/images/characters/hana_sheet_s1.png",   sheetS2:"/images/characters/hana_sheet_s2.png" },
 
-      const characters = [
-        { id:"sui",    name:"翠",     icon:"/images/characters/sui_icon.png",    sheetS1:"/images/characters/sui_sheet_s1.png",    sheetS2:"/images/characters/sui_sheet_s2.png" },
-        { id:"rei",    name:"零",     icon:"/images/characters/rei_icon.png",    sheetS1:"/images/characters/rei_sheet_s1.png",    sheetS2:"/images/characters/rei_sheet_s2.png" },
-        { id:"kiire",  name:"季依恋", icon:"/images/characters/kiire_icon.png",  sheetS1:"/images/characters/kiire_sheet_s1.png",  sheetS2:"/images/characters/kiire_sheet_s2.png" },
-        { id:"hari",   name:"羽璃",   icon:"/images/characters/hari_icon.png",   sheetS1:"/images/characters/hari_sheet_s1.png",   sheetS2:"/images/characters/hari_sheet_s2.png" },
-        { id:"yuugi",  name:"夕霧",   icon:"/images/characters/yuugi_icon.png",  sheetS1:"/images/characters/yuugi_sheet_s1.png",  sheetS2:"/images/characters/yuugi_sheet_s2.png" },
-        { id:"reine",  name:"零音",   icon:"/images/characters/reine_icon.png",  sheetS1:"/images/characters/reine_sheet_s1.png",  sheetS2:"/images/characters/reine_sheet_s2.png" },
-        { id:"yuri",   name:"結莉",   icon:"/images/characters/yuri_icon.png",   sheetS1:"/images/characters/yuri_sheet_s1.png",   sheetS2:"/images/characters/yuri_sheet_s2.png" },
-        { id:"yume",   name:"優芽",   icon:"/images/characters/yume_icon.png",   sheetS1:"/images/characters/yume_sheet_s1.png",   sheetS2:"/images/characters/yume_sheet_s2.png" },
-        { id:"reto",   name:"怜冬",   icon:"/images/characters/reto_icon.png",   sheetS1:"/images/characters/reto_sheet_s1.png",   sheetS2:"/images/characters/reto_sheet_s2.png" },
-        { id:"hana",   name:"白花",   icon:"/images/characters/hana_icon.png",   sheetS1:"/images/characters/hana_sheet_s1.png",   sheetS2:"/images/characters/hana_sheet_s2.png" },
-        { id:"yukina", name:"雪那",   icon:"/images/characters/yukina_icon.png", sheetS1:"/images/characters/yukina_sheet_s1.png", sheetS2:"/images/characters/yukina_sheet_s2.png" },
-        { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png", sheetS1:"/images/characters/anjela_sheet_s1.png", sheetS2:"/images/characters/anjela_sheet_s2.png" },
-        { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png", sheetS1:"/images/characters/nemuru_sheet_s1.png", sheetS2:"/images/characters/nemuru_sheet_s2.png" },
-        { id:"akiha",  name:"あきは", icon:"/images/characters/akiha_icon.png",  sheetS1:"/images/characters/akiha_sheet_s1.png",  sheetS2:"/images/characters/akiha_sheet_s2.png" },
-      ];
+      // ★ s3を出したい3人：akiha / nemuru / yukina
+      { id:"yukina", name:"雪那",   icon:"/images/characters/yukina_icon.png", sheetS1:"/images/characters/yukina_sheet_s1.png", sheetS2:"/images/characters/yukina_sheet_s2.png", sheetS3:"/images/characters/yukina_sheet_s3.png" },
+      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png", sheetS1:"/images/characters/nemuru_sheet_s1.png", sheetS2:"/images/characters/nemuru_sheet_s2.png", sheetS3:"/images/characters/nemuru_sheet_s3.png" },
+      { id:"akiha",  name:"あきは", icon:"/images/characters/akiha_icon.png",  sheetS1:"/images/characters/akiha_sheet_s1.png",  sheetS2:"/images/characters/akiha_sheet_s2.png",  sheetS3:"/images/characters/akiha_sheet_s3.png" },
 
-      const $ = (id) => document.getElementById(id);
+      { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png", sheetS1:"/images/characters/anjela_sheet_s1.png", sheetS2:"/images/characters/anjela_sheet_s2.png" },
+    ];
 
-      // ===== grid生成 =====
-      const grid = $("grid");
-      grid.innerHTML = characters.map((c, i) => `
-        <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${c.name}のプロフィールを開く">
-          <img class="avatar" src="${c.icon}" alt="${c.name}">
-          <div class="cname">${c.name}</div>
-        </div>
-      `).join("");
+    // ====== 2) アイコン一覧を生成 ======
+    const grid = document.getElementById("grid");
+    grid.innerHTML = characters.map((c, i) => `
+      <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${c.name}のプロフィールを開く">
+        <img class="avatar" src="${c.icon}" alt="${c.name}">
+        <div class="cname">${c.name}</div>
+      </div>
+    `).join("");
 
-      // ===== モーダル =====
-      const pOverlay  = $("pOverlay");
-      const charModal = $("charModal");
-      const modalInner= $("modalInner");
-      const psheet    = $("psheet");
-      const ptitle    = $("ptitle");
-      const charClose = $("charClose");
+    // ====== 3) プロフィールモーダル制御 ======
+    const pOverlay   = document.getElementById("pOverlay");
+    const charModal  = document.getElementById("charModal");
+    const modalInner = document.getElementById("modalInner");
+    const psheet     = document.getElementById("psheet");
+    const ptitle     = document.getElementById("ptitle");
+    const charClose  = document.getElementById("charClose");
 
-      const tabs = Array.from(document.querySelectorAll(".tab"));
-      let currentChar = null;
+    const tabsWrap = document.getElementById("tabs");
 
-      const setActiveTab = (season) => {
-        tabs.forEach(t => {
-          const on = (t.dataset.season === season);
-          t.classList.toggle("active", on);
-          t.setAttribute("aria-selected", on ? "true" : "false");
-        });
-      };
+    // ネタバレ確認
+    const spoilerOverlay = document.getElementById("spoilerOverlay");
+    const spoilerModal   = document.getElementById("spoilerModal");
+    const spoilerYes     = document.getElementById("spoilerYes");
+    const spoilerNo      = document.getElementById("spoilerNo");
 
-      const setSheet = (season) => {
-        if(!currentChar) return;
+    let currentChar = null;
+    let currentSeason = "s1";
+    let spoilerApproved = false; // キャラを開くたびにリセット
 
-        setActiveTab(season);
+    const openSpoilerConfirm = () => {
+      spoilerOverlay.classList.add("open");
+      spoilerModal.classList.add("open");
+      spoilerOverlay.setAttribute("aria-hidden","false");
+      spoilerModal.setAttribute("aria-hidden","false");
+    };
+    const closeSpoilerConfirm = () => {
+      spoilerModal.classList.remove("open");
+      spoilerOverlay.classList.remove("open");
+      spoilerOverlay.setAttribute("aria-hidden","true");
+      spoilerModal.setAttribute("aria-hidden","true");
+    };
 
-        psheet.classList.remove("show");
+    const rebuildTabs = () => {
+      // 1期/2期は固定、s3は必要なキャラだけ出す
+      const hasS3 = !!(currentChar && currentChar.sheetS3);
 
-        const nextSrc = (season === "s2") ? currentChar.sheetS2 : currentChar.sheetS1;
-        psheet.alt = currentChar.name + (season === "s2" ? " 2期プロフィール" : " 1期プロフィール");
+      tabsWrap.innerHTML = `
+        <button type="button" class="tab" data-season="s1" role="tab" aria-selected="false">1期</button>
+        <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
+        ${hasS3 ? `<button type="button" class="tab spoiler" data-season="s3" role="tab" aria-selected="false">縺偵ｓ縺倥▽</button>` : ``}
+      `;
 
-        // onloadは src を入れる前に仕込む（確実化）
-        psheet.onload = () => psheet.classList.add("show");
+      // クリックイベントを付け直す
+      tabsWrap.querySelectorAll(".tab").forEach(btn=>{
+        btn.addEventListener("click", ()=> setSheet(btn.dataset.season));
+      });
+    };
+
+    const setActiveTab = (season) => {
+      tabsWrap.querySelectorAll(".tab").forEach(t => {
+        const on = (t.dataset.season === season);
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    };
+
+    const setSheet = (season) => {
+      if(!currentChar) return;
+
+      // ★ s3 はネタバレ確認が必要
+      if (season === "s3") {
+        // そもそもs3無いキャラなら無視
+        if (!currentChar.sheetS3) return;
+
+        // まだ許可してないなら確認を出す
+        if (!spoilerApproved) {
+          openSpoilerConfirm();
+
+          spoilerNo.onclick = () => {
+            closeSpoilerConfirm();
+            // 元のタブに戻す（今回は「1期に戻す」）
+            setActiveTab(currentSeason);
+          };
+
+          spoilerYes.onclick = () => {
+            spoilerApproved = true;
+            closeSpoilerConfirm();
+            setSheet("s3"); // もう一回（今度は通る）
+          };
+
+          return; // ←確認が終わるまで止める
+        }
+      }
+
+      currentSeason = season;
+      setActiveTab(season);
+
+      psheet.classList.remove("show");
+
+      let nextSrc = currentChar.sheetS1;
+      if (season === "s2") nextSrc = currentChar.sheetS2;
+      if (season === "s3") nextSrc = currentChar.sheetS3;
+
+      psheet.alt = currentChar.name + " " + (season === "s1" ? "1期" : season === "s2" ? "2期" : "縺偵ｓ縺倥▽");
+
+      setTimeout(() => {
         psheet.src = nextSrc;
 
-        // キャッシュ等でonloadが飛ばない保険
+        psheet.onload = () => {
+          psheet.classList.add("show");
+        };
+
+        // キャッシュでonloadが飛ばない保険
         setTimeout(() => psheet.classList.add("show"), 220);
-      };
+      }, 20);
+    };
 
-      const openProfile = (c) => {
-        currentChar = c;
-        ptitle.textContent = c.name;
+    const openProfile = (c) => {
+      currentChar = c;
+      currentSeason = "s1";
+      spoilerApproved = false; // キャラを開くたびに毎回確認
 
-        pOverlay.classList.add("open");
-        charModal.classList.add("open");
-        document.body.style.overflow = "hidden";
-        modalInner.scrollTop = 0;
+      ptitle.textContent = c.name;
 
-        setSheet("s1");
-      };
+      // タブ作り直し（必要ならs3追加）
+      rebuildTabs();
 
-      const closeProfile = () => {
-        charModal.classList.remove("open");
-        pOverlay.classList.remove("open");
+      pOverlay.classList.add("open");
+      charModal.classList.add("open");
+      pOverlay.setAttribute("aria-hidden","false");
+      charModal.setAttribute("aria-hidden","false");
 
-        psheet.classList.remove("show");
-        psheet.onload = null;
-        psheet.src = "";
+      document.body.style.overflow = "hidden";
+      modalInner.scrollTop = 0;
 
-        document.body.style.overflow = "";
-        currentChar = null;
-        setActiveTab("s1");
-      };
+      setSheet("s1"); // 初期は1期
+    };
 
-      grid.addEventListener("click", (e) => {
-        const card = e.target.closest(".card");
-        if(!card) return;
-        openProfile(characters[Number(card.dataset.index)]);
-      });
+    const closeProfile = () => {
+      charModal.classList.remove("open");
+      pOverlay.classList.remove("open");
+      pOverlay.setAttribute("aria-hidden","true");
+      charModal.setAttribute("aria-hidden","true");
 
-      grid.addEventListener("keydown", (e) => {
-        if(e.key !== "Enter") return;
-        const card = e.target.closest(".card");
-        if(!card) return;
-        openProfile(characters[Number(card.dataset.index)]);
-      });
+      closeSpoilerConfirm();
 
-      tabs.forEach(t => t.addEventListener("click", () => setSheet(t.dataset.season)));
+      psheet.classList.remove("show");
+      psheet.src = "";
 
-      charClose.addEventListener("click", closeProfile);
-      pOverlay.addEventListener("click", closeProfile);
+      document.body.style.overflow = "";
+      currentChar = null;
+      currentSeason = "s1";
+      spoilerApproved = false;
+    };
 
-      window.addEventListener("keydown", (e) => {
-        if(e.key === "Escape" && charModal.classList.contains("open")) closeProfile();
-      });
+    // クリックで開く
+    grid.addEventListener("click", (e) => {
+      const card = e.target.closest(".card");
+      if(!card) return;
+      const idx = Number(card.dataset.index);
+      openProfile(characters[idx]);
+    });
 
-      // 下スワイプで閉じる
-      let sy = 0, dragging = false;
-      modalInner.addEventListener("touchstart", (e) => { sy = e.touches[0].clientY; dragging = true; }, {passive:true});
-      modalInner.addEventListener("touchmove", (e) => {
-        if(!dragging) return;
-        const dy = e.touches[0].clientY - sy;
-        if(modalInner.scrollTop === 0 && dy > 80){ closeProfile(); dragging = false; }
-      }, {passive:true});
-      modalInner.addEventListener("touchend", ()=>{ dragging=false; }, {passive:true});
+    // Enterキーでも開ける
+    grid.addEventListener("keydown", (e) => {
+      if(e.key !== "Enter") return;
+      const card = e.target.closest(".card");
+      if(!card) return;
+      const idx = Number(card.dataset.index);
+      openProfile(characters[idx]);
+    });
 
-      // ===== ハンバーガー =====
-      const menu = $("menu");
-      const overlay = $("overlay");
-      const menuBtn = $("menuBtn");
-      const closeBtn = $("closeBtn");
+    // 閉じる（× or 背景タップ）
+    charClose.addEventListener("click", closeProfile);
+    pOverlay.addEventListener("click", closeProfile);
 
-      const openMenu = () => { menu.classList.add("open"); overlay.classList.add("open"); };
-      const closeMenu = () => { menu.classList.remove("open"); overlay.classList.remove("open"); };
+    // ネタバレ確認：背景タップで閉じる＝いいえ扱い
+    spoilerOverlay.addEventListener("click", () => {
+      closeSpoilerConfirm();
+      setActiveTab(currentSeason);
+    });
 
-      menuBtn.addEventListener("click", openMenu);
-      closeBtn.addEventListener("click", closeMenu);
-      overlay.addEventListener("click", closeMenu);
-      menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+    // ESCで閉じる（PC）
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && charModal.classList.contains("open")){
+        closeProfile();
+      }
+    });
 
-      let sx=0, ssy=0, tracking=false;
-      menu.addEventListener("touchstart", e=>{ const t=e.touches[0]; sx=t.clientX; ssy=t.clientY; tracking=true; }, {passive:true});
-      menu.addEventListener("touchmove", e=>{
-        if(!tracking) return;
-        const t=e.touches[0];
-        const dx=t.clientX-sx, dy=t.clientY-ssy;
-        if(Math.abs(dx)>Math.abs(dy)){
-          e.preventDefault();
-          if(dx < -60){ closeMenu(); tracking=false; }
-        }
-      }, {passive:false});
-      menu.addEventListener("touchend", ()=>{ tracking=false; }, {passive:true});
-    })();
+    // 下スワイプで閉じる（スマホ）
+    let sy = 0, dragging = false;
+    modalInner.addEventListener("touchstart", (e) => {
+      sy = e.touches[0].clientY;
+      dragging = true;
+    }, {passive:true});
+
+    modalInner.addEventListener("touchmove", (e) => {
+      if(!dragging) return;
+      const dy = e.touches[0].clientY - sy;
+      if(modalInner.scrollTop === 0 && dy > 80){
+        closeProfile();
+        dragging = false;
+      }
+    }, {passive:true});
+
+    modalInner.addEventListener("touchend", ()=>{ dragging=false; }, {passive:true});
+
+    // ====== 4) ハンバーガーメニュー ======
+    const menu = document.getElementById("menu");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
+
+    const openMenu = () => { menu.classList.add("open"); overlay.classList.add("open"); };
+    const closeMenu = () => { menu.classList.remove("open"); overlay.classList.remove("open"); };
+
+    menuBtn.addEventListener("click", openMenu);
+    closeBtn.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+
+    let sx=0, ssy=0, tracking=false;
+    menu.addEventListener("touchstart", e=>{ const t=e.touches[0]; sx=t.clientX; ssy=t.clientY; tracking=true; }, {passive:true});
+    menu.addEventListener("touchmove", e=>{
+      if(!tracking) return;
+      const t=e.touches[0];
+      const dx=t.clientX-sx, dy=t.clientY-ssy;
+      if(Math.abs(dx)>Math.abs(dy)){
+        e.preventDefault();
+        if(dx < -60){ closeMenu(); tracking=false; }
+      }
+    }, {passive:false});
+    menu.addEventListener("touchend", ()=>{ tracking=false; }, {passive:true});
   </script>
 </body>
 </html>
