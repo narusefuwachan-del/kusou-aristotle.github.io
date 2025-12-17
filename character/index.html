@@ -221,6 +221,17 @@
       .pOverlay{ transition:none; }
       .modal-inner{ transition:none; }
     }
+    /* ===== モーダルの中身を“短くてもスクロール可能”にする ===== */
+.modal-inner{
+  overflow-y: scroll;          /* ← auto じゃなく scroll にするのがポイント */
+  overscroll-behavior: contain;
+}
+
+/* 画像が小さい時でもスクロール余地を作る */
+.modal-body{
+  min-height: 120vh;           /* 好みで 110〜160vh とかに調整OK */
+  padding-bottom: 40vh;        /* 下に余白を作ってスクロールできるようにする */
+}
   </style>
 </head>
 
