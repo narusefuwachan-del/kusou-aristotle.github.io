@@ -1,11 +1,10 @@
 <!doctype html>
 <html lang="ja">
 <head>
+  <link rel="icon" href="/favicon.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Character | Kusou-Aristotle</title>
-
-  <link rel="icon" href="/favicon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +21,7 @@
       overflow-x:hidden;
     }
 
+    /* ===== header ===== */
     .header{
       position: sticky; top:0; z-index:60;
       display:flex; justify-content:space-between; align-items:center;
@@ -32,11 +32,7 @@
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; }
-    .menu-btn{
-      font-size:22px; background:none; border:none; cursor:pointer;
-      color:#fff; padding:8px 10px; border-radius:10px;
-      -webkit-tap-highlight-color: transparent;
-    }
+    .menu-btn{ font-size:22px; background:none; border:none; cursor:pointer; color:#fff; padding:8px 10px; border-radius:10px; }
 
     .box{ max-width:920px; margin:0 auto; padding:18px 16px 56px; }
     h1{ margin:18px 0 10px; font-size:26px; font-weight:700; letter-spacing:.03em; color:#fff; }
@@ -44,10 +40,14 @@
     a{ color:#b7c6ff; text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    /* ===== ハンバーガー用 overlay/menu ===== */
+    /* ===== ハンバーガー overlay/menu ===== */
     .overlay{
-      position:fixed; inset:0; background:rgba(0,0,0,.55);
-      opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:1000;
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease;
+      z-index:1000;
     }
     .overlay.open{ opacity:1; pointer-events:auto; }
 
@@ -68,18 +68,21 @@
     .menu.open{ transform:translateX(0); }
     .menu-top{
       display:flex; justify-content:space-between; align-items:center;
-      padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.14);
-      margin-bottom:8px; color:#fff;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,.14);
+      margin-bottom:8px;
+      color:#fff;
     }
     .menu-title{ font-weight:700; letter-spacing:.06em; }
     .close-btn{
       font-size:20px; background:none; border:none; cursor:pointer;
       padding:8px 10px; border-radius:10px; color:#fff;
-      -webkit-tap-highlight-color: transparent;
     }
     .menu a{
-      display:block; padding:14px 6px; font-weight:700; letter-spacing:.03em;
-      border-bottom:1px solid rgba(255,255,255,.10); color:#fff;
+      display:block; padding:14px 6px;
+      font-weight:700; letter-spacing:.03em;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      color:#fff;
     }
 
     /* ===== キャラ一覧（アイコン） ===== */
@@ -92,7 +95,6 @@
     @media (min-width:700px){
       .grid{ grid-template-columns: repeat(5, 1fr); gap:14px; }
     }
-
     .card{
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
@@ -125,28 +127,38 @@
       text-overflow: ellipsis;
     }
 
-    /* ===== プロフィール画像モーダル ===== */
+    /* ===== プロフィール画像モーダル overlay ===== */
     .pOverlay{
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.72);
       opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s ease;
+      visibility: hidden;
+      transition: opacity .22s ease, visibility 0s linear .22s;
       z-index: 2000;
     }
     .pOverlay.open{
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transition: opacity .22s ease, visibility 0s;
     }
 
+    /* ===== モーダル本体（★pointer-events方式を捨てて安定化） ===== */
     .modal{
       position: fixed;
       inset: 0;
       display: grid;
       place-items: end center;
-      pointer-events: none;
       z-index: 2001;
+
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .22s ease, visibility 0s linear .22s;
+    }
+    .modal.open{
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .22s ease, visibility 0s;
     }
 
     .modal-inner{
@@ -156,16 +168,14 @@
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 18px 18px 0 0;
 
-      overflow-y: scroll;           /* ←短くてもスクロールできる */
-      overscroll-behavior: contain; /* ←変な跳ね防止 */
+      overflow-y: scroll; /* 短くてもスクロールしたいならscroll固定 */
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
 
       transform: translateY(16px);
       opacity: 0;
       transition: transform .22s ease, opacity .22s ease;
-      pointer-events: auto;
     }
-    .modal.open{ pointer-events: auto; }
     .modal.open .modal-inner{
       transform: translateY(0);
       opacity: 1;
@@ -182,13 +192,10 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255,255,255,.10);
-      z-index: 2;
+      z-index: 3;
       color:#fff;
     }
-    .modal-title{
-      font-weight: 700;
-      letter-spacing: .06em;
-    }
+    .modal-title{ font-weight: 700; letter-spacing: .06em; }
     .mclose{
       font-size: 20px;
       background: none;
@@ -197,21 +204,18 @@
       color:#fff;
       padding: 6px 10px;
       border-radius: 10px;
-      -webkit-tap-highlight-color: transparent;
     }
 
     /* ===== 1期/2期/縺偵ｓ縺倥▽ タブ ===== */
     .tabs{
-      position: sticky;
-      top: 52px; /* modal-topの下に追従 */
-      z-index: 1;
       display:flex;
       gap:10px;
       padding: 12px 14px 10px;
+      position: sticky;
+      top: 52px; /* modal-topの高さ分くらい */
       background: rgba(10,10,14,.92);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      z-index: 2;
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
     .tab{
       padding:10px 14px;
@@ -223,23 +227,20 @@
       font-weight:700;
       letter-spacing:.03em;
       cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .12s ease, background .12s ease;
       white-space: nowrap;
     }
-    .tab:active{ transform: scale(.98); }
     .tab.active{
       background: rgba(255,255,255,.14);
       border-color: rgba(255,255,255,.35);
     }
+    .tab.spoiler{
+      color: #ff4b4b; /* 赤文字 */
+      border-color: rgba(255,75,75,.35);
+    }
 
-    /* ★ 縺偵ｓ縺倥▽だけ赤文字 */
-    .tab.spoiler{ color:#ff6a6a; border-color: rgba(255,75,75,.45); }
-    .tab.spoiler.active{ background: rgba(255,75,75,.14); border-color: rgba(255,75,75,.65); }
-
-    /* ===== プロフ画像：フェード切替（transition） ===== */
+    /* ===== 画像本体：フェード切替（transition） ===== */
     .modal-body{
-      min-height: 120vh;     /* スクロール病対策（好みで調整OK） */
+      min-height: 120vh;     /* スクロール病対策 */
       padding-bottom: 40vh;  /* 下余白 */
     }
     .psheet{
@@ -258,25 +259,20 @@
       transform: translateY(0);
     }
 
-    @media (prefers-reduced-motion: reduce){
-      .psheet{ transition:none; opacity:1; transform:none; }
-      .pOverlay{ transition:none; }
-      .modal-inner{ transition:none; }
-    }
-
-    /* ===== ネタバレ確認ダイアログ ===== */
+    /* ===== ネタバレ確認モーダル（縺偵ｓ縺倥▽用） ===== */
     .spoilerOverlay{
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.72);
+      background: rgba(0,0,0,.75);
       opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s ease;
+      visibility: hidden;
+      transition: opacity .22s ease, visibility 0s linear .22s;
       z-index: 3000;
     }
     .spoilerOverlay.open{
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transition: opacity .22s ease, visibility 0s;
     }
 
     .spoilerModal{
@@ -284,67 +280,65 @@
       inset: 0;
       display: grid;
       place-items: center;
-      pointer-events: none;
       z-index: 3001;
+
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .22s ease, visibility 0s linear .22s;
+    }
+    .spoilerModal.open{
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .22s ease, visibility 0s;
     }
 
     .spoilerBox{
-      width: min(92vw, 520px);
-      background: rgba(10,10,14,.94);
+      width: min(92vw, 560px);
+      background: rgba(10,10,14,.96);
       border: 1px solid rgba(255,255,255,.14);
       border-radius: 16px;
-      padding: 16px 16px 14px;
-      color: #fff;
-
-      transform: translateY(10px);
-      opacity: 0;
-      transition: transform .22s ease, opacity .22s ease;
-      pointer-events: auto;
+      padding: 16px 14px;
+      color:#fff;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
     }
-
-    .spoilerModal.open{ pointer-events: auto; }
-    .spoilerModal.open .spoilerBox{
-      transform: translateY(0);
-      opacity: 1;
-    }
-
     .spoilerTitle{
-      font-weight: 700;
-      letter-spacing: .06em;
-      margin-bottom: 8px;
+      font-weight:800;
+      letter-spacing:.04em;
+      margin: 0 0 10px;
     }
-
     .spoilerText{
       margin: 0 0 14px;
       color: rgba(255,255,255,.88);
-      line-height: 1.8;
+      font-size: 14px;
+      line-height: 1.7;
     }
-
     .spoilerBtns{
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
     }
-
-    .spoilerBtn{
+    .btn{
       font-family: inherit;
       font-weight: 700;
-      letter-spacing: .04em;
-      padding: 10px 14px;
+      letter-spacing:.03em;
       border-radius: 12px;
+      padding: 10px 14px;
       border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.06);
       color: #fff;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      cursor:pointer;
+    }
+    .btn.primary{
+      border-color: rgba(255,75,75,.38);
+      background: rgba(255,75,75,.12);
+      color: #ffb3b3;
     }
 
-    .spoilerBtn.yes{
-      border-color: rgba(255,75,75,.65);
-      color: #ff6a6a;
+    @media (prefers-reduced-motion: reduce){
+      .pOverlay, .modal, .modal-inner, .psheet, .spoilerOverlay, .spoilerModal{ transition:none; }
+      .psheet{ opacity:1; transform:none; }
+      .modal-inner{ opacity:1; transform:none; }
     }
-    .spoilerBtn.yes:active{ transform: scale(.98); }
-    .spoilerBtn.no:active{ transform: scale(.98); }
   </style>
 </head>
 
@@ -386,11 +380,11 @@
         <button class="mclose" id="charClose" aria-label="閉じる">✕</button>
       </div>
 
-      <!-- ✅ タブ領域（JSで必要なら縺偵ｓ縺倥▽を出す） -->
-      <div class="tabs" id="tabs" role="tablist" aria-label="期の切り替え">
+      <!-- ✅ タブ（JSで必要な時だけ3つ目を出す） -->
+      <div class="tabs" role="tablist" aria-label="期の切り替え">
         <button type="button" class="tab active" data-season="s1" role="tab" aria-selected="true">1期</button>
         <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
-        <!-- s3はJSで必要なキャラの時だけ追加 -->
+        <button type="button" class="tab spoiler" id="tabSpoiler" data-season="sp" role="tab" aria-selected="false" style="display:none;">縺偵ｓ縺倥▽</button>
       </div>
 
       <div class="modal-body" id="modalBody">
@@ -399,46 +393,54 @@
     </div>
   </section>
 
-  <!-- ===== ネタバレ確認ダイアログ ===== -->
+  <!-- ===== ネタバレ確認（縺偵ｓ縺倥▽用） ===== -->
   <div id="spoilerOverlay" class="spoilerOverlay" aria-hidden="true"></div>
-
   <section id="spoilerModal" class="spoilerModal" aria-hidden="true">
-    <div class="spoilerBox" role="dialog" aria-modal="true" aria-labelledby="spoilerTitle">
-      <div id="spoilerTitle" class="spoilerTitle">確認</div>
+    <div class="spoilerBox" role="dialog" aria-modal="true" aria-label="ネタバレ確認">
+      <h2 class="spoilerTitle">確認</h2>
       <p class="spoilerText">空想世界アリストテレス1期のネタバレを含む内容ですが、よろしいですか？</p>
       <div class="spoilerBtns">
-        <button type="button" id="spoilerYes" class="spoilerBtn yes">はい</button>
-        <button type="button" id="spoilerNo" class="spoilerBtn no">いいえ</button>
+        <button type="button" class="btn" id="spoilerNo">いいえ</button>
+        <button type="button" class="btn primary" id="spoilerYes">はい</button>
       </div>
     </div>
   </section>
 
   <script>
     // ====== 1) キャラデータ ======
-    // icon: 一覧アイコン
-    // sheetS1 / sheetS2: 1期/2期
-    // sheetS3: 「縺偵ｓ縺倥▽」（必要キャラだけ入れる）
+    // spoilerOnly: true のキャラだけ「縺偵ｓ縺倥▽」タブを出す
     const characters = [
       { id:"sui",    name:"翠",     icon:"/images/characters/sui_icon.png",    sheetS1:"/images/characters/sui_sheet_s1.png",    sheetS2:"/images/characters/sui_sheet_s2.png" },
+
       { id:"rei",    name:"零",     icon:"/images/characters/rei_icon.png",    sheetS1:"/images/characters/rei_sheet_s1.png",    sheetS2:"/images/characters/rei_sheet_s2.png" },
+
       { id:"kiire",  name:"季依恋", icon:"/images/characters/kiire_icon.png",  sheetS1:"/images/characters/kiire_sheet_s1.png",  sheetS2:"/images/characters/kiire_sheet_s2.png" },
+
       { id:"hari",   name:"羽璃",   icon:"/images/characters/hari_icon.png",   sheetS1:"/images/characters/hari_sheet_s1.png",   sheetS2:"/images/characters/hari_sheet_s2.png" },
+
       { id:"yuugi",  name:"夕霧",   icon:"/images/characters/yuugi_icon.png",  sheetS1:"/images/characters/yuugi_sheet_s1.png",  sheetS2:"/images/characters/yuugi_sheet_s2.png" },
+
       { id:"reine",  name:"零音",   icon:"/images/characters/reine_icon.png",  sheetS1:"/images/characters/reine_sheet_s1.png",  sheetS2:"/images/characters/reine_sheet_s2.png" },
+
       { id:"yuri",   name:"結莉",   icon:"/images/characters/yuri_icon.png",   sheetS1:"/images/characters/yuri_sheet_s1.png",   sheetS2:"/images/characters/yuri_sheet_s2.png" },
+
       { id:"yume",   name:"優芽",   icon:"/images/characters/yume_icon.png",   sheetS1:"/images/characters/yume_sheet_s1.png",   sheetS2:"/images/characters/yume_sheet_s2.png" },
+
       { id:"reto",   name:"怜冬",   icon:"/images/characters/reto_icon.png",   sheetS1:"/images/characters/reto_sheet_s1.png",   sheetS2:"/images/characters/reto_sheet_s2.png" },
+
       { id:"hana",   name:"白花",   icon:"/images/characters/hana_icon.png",   sheetS1:"/images/characters/hana_sheet_s1.png",   sheetS2:"/images/characters/hana_sheet_s2.png" },
 
-      // ★ s3を出したい3人：akiha / nemuru / yukina
-      { id:"yukina", name:"雪那",   icon:"/images/characters/yukina_icon.png", sheetS1:"/images/characters/yukina_sheet_s1.png", sheetS2:"/images/characters/yukina_sheet_s2.png", sheetS3:"/images/characters/yukina_sheet_s3.png" },
-      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png", sheetS1:"/images/characters/nemuru_sheet_s1.png", sheetS2:"/images/characters/nemuru_sheet_s2.png", sheetS3:"/images/characters/nemuru_sheet_s3.png" },
-      { id:"akiha",  name:"あきは", icon:"/images/characters/akiha_icon.png",  sheetS1:"/images/characters/akiha_sheet_s1.png",  sheetS2:"/images/characters/akiha_sheet_s2.png",  sheetS3:"/images/characters/akiha_sheet_s3.png" },
+      // ▼「縺偵ｓ縺倥▽」を出したい3人
+      { id:"yukina", name:"雪那",   icon:"/images/characters/yukina_icon.png", sheetS1:"/images/characters/yukina_sheet_s1.png", sheetS2:"/images/characters/yukina_sheet_s2.png", sheetSP:"/images/characters/yukina_sheet_sp.png", spoilerOnly:true },
+
+      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png", sheetS1:"/images/characters/nemuru_sheet_s1.png", sheetS2:"/images/characters/nemuru_sheet_s2.png", sheetSP:"/images/characters/nemuru_sheet_sp.png", spoilerOnly:true },
+
+      { id:"akiha",  name:"あきは", icon:"/images/characters/akiha_icon.png",  sheetS1:"/images/characters/akiha_sheet_s1.png",  sheetS2:"/images/characters/akiha_sheet_s2.png",  sheetSP:"/images/characters/akiha_sheet_sp.png",  spoilerOnly:true },
 
       { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png", sheetS1:"/images/characters/anjela_sheet_s1.png", sheetS2:"/images/characters/anjela_sheet_s2.png" },
     ];
 
-    // ====== 2) アイコン一覧を生成 ======
+    // ====== 2) 一覧生成 ======
     const grid = document.getElementById("grid");
     grid.innerHTML = characters.map((c, i) => `
       <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${c.name}のプロフィールを開く">
@@ -447,123 +449,77 @@
       </div>
     `).join("");
 
-    // ====== 3) プロフィールモーダル制御 ======
-    const pOverlay   = document.getElementById("pOverlay");
-    const charModal  = document.getElementById("charModal");
+    // ====== 3) プロフモーダル制御 ======
+    const pOverlay = document.getElementById("pOverlay");
+    const charModal = document.getElementById("charModal");
     const modalInner = document.getElementById("modalInner");
-    const psheet     = document.getElementById("psheet");
-    const ptitle     = document.getElementById("ptitle");
-    const charClose  = document.getElementById("charClose");
+    const psheet = document.getElementById("psheet");
+    const ptitle = document.getElementById("ptitle");
+    const charClose = document.getElementById("charClose");
 
-    const tabsWrap = document.getElementById("tabs");
+    const tabSpoiler = document.getElementById("tabSpoiler");
+    const tabs = Array.from(document.querySelectorAll(".tab"));
 
     // ネタバレ確認
     const spoilerOverlay = document.getElementById("spoilerOverlay");
-    const spoilerModal   = document.getElementById("spoilerModal");
-    const spoilerYes     = document.getElementById("spoilerYes");
-    const spoilerNo      = document.getElementById("spoilerNo");
+    const spoilerModal = document.getElementById("spoilerModal");
+    const spoilerYes = document.getElementById("spoilerYes");
+    const spoilerNo = document.getElementById("spoilerNo");
 
     let currentChar = null;
     let currentSeason = "s1";
-    let spoilerApproved = false; // キャラを開くたびにリセット
-
-    const openSpoilerConfirm = () => {
-      spoilerOverlay.classList.add("open");
-      spoilerModal.classList.add("open");
-      spoilerOverlay.setAttribute("aria-hidden","false");
-      spoilerModal.setAttribute("aria-hidden","false");
-    };
-    const closeSpoilerConfirm = () => {
-      spoilerModal.classList.remove("open");
-      spoilerOverlay.classList.remove("open");
-      spoilerOverlay.setAttribute("aria-hidden","true");
-      spoilerModal.setAttribute("aria-hidden","true");
-    };
-
-    const rebuildTabs = () => {
-      // 1期/2期は固定、s3は必要なキャラだけ出す
-      const hasS3 = !!(currentChar && currentChar.sheetS3);
-
-      tabsWrap.innerHTML = `
-        <button type="button" class="tab" data-season="s1" role="tab" aria-selected="false">1期</button>
-        <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
-        ${hasS3 ? `<button type="button" class="tab spoiler" data-season="s3" role="tab" aria-selected="false">縺偵ｓ縺倥▽</button>` : ``}
-      `;
-
-      // クリックイベントを付け直す
-      tabsWrap.querySelectorAll(".tab").forEach(btn=>{
-        btn.addEventListener("click", ()=> setSheet(btn.dataset.season));
-      });
-    };
+    let pendingSeason = null;
 
     const setActiveTab = (season) => {
-      tabsWrap.querySelectorAll(".tab").forEach(t => {
+      tabs.forEach(t => {
+        if (t.style.display === "none") return;
         const on = (t.dataset.season === season);
         t.classList.toggle("active", on);
         t.setAttribute("aria-selected", on ? "true" : "false");
       });
     };
 
+    const fadeToSrc = (src, alt) => {
+      psheet.classList.remove("show");
+      psheet.alt = alt || "";
+
+      setTimeout(() => {
+        psheet.src = src;
+
+        psheet.onload = () => {
+          psheet.classList.add("show");
+        };
+        // キャッシュ保険
+        setTimeout(() => psheet.classList.add("show"), 220);
+      }, 20);
+    };
+
     const setSheet = (season) => {
       if(!currentChar) return;
 
-      // ★ s3 はネタバレ確認が必要
-      if (season === "s3") {
-        // そもそもs3無いキャラなら無視
-        if (!currentChar.sheetS3) return;
-
-        // まだ許可してないなら確認を出す
-        if (!spoilerApproved) {
-          openSpoilerConfirm();
-
-          spoilerNo.onclick = () => {
-            closeSpoilerConfirm();
-            // 元のタブに戻す（今回は「1期に戻す」）
-            setActiveTab(currentSeason);
-          };
-
-          spoilerYes.onclick = () => {
-            spoilerApproved = true;
-            closeSpoilerConfirm();
-            setSheet("s3"); // もう一回（今度は通る）
-          };
-
-          return; // ←確認が終わるまで止める
-        }
+      // spoilerタブを押した場合は確認
+      if(season === "sp"){
+        openSpoilerConfirm();
+        return;
       }
 
       currentSeason = season;
       setActiveTab(season);
 
-      psheet.classList.remove("show");
-
-      let nextSrc = currentChar.sheetS1;
-      if (season === "s2") nextSrc = currentChar.sheetS2;
-      if (season === "s3") nextSrc = currentChar.sheetS3;
-
-      psheet.alt = currentChar.name + " " + (season === "s1" ? "1期" : season === "s2" ? "2期" : "縺偵ｓ縺倥▽");
-
-      setTimeout(() => {
-        psheet.src = nextSrc;
-
-        psheet.onload = () => {
-          psheet.classList.add("show");
-        };
-
-        // キャッシュでonloadが飛ばない保険
-        setTimeout(() => psheet.classList.add("show"), 220);
-      }, 20);
+      const nextSrc = (season === "s2") ? currentChar.sheetS2 : currentChar.sheetS1;
+      fadeToSrc(nextSrc, currentChar.name + (season === "s2" ? " 2期プロフィール" : " 1期プロフィール"));
     };
 
     const openProfile = (c) => {
       currentChar = c;
-      currentSeason = "s1";
-      spoilerApproved = false; // キャラを開くたびに毎回確認
-
       ptitle.textContent = c.name;
 
-      // タブ作り直し（必要ならs3追加）
-      rebuildTabs();
+      // 3タブ目の表示/非表示（雪那/ねむる/あきはだけ）
+      if(c.spoilerOnly){
+        tabSpoiler.style.display = "inline-flex";
+      }else{
+        tabSpoiler.style.display = "none";
+      }
 
       pOverlay.classList.add("open");
       charModal.classList.add("open");
@@ -573,7 +529,10 @@
       document.body.style.overflow = "hidden";
       modalInner.scrollTop = 0;
 
-      setSheet("s1"); // 初期は1期
+      // 初期は1期
+      currentSeason = "s1";
+      setActiveTab("s1");
+      fadeToSrc(c.sheetS1, c.name + " 1期プロフィール");
     };
 
     const closeProfile = () => {
@@ -582,45 +541,45 @@
       pOverlay.setAttribute("aria-hidden","true");
       charModal.setAttribute("aria-hidden","true");
 
-      closeSpoilerConfirm();
+      closeSpoilerConfirm(true);
 
       psheet.classList.remove("show");
       psheet.src = "";
-
       document.body.style.overflow = "";
       currentChar = null;
       currentSeason = "s1";
-      spoilerApproved = false;
+      pendingSeason = null;
+      setActiveTab("s1");
+      tabSpoiler.style.display = "none";
     };
 
-    // クリックで開く
-    grid.addEventListener("click", (e) => {
+    // 一覧クリック/Enter
+    const openFromEvent = (e) => {
       const card = e.target.closest(".card");
       if(!card) return;
       const idx = Number(card.dataset.index);
       openProfile(characters[idx]);
-    });
+    };
 
-    // Enterキーでも開ける
+    grid.addEventListener("click", openFromEvent);
     grid.addEventListener("keydown", (e) => {
       if(e.key !== "Enter") return;
-      const card = e.target.closest(".card");
-      if(!card) return;
-      const idx = Number(card.dataset.index);
-      openProfile(characters[idx]);
+      openFromEvent(e);
     });
 
-    // 閉じる（× or 背景タップ）
+    // タブ切替
+    tabs.forEach(t => {
+      t.addEventListener("click", () => {
+        if(t.style.display === "none") return;
+        setSheet(t.dataset.season);
+      });
+    });
+
+    // 背景タップで閉じる（要望）
     charClose.addEventListener("click", closeProfile);
     pOverlay.addEventListener("click", closeProfile);
 
-    // ネタバレ確認：背景タップで閉じる＝いいえ扱い
-    spoilerOverlay.addEventListener("click", () => {
-      closeSpoilerConfirm();
-      setActiveTab(currentSeason);
-    });
-
-    // ESCで閉じる（PC）
+    // ESCで閉じる
     window.addEventListener("keydown", (e) => {
       if(e.key === "Escape" && charModal.classList.contains("open")){
         closeProfile();
@@ -644,6 +603,44 @@
     }, {passive:true});
 
     modalInner.addEventListener("touchend", ()=>{ dragging=false; }, {passive:true});
+
+    // ===== ネタバレ確認 =====
+    const openSpoilerConfirm = () => {
+      if(!currentChar || !currentChar.spoilerOnly) return;
+
+      pendingSeason = "sp";
+      spoilerOverlay.classList.add("open");
+      spoilerModal.classList.add("open");
+      spoilerOverlay.setAttribute("aria-hidden","false");
+      spoilerModal.setAttribute("aria-hidden","false");
+    };
+
+    const closeSpoilerConfirm = (silent=false) => {
+      spoilerModal.classList.remove("open");
+      spoilerOverlay.classList.remove("open");
+      spoilerOverlay.setAttribute("aria-hidden","true");
+      spoilerModal.setAttribute("aria-hidden","true");
+      if(!silent) pendingSeason = null;
+    };
+
+    spoilerNo.addEventListener("click", () => {
+      closeSpoilerConfirm();
+      // 元のタブへ戻す（表示してたやつ）
+      setActiveTab(currentSeason);
+    });
+    spoilerOverlay.addEventListener("click", () => {
+      closeSpoilerConfirm();
+      setActiveTab(currentSeason);
+    });
+
+    spoilerYes.addEventListener("click", () => {
+      closeSpoilerConfirm();
+
+      // spoiler画像に切り替え
+      currentSeason = "sp";
+      setActiveTab("sp");
+      fadeToSrc(currentChar.sheetSP, currentChar.name + " 縺偵ｓ縺倥▽");
+    });
 
     // ====== 4) ハンバーガーメニュー ======
     const menu = document.getElementById("menu");
