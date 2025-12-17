@@ -143,7 +143,7 @@
       transition: opacity .22s ease, visibility 0s;
     }
 
-    /* ===== モーダル本体（★pointer-events方式を捨てて安定化） ===== */
+    /* ===== モーダル本体 ===== */
     .modal{
       position: fixed;
       inset: 0;
@@ -168,7 +168,7 @@
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 18px 18px 0 0;
 
-      overflow-y: scroll; /* 短くてもスクロールしたいならscroll固定 */
+      overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
 
@@ -212,7 +212,7 @@
       gap:10px;
       padding: 12px 14px 10px;
       position: sticky;
-      top: 52px; /* modal-topの高さ分くらい */
+      top: 52px;
       background: rgba(10,10,14,.92);
       z-index: 2;
       border-bottom: 1px solid rgba(255,255,255,.06);
@@ -234,15 +234,42 @@
       border-color: rgba(255,255,255,.35);
     }
     .tab.spoiler{
-      color: #ff4b4b; /* 赤文字 */
+      color: #ff4b4b;
       border-color: rgba(255,75,75,.35);
     }
 
-    /* ===== 画像本体：フェード切替（transition） ===== */
+    /* ===== 画像本体（フェード） ===== */
     .modal-body{
-      min-height: 120vh;     /* スクロール病対策 */
-      padding-bottom: 40vh;  /* 下余白 */
+      min-height: 120vh;
+      padding-bottom: 40vh;
     }
+
+    /* ★2期：立ち絵枠 */
+    .stand-wrap{
+      padding: 14px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.02);
+      display:none;
+    }
+    .stand-wrap.show{ display:block; }
+
+    .pstand{
+      width: 100%;
+      max-height: 66vh;
+      object-fit: contain;
+      display:block;
+      background: rgba(255,255,255,.04);
+
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .28s ease, transform .28s ease;
+    }
+    .pstand.show{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .psheet{
       width: 100%;
       height: auto;
@@ -259,7 +286,7 @@
       transform: translateY(0);
     }
 
-    /* ===== ネタバレ確認モーダル（縺偵ｓ縺倥▽用） ===== */
+    /* ===== ネタバレ確認モーダル ===== */
     .spoilerOverlay{
       position: fixed;
       inset: 0;
@@ -335,8 +362,8 @@
     }
 
     @media (prefers-reduced-motion: reduce){
-      .pOverlay, .modal, .modal-inner, .psheet, .spoilerOverlay, .spoilerModal{ transition:none; }
-      .psheet{ opacity:1; transform:none; }
+      .pOverlay, .modal, .modal-inner, .psheet, .pstand, .spoilerOverlay, .spoilerModal{ transition:none; }
+      .psheet, .pstand{ opacity:1; transform:none; }
       .modal-inner{ opacity:1; transform:none; }
     }
   </style>
@@ -352,11 +379,9 @@
     <h1>Character</h1>
     <p>キャラクター一覧</p>
 
-    <!-- ✅ キャラのアイコン一覧 -->
     <div id="grid" class="grid" aria-label="キャラクター一覧"></div>
   </div>
 
-  <!-- ===== ハンバーガーのoverlay ===== -->
   <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <nav id="menu" class="menu" aria-hidden="true">
@@ -380,7 +405,6 @@
         <button class="mclose" id="charClose" aria-label="閉じる">✕</button>
       </div>
 
-      <!-- ✅ タブ（JSで必要な時だけ3つ目を出す） -->
       <div class="tabs" role="tablist" aria-label="期の切り替え">
         <button type="button" class="tab active" data-season="s1" role="tab" aria-selected="true">1期</button>
         <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
@@ -388,6 +412,12 @@
       </div>
 
       <div class="modal-body" id="modalBody">
+        <!-- ★2期だけ出す立ち絵 -->
+        <div class="stand-wrap" id="standWrap">
+          <img id="pstand" class="pstand" src="" alt="">
+        </div>
+
+        <!-- 1期/2期/ネタバレ 共通：プロフィール -->
         <img id="psheet" class="psheet" src="" alt="">
       </div>
     </div>
@@ -408,36 +438,51 @@
 
   <script>
     // ====== 1) キャラデータ ======
-    // spoilerOnly: true のキャラだけ「縺偵ｓ縺倥▽」タブを出す
+    // ★2期を分割したいキャラだけ stand を入れる（stand_S2等は不要）
     const characters = [
-      { id:"sui",    name:"翠",     icon:"/images/characters/sui_icon.png",    sheetS1:"/images/characters/sui_sheet_s1.png",    sheetS2:"/images/characters/sui_sheet_s2.png" },
+      {
+        id:"sui", name:"翠",
+        icon:"/images/characters/sui_icon.png",
+        sheetS1:"/images/characters/sui_sheet_s1.png",
 
-      { id:"rei",    name:"零",     icon:"/images/characters/rei_icon.png",    sheetS1:"/images/characters/rei_sheet_s1.png",    sheetS2:"/images/characters/rei_sheet_s2.png" },
+        // 2期：立ち絵 + プロフィール（分割）
+        stand:"/images/characters/sui_stand.png",
+        sheetS2:"/images/characters/sui_profile.png",
+      },
 
-      { id:"kiire",  name:"季依恋", icon:"/images/characters/kiire_icon.png",  sheetS1:"/images/characters/kiire_sheet_s1.png",  sheetS2:"/images/characters/kiire_sheet_s2.png" },
+      { id:"rei",   name:"零",     icon:"/images/characters/rei_icon.png",   sheetS1:"/images/characters/rei_sheet_s1.png",   sheetS2:"/images/characters/rei_sheet_s2.png" },
+      { id:"kiire", name:"季依恋", icon:"/images/characters/kiire_icon.png", sheetS1:"/images/characters/kiire_sheet_s1.png", sheetS2:"/images/characters/kiire_sheet_s2.png" },
+      { id:"hari",  name:"羽璃",   icon:"/images/characters/hari_icon.png",  sheetS1:"/images/characters/hari_sheet_s1.png",  sheetS2:"/images/characters/hari_sheet_s2.png" },
+      { id:"yuugi", name:"夕霧",   icon:"/images/characters/yuugi_icon.png", sheetS1:"/images/characters/yuugi_sheet_s1.png", sheetS2:"/images/characters/yuugi_sheet_s2.png" },
+      { id:"reine", name:"零音",   icon:"/images/characters/reine_icon.png", sheetS1:"/images/characters/reine_sheet_s1.png", sheetS2:"/images/characters/reine_sheet_s2.png" },
+      { id:"yuri",  name:"結莉",   icon:"/images/characters/yuri_icon.png",  sheetS1:"/images/characters/yuri_sheet_s1.png",  sheetS2:"/images/characters/yuri_sheet_s2.png" },
+      { id:"yume",  name:"優芽",   icon:"/images/characters/yume_icon.png",  sheetS1:"/images/characters/yume_sheet_s1.png",  sheetS2:"/images/characters/yume_sheet_s2.png" },
+      { id:"reto",  name:"怜冬",   icon:"/images/characters/reto_icon.png",  sheetS1:"/images/characters/reto_sheet_s1.png",  sheetS2:"/images/characters/reto_sheet_s2.png" },
+      { id:"hana",  name:"白花",   icon:"/images/characters/hana_icon.png",  sheetS1:"/images/characters/hana_sheet_s1.png",  sheetS2:"/images/characters/hana_sheet_s2.png" },
 
-      { id:"hari",   name:"羽璃",   icon:"/images/characters/hari_icon.png",   sheetS1:"/images/characters/hari_sheet_s1.png",   sheetS2:"/images/characters/hari_sheet_s2.png" },
+      { id:"yukina", name:"雪那", icon:"/images/characters/yukina_icon.png",
+        sheetS1:"/images/characters/yukina_sheet_s1.png",
+        sheetS2:"/images/characters/yukina_sheet_s2.png",
+        sheetSP:"/images/characters/yukina_sheet_sp.png",
+        spoilerOnly:true
+      },
+      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png",
+        sheetS1:"/images/characters/nemuru_sheet_s1.png",
+        sheetS2:"/images/characters/nemuru_sheet_s2.png",
+        sheetSP:"/images/characters/nemuru_sheet_sp.png",
+        spoilerOnly:true
+      },
+      { id:"akiha", name:"あきは", icon:"/images/characters/akiha_icon.png",
+        sheetS1:"/images/characters/akiha_sheet_s1.png",
+        sheetS2:"/images/characters/akiha_sheet_s2.png",
+        sheetSP:"/images/characters/akiha_sheet_sp.png",
+        spoilerOnly:true
+      },
 
-      { id:"yuugi",  name:"夕霧",   icon:"/images/characters/yuugi_icon.png",  sheetS1:"/images/characters/yuugi_sheet_s1.png",  sheetS2:"/images/characters/yuugi_sheet_s2.png" },
-
-      { id:"reine",  name:"零音",   icon:"/images/characters/reine_icon.png",  sheetS1:"/images/characters/reine_sheet_s1.png",  sheetS2:"/images/characters/reine_sheet_s2.png" },
-
-      { id:"yuri",   name:"結莉",   icon:"/images/characters/yuri_icon.png",   sheetS1:"/images/characters/yuri_sheet_s1.png",   sheetS2:"/images/characters/yuri_sheet_s2.png" },
-
-      { id:"yume",   name:"優芽",   icon:"/images/characters/yume_icon.png",   sheetS1:"/images/characters/yume_sheet_s1.png",   sheetS2:"/images/characters/yume_sheet_s2.png" },
-
-      { id:"reto",   name:"怜冬",   icon:"/images/characters/reto_icon.png",   sheetS1:"/images/characters/reto_sheet_s1.png",   sheetS2:"/images/characters/reto_sheet_s2.png" },
-
-      { id:"hana",   name:"白花",   icon:"/images/characters/hana_icon.png",   sheetS1:"/images/characters/hana_sheet_s1.png",   sheetS2:"/images/characters/hana_sheet_s2.png" },
-
-      // ▼「縺偵ｓ縺倥▽」を出したい3人
-      { id:"yukina", name:"雪那",   icon:"/images/characters/yukina_icon.png", sheetS1:"/images/characters/yukina_sheet_s1.png", sheetS2:"/images/characters/yukina_sheet_s2.png", sheetSP:"/images/characters/yukina_sheet_sp.png", spoilerOnly:true },
-
-      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png", sheetS1:"/images/characters/nemuru_sheet_s1.png", sheetS2:"/images/characters/nemuru_sheet_s2.png", sheetSP:"/images/characters/nemuru_sheet_sp.png", spoilerOnly:true },
-
-      { id:"akiha",  name:"あきは", icon:"/images/characters/akiha_icon.png",  sheetS1:"/images/characters/akiha_sheet_s1.png",  sheetS2:"/images/characters/akiha_sheet_s2.png",  sheetSP:"/images/characters/akiha_sheet_sp.png",  spoilerOnly:true },
-
-      { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png", sheetS1:"/images/characters/anjela_sheet_s1.png", sheetS2:"/images/characters/anjela_sheet_s2.png" },
+      { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png",
+        sheetS1:"/images/characters/anjela_sheet_s1.png",
+        sheetS2:"/images/characters/anjela_sheet_s2.png"
+      },
     ];
 
     // ====== 2) 一覧生成 ======
@@ -456,6 +501,10 @@
     const psheet = document.getElementById("psheet");
     const ptitle = document.getElementById("ptitle");
     const charClose = document.getElementById("charClose");
+
+    // ★追加：2期立ち絵
+    const standWrap = document.getElementById("standWrap");
+    const pstand = document.getElementById("pstand");
 
     const tabSpoiler = document.getElementById("tabSpoiler");
     const tabs = Array.from(document.querySelectorAll(".tab"));
@@ -479,19 +528,24 @@
       });
     };
 
-    const fadeToSrc = (src, alt) => {
-      psheet.classList.remove("show");
-      psheet.alt = alt || "";
+    // ★汎用フェード（どのimgにも使える）
+    const fadeImgTo = (imgEl, src, alt) => {
+      imgEl.classList.remove("show");
+      imgEl.alt = alt || "";
 
       setTimeout(() => {
-        psheet.src = src;
-
-        psheet.onload = () => {
-          psheet.classList.add("show");
-        };
-        // キャッシュ保険
-        setTimeout(() => psheet.classList.add("show"), 220);
+        imgEl.src = src || "";
+        imgEl.onload = () => imgEl.classList.add("show");
+        setTimeout(() => imgEl.classList.add("show"), 220); // キャッシュ保険
       }, 20);
+    };
+
+    // ★表示リセット（季節切替時に毎回整える）
+    const resetStand = () => {
+      standWrap.classList.remove("show");
+      pstand.classList.remove("show");
+      pstand.src = "";
+      pstand.alt = "";
     };
 
     const setSheet = (season) => {
@@ -506,8 +560,24 @@
       currentSeason = season;
       setActiveTab(season);
 
-      const nextSrc = (season === "s2") ? currentChar.sheetS2 : currentChar.sheetS1;
-      fadeToSrc(nextSrc, currentChar.name + (season === "s2" ? " 2期プロフィール" : " 1期プロフィール"));
+      // ★まず立ち絵を隠す（1期/ネタバレは不要）
+      resetStand();
+
+      if(season === "s2"){
+        // 2期：stand があるキャラだけ「立ち絵＋プロフィール」2枚表示
+        if(currentChar.stand){
+          standWrap.classList.add("show");
+          fadeImgTo(pstand, currentChar.stand, currentChar.name + " 2期 立ち絵");
+        }
+
+        // 2期プロフィール（必須）
+        const profSrc = currentChar.sheetS2 || currentChar.sheetS1;
+        fadeImgTo(psheet, profSrc, currentChar.name + " 2期プロフィール");
+        return;
+      }
+
+      // 1期（従来通り）
+      fadeImgTo(psheet, currentChar.sheetS1, currentChar.name + " 1期プロフィール");
     };
 
     const openProfile = (c) => {
@@ -531,8 +601,15 @@
 
       // 初期は1期
       currentSeason = "s1";
-      setActiveTab("s1");
-      fadeToSrc(c.sheetS1, c.name + " 1期プロフィール");
+      setSheet("s1");
+    };
+
+    const closeSpoilerConfirm = (silent=false) => {
+      spoilerModal.classList.remove("open");
+      spoilerOverlay.classList.remove("open");
+      spoilerOverlay.setAttribute("aria-hidden","true");
+      spoilerModal.setAttribute("aria-hidden","true");
+      if(!silent) pendingSeason = null;
     };
 
     const closeProfile = () => {
@@ -545,6 +622,8 @@
 
       psheet.classList.remove("show");
       psheet.src = "";
+      resetStand();
+
       document.body.style.overflow = "";
       currentChar = null;
       currentSeason = "s1";
@@ -575,7 +654,7 @@
       });
     });
 
-    // 背景タップで閉じる（要望）
+    // 背景タップで閉じる
     charClose.addEventListener("click", closeProfile);
     pOverlay.addEventListener("click", closeProfile);
 
@@ -615,17 +694,8 @@
       spoilerModal.setAttribute("aria-hidden","false");
     };
 
-    const closeSpoilerConfirm = (silent=false) => {
-      spoilerModal.classList.remove("open");
-      spoilerOverlay.classList.remove("open");
-      spoilerOverlay.setAttribute("aria-hidden","true");
-      spoilerModal.setAttribute("aria-hidden","true");
-      if(!silent) pendingSeason = null;
-    };
-
     spoilerNo.addEventListener("click", () => {
       closeSpoilerConfirm();
-      // 元のタブへ戻す（表示してたやつ）
       setActiveTab(currentSeason);
     });
     spoilerOverlay.addEventListener("click", () => {
@@ -636,10 +706,11 @@
     spoilerYes.addEventListener("click", () => {
       closeSpoilerConfirm();
 
-      // spoiler画像に切り替え
+      // spoiler画像に切り替え（spoilerは2枚にはしない）
+      resetStand();
       currentSeason = "sp";
       setActiveTab("sp");
-      fadeToSrc(currentChar.sheetSP, currentChar.name + " 縺偵ｓ縺倥▽");
+      fadeImgTo(psheet, currentChar.sheetSP, currentChar.name + " 縺偵ｓ縺倥▽");
     });
 
     // ====== 4) ハンバーガーメニュー ======
