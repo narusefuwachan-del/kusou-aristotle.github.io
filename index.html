@@ -474,50 +474,51 @@
       }
     });
 
-    // ===== splash → hero（確実に鳥居を動かす） =====
-    window.addEventListener("load", () => {
-      const splash = document.getElementById("splash");
-      const hero = document.getElementById("hero");
+    // ===== splash → hero（「見える瞬間に」鳥居が動き出す版） =====
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  const hero = document.getElementById("hero");
+  if (!hero) return;
 
-      if (!hero) return;
+  // まず初期化（必須）
+  hero.classList.remove("play");
 
-      // いったん初期化（更新時のキャッシュ対策）
-      hero.classList.remove("play");
+  // ★強制リフロー：これがあると transition がコケにくい
+  void hero.offsetWidth;
 
-      // splashロゴ出す
-      if (splash) requestAnimationFrame(() => splash.classList.add("show"));
+  // splash を表示状態へ
+  if (splash) requestAnimationFrame(() => splash.classList.add("show"));
 
-      // ★「レイアウト確定後」にplayを付ける（ここが効く）
-      const firePlay = () => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            hero.classList.add("play");
-          });
-        });
-      };
+  const HOLD = 1200;      // ロゴを見せる時間
+  const FADE = 700;       // splash の opacity 遷移時間
 
-      // 1200ms後に発火（画像が遅くても止まらない）
-      setTimeout(() => {
-        firePlay();
+  setTimeout(() => {
+    // 1) 先に splash をフェードアウト開始（白が薄くなる＝下が見え始める）
+    if (splash) splash.classList.add("hide");
 
-        if (splash){
-          splash.classList.add("hide");
-          splash.classList.remove("show");
-          setTimeout(() => splash.remove(), 750);
-        }
-      }, 1200);
-
-      // さらに保険：2.8秒後にもう一回playを付け直す（環境差吸収）
-      setTimeout(() => {
-        hero.classList.add("play");
-      }, 2800);
-
-      // 何があってもスプラッシュは消す
-      setTimeout(() => {
-        const s = document.getElementById("splash");
-        if (s) s.remove();
-      }, 3000);
+    // 2) 「フェード開始直後」に hero を動かす（見える瞬間に動いてる）
+    requestAnimationFrame(() => {
+      // もう一発リフロー保険
+      void hero.offsetWidth;
+      hero.classList.add("play");
     });
+
+    // 3) 終わったら splash 消す
+    if (splash) setTimeout(() => splash.remove(), FADE + 80);
+  }, HOLD);
+
+  // 保険：残ったら消す
+  setTimeout(() => {
+    const s = document.getElementById("splash");
+    if (s) s.remove();
+  }, 3200);
+
+  // デバッグ用：画面タップでアニメ再生（確認が超ラク）
+  hero.addEventListener("click", () => {
+    hero.classList.remove("play");
+    void hero.offsetWidth;
+    requestAnimationFrame(() => hero.classList.add("play"));
+  });
   </script>
 </body>
 </html>
