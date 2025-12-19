@@ -411,95 +411,119 @@
   </footer>
 
   <script>
-    // ===== SHARE（X / LINE） =====
-    (() => {
-      const url = encodeURIComponent(location.href);
-      const title = encodeURIComponent(document.title);
-      const shareX = document.getElementById("shareX");
-      const shareLINE = document.getElementById("shareLINE");
-      if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
-      if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
-    })();
+  // ===== SHARE（X / LINE） =====
+  (() => {
+    const url = encodeURIComponent(location.href);
+    const title = encodeURIComponent(document.title);
+    const shareX = document.getElementById("shareX");
+    const shareLINE = document.getElementById("shareLINE");
+    if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
+    if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+  })();
 
-    // ===== menu =====
-    const menu = document.getElementById("menu");
-    const overlay = document.getElementById("overlay");
-    const menuBtn = document.getElementById("menuBtn");
-    const closeBtn = document.getElementById("closeBtn");
+  // ===== menu =====
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+  const menuBtn = document.getElementById("menuBtn");
+  const closeBtn = document.getElementById("closeBtn");
 
-    const openMenu = () => {
-      menu.classList.add("open");
-      overlay.classList.add("open");
-      menu.setAttribute("aria-hidden","false");
-    };
-    const closeMenu = () => {
-      menu.classList.remove("open");
-      overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden","true");
-    };
+  const openMenu = () => {
+    menu.classList.add("open");
+    overlay.classList.add("open");
+    menu.setAttribute("aria-hidden","false");
+  };
+  const closeMenu = () => {
+    menu.classList.remove("open");
+    overlay.classList.remove("open");
+    menu.setAttribute("aria-hidden","true");
+  };
 
-    menuBtn.addEventListener("click", openMenu);
-    closeBtn.addEventListener("click", closeMenu);
-    overlay.addEventListener("click", closeMenu);
-    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+  menuBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+  overlay.addEventListener("click", closeMenu);
+  menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // ===== BGM ON/OFF（保存つき） =====
-    const bgm = document.getElementById("bgm");
-    const bgmBtn = document.getElementById("bgmBtn");
-    const bgmLabel = document.getElementById("bgmLabel");
-    const DEFAULT_VOLUME = 0.35;
+  // ===== BGM ON/OFF（保存つき） =====
+  const bgm = document.getElementById("bgm");
+  const bgmBtn = document.getElementById("bgmBtn");
+  const bgmLabel = document.getElementById("bgmLabel");
+  const DEFAULT_VOLUME = 0.35;
 
-    bgm.volume = DEFAULT_VOLUME;
-    const saved = localStorage.getItem("bgm_on") === "1";
+  bgm.volume = DEFAULT_VOLUME;
+  const saved = localStorage.getItem("bgm_on") === "1";
 
-    function setBgmUI(isOn){
-      bgmBtn.classList.toggle("on", isOn);
-      bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
-    }
-    setBgmUI(saved);
+  function setBgmUI(isOn){
+    bgmBtn.classList.toggle("on", isOn);
+    bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
+  }
+  setBgmUI(saved);
 
-    bgmBtn.addEventListener("click", async () => {
-      try{
-        if (bgm.paused){
-          await bgm.play();
-          localStorage.setItem("bgm_on", "1");
-          setBgmUI(true);
-        }else{
-          bgm.pause();
-          localStorage.setItem("bgm_on", "0");
-          setBgmUI(false);
-        }
-      }catch(e){
-        alert("BGMを再生できませんでした。もう一度タップしてみて！");
+  bgmBtn.addEventListener("click", async () => {
+    try{
+      if (bgm.paused){
+        await bgm.play();
+        localStorage.setItem("bgm_on", "1");
+        setBgmUI(true);
+      }else{
+        bgm.pause();
+        localStorage.setItem("bgm_on", "0");
+        setBgmUI(false);
       }
-    });
-
-    window.addEventListener("load", () => {
-  const hero = document.getElementById("hero");
-  const splash = document.getElementById("splash");
-
-  if (!hero) return;
-
-  /* ① 初期状態を確定させる */
-  hero.classList.remove("play");
-
-  /* ★ここが最重要：ブラウザに「今の状態を確定しろ」と命令 */
-  hero.offsetHeight;
-
-  /* ② 次フレームで play を付ける → transition 発火 */
-  requestAnimationFrame(() => {
-    hero.classList.add("play");
+    }catch(e){
+      alert("BGMを再生できませんでした。もう一度タップしてみて！");
+    }
   });
 
-  /* splash は普通に消すだけ */
-  if (splash) {
-    requestAnimationFrame(() => splash.classList.add("show"));
-    setTimeout(() => {
-      splash.classList.add("hide");
-      setTimeout(() => splash.remove(), 700);
-    }, 1200);
+  // ===== splash → hero（reflowで“確実にtransitionを発火”） =====
+  function startHeroAnimation(){
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+
+    // 1) 初期状態に戻す
+    hero.classList.remove("play");
+
+    // 2) ★ここが核心：強制的にレイアウト計算させて「初期状態」を確定
+    void hero.offsetWidth;
+
+    // 3) 次のフレームでplay付与 → transitionが必ず走る
+    requestAnimationFrame(() => {
+      hero.classList.add("play");
+    });
   }
-});
+
+  function startSplashSequence(){
+    const splash = document.getElementById("splash");
+
+    // splashがあるなら表示 → 1.2秒後に消しながらアニメ開始
+    if (splash){
+      requestAnimationFrame(() => splash.classList.add("show"));
+
+      setTimeout(() => {
+        startHeroAnimation();
+
+        splash.classList.add("hide");
+        splash.classList.remove("show");
+        setTimeout(() => splash.remove(), 750);
+      }, 1200);
+
+      // 保険：何があっても3秒で消す
+      setTimeout(() => {
+        const s = document.getElementById("splash");
+        if (s) s.remove();
+      }, 3000);
+    }else{
+      // splash無しでも必ず動かす
+      startHeroAnimation();
+    }
+  }
+
+  // load時
+  window.addEventListener("load", startSplashSequence);
+
+  // ★超重要：戻る/進む（bfcache）でも動くようにする
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) startSplashSequence();
+  });
   </script>
 </body>
 </html>
