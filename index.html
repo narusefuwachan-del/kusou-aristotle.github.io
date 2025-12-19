@@ -339,7 +339,6 @@
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    <script>
   // ===== splash + hero transition発火（確実に動かす版） =====
   window.addEventListener("load", async () => {
     const splash = document.getElementById("splash");
@@ -402,7 +401,6 @@
       if (s) s.remove();
     }, 3000);
   });
-</script>
       // まずロゴをフェードイン
       requestAnimationFrame(() => splash.classList.add("show"));
 
