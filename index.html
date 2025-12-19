@@ -339,16 +339,70 @@
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // ===== splash + hero transition発火 =====
-    window.addEventListener("load", () => {
-      const splash = document.getElementById("splash");
-      const hero = document.getElementById("hero");
-      if(!splash) {
-        // splash無い時でも一応 hero 動かす
-        if(hero) requestAnimationFrame(() => hero.classList.add("play"));
-        return;
+    <script>
+  // ===== splash + hero transition発火（確実に動かす版） =====
+  window.addEventListener("load", async () => {
+    const splash = document.getElementById("splash");
+    const hero = document.getElementById("hero");
+
+    // ★保険：毎回「未再生状態」に戻してから始める
+    if (hero) hero.classList.remove("play");
+
+    // ★画像の読み込みを待つ（これが超重要）
+    const toriiImg = document.querySelector(".hero-torii");
+    const charaImg = document.querySelector(".hero-chara");
+
+    const waitImg = (img) => {
+      if (!img) return Promise.resolve();
+      // decodeが使えるならそれ優先（チラつき減る）
+      if (img.decode) return img.decode().catch(() => {});
+      // 古い環境用
+      return new Promise((res) => {
+        if (img.complete) return res();
+        img.addEventListener("load", res, { once: true });
+        img.addEventListener("error", res, { once: true });
+      });
+    };
+
+    await Promise.all([waitImg(toriiImg), waitImg(charaImg)]);
+
+    // splash が無い場合でも hero を動かす
+    if (!splash) {
+      if (hero) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => hero.classList.add("play"));
+        });
+      }
+      return;
+    }
+
+    // まずロゴをフェードイン
+    requestAnimationFrame(() => splash.classList.add("show"));
+
+    const hold = 1200;
+
+    setTimeout(() => {
+      // ★ここでトップ画像のtransition発火（2回RAFで確実に「変化」にする）
+      if (hero) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => hero.classList.add("play"));
+        });
       }
 
+      // その後スプラッシュを消す
+      splash.classList.add("hide");
+      splash.classList.remove("show");
+
+      setTimeout(() => splash.remove(), 750);
+    }, hold);
+
+    // 保険：何があっても消す
+    setTimeout(() => {
+      const s = document.getElementById("splash");
+      if (s) s.remove();
+    }, 3000);
+  });
+</script>
       // まずロゴをフェードイン
       requestAnimationFrame(() => splash.classList.add("show"));
 
