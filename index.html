@@ -200,6 +200,111 @@
     .bgm-btn.on .bgm-dot{
       background:rgba(120,255,180,.95);
     }
+    /* ===== footer ===== */
+.footer{
+  position: relative;
+  z-index: 5; /* heroより上に出す */
+  padding: 44px 16px 56px;
+  text-align: center;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.footer-inner{
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.footer-logo{
+  width: min(64vw, 260px);
+  height: auto;
+  display: block;
+  margin: 0 auto 18px;
+  opacity: .92;
+  filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
+}
+
+.footer-title{
+  margin: 0 0 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  font-size: 13px;
+  color: rgba(255,255,255,.78);
+}
+
+/* SNS icons */
+.footer-sns{
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 12px 0 6px;
+}
+
+.sns-btn{
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  text-decoration: none;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.sns-btn:active{ transform: scale(.98); }
+.sns-btn:hover{
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.28);
+}
+.sns-btn svg{ width: 22px; height: 22px; display:block; opacity:.92; }
+
+/* SHARE */
+.share{
+  margin: 10px 0 18px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.share-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.share-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: .04em;
+  font-size: 13px;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.share-btn:active{ transform: scale(.98); }
+.share-btn:hover{
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.28);
+}
+.share-btn svg{ width: 18px; height: 18px; opacity:.92; }
+
+.footer-note{
+  margin-top: 18px;
+  font-size: 12px;
+  color: rgba(255,255,255,.60);
+  letter-spacing: .03em;
+}
   </style>
 </head>
 
