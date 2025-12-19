@@ -24,7 +24,7 @@
       overflow-x:hidden;
     }
 
-    /* ===== splash（transition方式） ===== */
+    /* ===== splash ===== */
     .splash{
       position: fixed;
       inset: 0;
@@ -32,7 +32,6 @@
       display: grid;
       place-items: center;
       z-index: 9999;
-
       opacity: 1;
       transition: opacity 700ms ease;
       will-change: opacity;
@@ -54,16 +53,15 @@
       display:block;
     }
 
-    /* ===== hero（メインビジュアル） ===== */
+    /* ===== hero ===== */
     .hero{
       position: relative;
       z-index: 2;
-      height: 100vh; /* PC/タブでも画面いっぱい */
+      height: 100vh;
       overflow: hidden;
       background: #0b0b0f;
     }
 
-    /* 紫色の空 */
     .hero-bg{
       position:absolute;
       inset:0;
@@ -72,7 +70,6 @@
       z-index: 1;
     }
 
-    /* 鳥居（transitionで“縮小→通常”） */
     .hero-torii{
       position:absolute;
       inset:0;
@@ -93,7 +90,6 @@
       will-change: transform, opacity, filter;
     }
 
-    /* 立ち絵（tatie.png：下→上） */
     .hero-chara{
       position:absolute;
       inset:0;
@@ -112,7 +108,6 @@
       will-change: transform, opacity;
     }
 
-    /* ★スプラッシュ後に .play が付いたら動く */
     .hero.play .hero-torii{
       transform: scale(1);
       opacity: 1;
@@ -123,7 +118,6 @@
       opacity: 1;
     }
 
-    /* 動きが苦手な人向け */
     @media (prefers-reduced-motion: reduce){
       .hero-torii, .hero-chara{
         transition: none;
@@ -133,7 +127,7 @@
       }
     }
 
-    /* ===== header（右上にハンバーガー） ===== */
+    /* ===== header ===== */
     .header{
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -217,7 +211,7 @@
       text-decoration:none;
     }
 
-    /* ===== BGMボタン（右下固定） ===== */
+    /* ===== BGM ===== */
     .bgm-btn{
       position: fixed;
       right: 14px;
@@ -244,7 +238,7 @@
     .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
     .bgm-btn small{ font-weight:700; opacity:.92; }
 
-    /* ===== footer（下） ===== */
+    /* ===== footer ===== */
     .footer{
       position: relative;
       z-index: 5;
@@ -267,6 +261,7 @@
       opacity: .92;
       filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
     }
+
     .footer-title{
       margin: 0 0 10px;
       font-weight: 800;
@@ -376,22 +371,19 @@
     <small id="bgmLabel">BGM OFF</small>
   </button>
 
-  <!-- footer（heroの後ろ＝下に来る） -->
+  <!-- footer -->
   <footer class="footer" aria-label="フッター">
     <div class="footer-inner">
-
       <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
 
-      <!-- SHARE -->
+      <!-- SHARE（ロゴだけ） -->
       <div class="share" aria-label="シェア">
-        <div class="footer-title">SHARE</div>
         <div class="share-row">
           <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
-            <img class="icon-img" src="/images/icons/x.svg" alt="" aria-hidden="true">
+            <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
           </a>
-
           <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
-            <img class="icon-img" src="/images/icons/line.svg" alt="" aria-hidden="true">
+            <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
           </a>
         </div>
       </div>
@@ -421,10 +413,8 @@
     (() => {
       const url = encodeURIComponent(location.href);
       const title = encodeURIComponent(document.title);
-
       const shareX = document.getElementById("shareX");
       const shareLINE = document.getElementById("shareLINE");
-
       if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
       if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
     })();
@@ -459,7 +449,6 @@
 
     bgm.volume = DEFAULT_VOLUME;
     const saved = localStorage.getItem("bgm_on") === "1";
-
     function setBgmUI(isOn){
       bgmBtn.classList.toggle("on", isOn);
       bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
@@ -469,7 +458,6 @@
     bgmBtn.addEventListener("click", async () => {
       try{
         if (bgm.paused){
-          bgm.volume = DEFAULT_VOLUME;
           await bgm.play();
           localStorage.setItem("bgm_on", "1");
           setBgmUI(true);
@@ -483,54 +471,31 @@
       }
     });
 
-    // ===== splash → hero（確実にtransition発火） =====
-    window.addEventListener("load", async () => {
+    // ===== splash → hero（止まらない版：ここが鳥居復活の核心） =====
+    window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const hero = document.getElementById("hero");
 
       if (hero) hero.classList.remove("play");
+      if (splash) requestAnimationFrame(() => splash.classList.add("show"));
 
-      const toriiImg = document.querySelector(".hero-torii");
-      const charaImg = document.querySelector(".hero-chara");
-
-      const waitImg = (img) => {
-        if (!img) return Promise.resolve();
-        if (img.decode) return img.decode().catch(() => {});
-        return new Promise((res) => {
-          if (img.complete) return res();
-          img.addEventListener("load", res, { once: true });
-          img.addEventListener("error", res, { once: true });
-        });
-      };
-
-      await Promise.all([waitImg(toriiImg), waitImg(charaImg)]);
-
-      if (splash) {
-        requestAnimationFrame(() => splash.classList.add("show"));
-
-        setTimeout(() => {
-          if (hero) {
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => hero.classList.add("play"));
-            });
-          }
-          splash.classList.add("hide");
-          splash.classList.remove("show");
-
-          setTimeout(() => splash.remove(), 750);
-        }, 1200);
-
-        setTimeout(() => {
-          const s = document.getElementById("splash");
-          if (s) s.remove();
-        }, 3000);
-      } else {
-        if (hero) {
+      setTimeout(() => {
+        if (hero){
           requestAnimationFrame(() => {
             requestAnimationFrame(() => hero.classList.add("play"));
           });
         }
-      }
+        if (splash){
+          splash.classList.add("hide");
+          splash.classList.remove("show");
+          setTimeout(() => splash.remove(), 750);
+        }
+      }, 1200);
+
+      setTimeout(() => {
+        const s = document.getElementById("splash");
+        if (s) s.remove();
+      }, 3000);
     });
   </script>
 </body>
