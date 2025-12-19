@@ -8,6 +8,7 @@
   <link rel="icon" href="/favicon.png">
   <link rel="icon" href="/images/favicon.png" type="image/png">
 
+  <!-- Google Fonts：Shippori Mincho -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
@@ -23,7 +24,116 @@
       overflow-x:hidden;
     }
 
-    /* ===== header ===== */
+    /* ===== splash（transition方式） ===== */
+    .splash{
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+
+      opacity: 1;
+      transition: opacity 700ms ease;
+      will-change: opacity;
+    }
+    .splash.hide{ opacity: 0; }
+
+    .splash-inner{
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 700ms ease, transform 700ms ease;
+      will-change: opacity, transform;
+    }
+    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
+    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+
+    .splash-inner img{
+      width: min(90vw, 520px);
+      height:auto;
+      display:block;
+    }
+
+    /* ===== hero（メインビジュアル） ===== */
+    .hero{
+      position: relative;
+      z-index: 2;
+      height: min(92vh, 900px);
+      overflow: hidden;
+      background: #0b0b0f;
+    }
+
+    /* 紫色の空 */
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background: url("/images/home/sora.png") center / cover no-repeat;
+      transform: scale(1.02);
+      z-index: 1;
+    }
+
+    /* 鳥居（transitionで“縮小→通常”） */
+    .hero-torii{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      z-index: 2;
+
+      transform: scale(0.86);
+      opacity: 0;
+      filter: blur(1px);
+
+      transition:
+        transform 900ms cubic-bezier(.2,.9,.2,1),
+        opacity   900ms cubic-bezier(.2,.9,.2,1),
+        filter    900ms cubic-bezier(.2,.9,.2,1);
+      transition-delay: 120ms;
+      will-change: transform, opacity, filter;
+    }
+
+    /* 立ち絵（tatie.png：下→上） */
+    .hero-chara{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      z-index: 3;
+
+      transform: translateY(60px);
+      opacity: 0;
+
+      transition:
+        transform 900ms cubic-bezier(.2,.9,.2,1),
+        opacity   900ms cubic-bezier(.2,.9,.2,1);
+      transition-delay: 520ms;
+      will-change: transform, opacity;
+    }
+
+    /* ★スプラッシュ後に .play が付いたら動く */
+    .hero.play .hero-torii{
+      transform: scale(1);
+      opacity: 1;
+      filter: blur(0);
+    }
+    .hero.play .hero-chara{
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* 動きが苦手な人向け */
+    @media (prefers-reduced-motion: reduce){
+      .hero-torii, .hero-chara{
+        transition: none;
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
+
+    /* ===== header（右上にハンバーガー） ===== */
     .header{
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -34,10 +144,8 @@
       padding:12px 16px;
       background: transparent;
       border: none;
-      pointer-events:none; /* ボタンだけ押せるようにする */
     }
     .menu-btn{
-      pointer-events:auto;
       font-size:22px;
       background:none;
       border:none;
@@ -80,6 +188,7 @@
       touch-action: pan-y;
     }
     .menu.open{ transform: translateX(0); }
+
     .menu-top{
       display:flex; justify-content:space-between; align-items:center;
       padding-bottom:10px;
@@ -101,7 +210,7 @@
       text-decoration:none;
     }
 
-    /* ===== BGMボタン ===== */
+    /* ===== BGMボタン（右下固定） ===== */
     .bgm-btn{
       position: fixed;
       right: 14px;
@@ -110,6 +219,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+
       padding: 10px 12px;
       border: 1px solid rgba(0,0,0,.15);
       border-radius: 999px;
@@ -117,6 +227,7 @@
       color: #fff;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
+
       font-weight: 700;
       font-size: 14px;
       cursor: pointer;
@@ -125,100 +236,18 @@
     .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
     .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
     .bgm-btn small{ font-weight:700; opacity:.92; }
-
-    /* ===== splash ===== */
-    .splash{
-      position: fixed;
-      inset: 0;
-      background: #f5f7fb;
-      display: grid;
-      place-items: center;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 700ms ease;
-      will-change: opacity;
-    }
-    .splash-inner{
-      opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 700ms ease, transform 700ms ease;
-      will-change: opacity, transform;
-    }
-    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
-    .splash.hide{ opacity: 0; }
-    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
-    .splash-inner img{ width: min(90vw, 520px); height:auto; display:block; }
-
-    /* ===== hero（メインビジュアル） ===== */
-    .hero{
-      position: relative;
-      z-index: 2;
-      height: min(92vh, 900px);
-      overflow: hidden;
-      background: #0b0b0f;
-    }
-    .hero-bg{
-      position: absolute;
-      inset: 0;
-      background: url("/images/home/sora.png") center / cover no-repeat;
-      transform: scale(1.02);
-      z-index: 1;
-    }
-
-    /* ★最初は“止めておく”状態（初期値） */
-    .hero-torii{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(0.86);
-      opacity: 0;
-      filter: blur(1px);
-      z-index: 2;
-    }
-    .hero-chara{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: translateY(60px);
-      opacity: 0;
-      z-index: 3;
-    }
-
-    /* ★再生トリガー：.hero.play が付いたらアニメ開始 */
-    .hero.play .hero-torii{
-      animation: toriiIn 900ms cubic-bezier(.2,.9,.2,1) 120ms forwards;
-    }
-    .hero.play .hero-chara{
-      animation: charaUp 900ms cubic-bezier(.2,.9,.2,1) 520ms forwards;
-    }
-
-    @keyframes toriiIn{ to{ transform: scale(1); opacity:1; filter: blur(0); } }
-    @keyframes charaUp{ to{ transform: translateY(0); opacity:1; } }
-
-    @media (prefers-reduced-motion: reduce){
-      .hero-torii,.hero-chara{
-        animation:none !important;
-        opacity:1 !important;
-        transform:none !important;
-        filter:none !important;
-      }
-    }
   </style>
 </head>
 
 <body>
-  <!-- hero -->
+  <!-- hero（body内に置く！） -->
   <section class="hero" id="hero" aria-label="メインビジュアル">
     <div class="hero-bg"></div>
     <img class="hero-torii" src="/images/home/torii.png" alt="">
     <img class="hero-chara" src="/images/home/tatie.png" alt="">
   </section>
 
-  <!-- BGM -->
+  <!-- BGM（自動再生しない） -->
   <audio id="bgm" preload="auto" loop>
     <source src="audio/bgm.mp3" type="audio/mpeg">
   </audio>
@@ -240,6 +269,7 @@
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
   </header>
 
+  <!-- overlay/menu -->
   <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <nav id="menu" class="menu" aria-hidden="true">
@@ -247,6 +277,7 @@
       <div class="menu-title">MENU</div>
       <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
     </div>
+
     <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
@@ -254,7 +285,7 @@
   </nav>
 
   <script>
-    // ===== BGM =====
+    // ===== BGM ON/OFF =====
     const bgm = document.getElementById("bgm");
     const bgmBtn = document.getElementById("bgmBtn");
     const bgmLabel = document.getElementById("bgmLabel");
@@ -292,40 +323,52 @@
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    const openMenu = () => { menu.classList.add("open"); overlay.classList.add("open"); menu.setAttribute("aria-hidden","false"); };
-    const closeMenu = () => { menu.classList.remove("open"); overlay.classList.remove("open"); menu.setAttribute("aria-hidden","true"); };
+    const openMenu = () => {
+      menu.classList.add("open");
+      overlay.classList.add("open");
+      menu.setAttribute("aria-hidden","false");
+    };
+    const closeMenu = () => {
+      menu.classList.remove("open");
+      overlay.classList.remove("open");
+      menu.setAttribute("aria-hidden","true");
+    };
 
     menuBtn.addEventListener("click", openMenu);
     closeBtn.addEventListener("click", closeMenu);
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // ===== splash → 消えたあとに hero アニメ開始 =====
+    // ===== splash + hero transition発火 =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const hero = document.getElementById("hero");
-      if(!splash || !hero) return;
+      if(!splash) {
+        // splash無い時でも一応 hero 動かす
+        if(hero) requestAnimationFrame(() => hero.classList.add("play"));
+        return;
+      }
 
-      // いったんshow（ロゴ側フェードイン）
+      // まずロゴをフェードイン
       requestAnimationFrame(() => splash.classList.add("show"));
 
       const hold = 1200;
 
       setTimeout(() => {
+        // ★ここでトップ画像のtransition発火
+        if(hero) hero.classList.add("play");
+
+        // その後スプラッシュを消す
         splash.classList.add("hide");
         splash.classList.remove("show");
-
-        // スプラッシュが薄くなり始めたタイミングで、heroアニメ開始
-        hero.classList.add("play");
 
         setTimeout(() => splash.remove(), 750);
       }, hold);
 
-      // 保険：消し忘れ防止 + アニメ開始保証
+      // 保険：何があっても消す
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
-        hero.classList.add("play");
       }, 3000);
     });
   </script>
