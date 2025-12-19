@@ -7,119 +7,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>空想世界アリストテレス神殿案内板</title>
 
-  <!-- Google Fonts：Shippori Mincho -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ★追加：スプラッシュ背景もフェードさせる */
-.splash{
-  transition: opacity 700ms ease;
-  will-change: opacity;
-}
-
-.splash.hide{
-  opacity: 0;
-}
-    /* ===== BGMボタン（右下固定） ===== */
-.bgm-btn{
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 1200; /* メニュー/overlayより上 */
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 10px 12px;
-  border: 1px solid rgba(0,0,0,.15);
-  border-radius: 999px;
-  background: rgba(20,20,20,.72);
-  color: #fff;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.bgm-btn:active{ transform: scale(.98); }
-
-.bgm-dot{
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.35);
-}
-.bgm-btn.on .bgm-dot{
-  background: rgba(120,255,180,.95); /* ONっぽい点灯 */
-}
-
-.bgm-btn small{
-  font-weight: 700;
-  opacity: .92;
-}
-    /* ===== base ===== */
-    *{ box-sizing:border-box; }
-    html,body{
-      margin:0;
-      padding:0;
-      width:100%;
-      height:100%;
+    .splash{
+      transition: opacity 700ms ease;
+      will-change: opacity;
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
     }
+    .splash.hide{ opacity: 0; }
+
+    .splash-inner{
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 700ms ease, transform 700ms ease;
+      will-change: opacity, transform;
+    }
+    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
+    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+    .splash-inner img{ width: min(90vw, 520px); height:auto; display:block; }
+
+    /* ===== BGMボタン ===== */
+    .bgm-btn{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 1200;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 999px;
+      background: rgba(20,20,20,.72);
+      color: #fff;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .bgm-btn:active{ transform: scale(.98); }
+    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
+    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
+    .bgm-btn small{ font-weight:700; opacity:.92; }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; width:100%; height:100%; }
     body{
-      font-family:
-        "Shippori Mincho",
-        "Hiragino Mincho ProN",
-        "Yu Mincho",
-        "MS Mincho",
-        serif;
+      font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
       line-height: 1.8;
       color:#fff;
       background:#000;
       overflow-x:hidden;
     }
 
-    /* ===== background (fade-in) ===== */
-    .home-bg{
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      background: url("images/home.png") center / cover no-repeat;
-
-      opacity: 0;
-      transition: opacity 900ms ease;
-    }
-    body.loaded .home-bg{
-      opacity: 1;
-    }
-
-    /* ===== header (no white bar) ===== */
+    /* ===== header ===== */
     .header{
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 60;
       display:flex;
-  justify-content: flex-end;
+      justify-content: flex-end;
       align-items:center;
       padding:12px 16px;
-
       background: transparent;
       border: none;
     }
-
-    .site-title{
-      font-weight: 600;
-      font-size: 18px;
-      letter-spacing: .04em;
-      text-shadow: 0 2px 18px rgba(0,0,0,.35);
-      user-select:none;
-    }
-
     .menu-btn{
       font-size:22px;
       background:none;
@@ -132,7 +94,7 @@
     }
     .menu-btn:active{ transform: scale(.98); }
 
-    /* ===== overlay ===== */
+    /* ===== overlay/menu ===== */
     .overlay{
       position: fixed;
       inset: 0;
@@ -142,12 +104,8 @@
       transition: opacity .25s ease;
       z-index: 1000;
     }
-    .overlay.open{
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .overlay.open{ opacity: 1; pointer-events: auto; }
 
-    /* ===== menu (black + slightly transparent) ===== */
     .menu{
       position: fixed;
       top: 0;
@@ -155,49 +113,29 @@
       width: 340px;
       max-width: 78vw;
       height: 100vh;
-
       background: rgba(0,0,0,.86);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-
       padding: 18px 16px;
-      box-sizing: border-box;
-
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1001;
-
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
       touch-action: pan-y;
     }
     .menu.open{ transform: translateX(0); }
-
     .menu-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+      display:flex; justify-content:space-between; align-items:center;
       padding-bottom:10px;
       border-bottom: 1px solid rgba(255,255,255,.14);
       margin-bottom:8px;
     }
-
-    .menu-title{
-      font-weight: 700;
-      letter-spacing: .06em;
-      color:#fff;
-    }
-
+    .menu-title{ font-weight: 700; letter-spacing: .06em; color:#fff; }
     .close-btn{
-      font-size:20px;
-      background:none;
-      border:none;
-      cursor:pointer;
-      padding:8px 10px;
-      border-radius:10px;
-      color:#fff;
+      font-size:20px; background:none; border:none; cursor:pointer;
+      padding:8px 10px; border-radius:10px; color:#fff;
     }
-
     .menu a{
       display:block;
       padding:14px 6px;
@@ -207,136 +145,72 @@
       color:#fff;
       text-decoration:none;
     }
-    .menu a:active{ opacity:.85; }
 
-    /* ===== splash (transition方式：確実に動くやつ) ===== */
-    .splash{
-      position: fixed;
-      inset: 0;
-      background: #f5f7fb;
-      display: grid;
-      place-items: center;
-      z-index: 9999;
-    }
-
-    .splash-inner{
-      opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 700ms ease, transform 700ms ease;
-      will-change: opacity, transform;
-    }
-
-    /* フェードイン */
-    .splash.show .splash-inner{
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* フェードアウト＋縮小 */
-    .splash.hide .splash-inner{
-      opacity: 0;
-      transform: scale(0.82);
-    }
-
-    .splash-inner img{
-      width: min(90vw, 520px);
-      height: auto;
-      display:block;
-    }
-
-    /* （テキストは消してるので、本文は置かない） */
+    /* ===== hero（ここがメインビジュアル） ===== */
     .hero{
-  position: relative;
-  height: min(92vh, 900px);
-  overflow: hidden;
-  background: #0b0b0f;
-}
+      position: relative;
+      z-index: 2; /* menuより下、背景より上 */
+      height: min(92vh, 900px);
+      overflow: hidden;
+      background: #0b0b0f;
+    }
+    .hero-bg{
+      position: absolute;
+      inset: 0;
+      background: url("/images/home/sora.png") center / cover no-repeat;
+      transform: scale(1.02);
+      z-index: 1;
+    }
+    .hero-torii{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(0.86);
+      opacity: 0;
+      filter: blur(1px);
+      animation: toriiIn 900ms cubic-bezier(.2,.9,.2,1) 120ms forwards;
+      z-index: 2;
+    }
+    .hero-chara{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translateY(60px);
+      opacity: 0;
+      animation: charaUp 900ms cubic-bezier(.2,.9,.2,1) 520ms forwards;
+      z-index: 3;
+    }
+    @keyframes toriiIn{ to{ transform: scale(1); opacity:1; filter: blur(0); } }
+    @keyframes charaUp{ to{ transform: translateY(0); opacity:1; } }
 
-/* ===== 紫色の空 ===== */
-.hero-bg{
-  position: absolute;
-  inset: 0;
-  background: url("/images/home/sora.png") center / cover no-repeat;
-  transform: scale(1.02);
-  z-index: 1;
-}
-
-/* ===== 鳥居 ===== */
-.hero-torii{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  transform: scale(0.86);
-  opacity: 0;
-  filter: blur(1px);
-
-  animation: toriiIn 900ms cubic-bezier(.2,.9,.2,1) 120ms forwards;
-  z-index: 2;
-}
-
-/* ===== 立ち絵 ===== */
-.hero-chara{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  transform: translateY(60px);
-  opacity: 0;
-
-  animation: charaUp 900ms cubic-bezier(.2,.9,.2,1) 520ms forwards;
-  z-index: 3;
-}
-
-/* ===== 鳥居アニメ ===== */
-@keyframes toriiIn{
-  to{
-    transform: scale(1);
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-
-/* ===== 立ち絵アニメ ===== */
-@keyframes charaUp{
-  to{
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* ===== 動きが苦手な人向け ===== */
-@media (prefers-reduced-motion: reduce){
-  .hero-torii,
-  .hero-chara{
-    animation: none;
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
+    @media (prefers-reduced-motion: reduce){
+      .hero-torii,.hero-chara{ animation:none; opacity:1; transform:none; filter:none; }
+    }
   </style>
 </head>
-<section class="hero" aria-label="メインビジュアル">
-  <div class="hero-bg"></div>
-  <img class="hero-torii" src="/images/home/torii.png" alt="">
-  <img class="hero-chara" src="/images/home/tatie.png" alt="">
-</section>
-<body>
-  <!-- BGM本体（自動再生しない） -->
-<audio id="bgm" preload="auto" loop>
-  <source src="audio/bgm.mp3" type="audio/mpeg">
-</audio>
 
-<!-- 右下ボタン -->
-<button id="bgmBtn" class="bgm-btn" type="button" aria-label="BGMの切り替え">
-  <span class="bgm-dot" aria-hidden="true"></span>
-  <small id="bgmLabel">BGM OFF</small>
-</button>
+<body>
+  <!-- ★heroはここ（body内） -->
+  <section class="hero" aria-label="メインビジュアル">
+    <div class="hero-bg"></div>
+    <img class="hero-torii" src="/images/home/torii.png" alt="">
+    <img class="hero-chara" src="/images/home/tatie.png" alt="">
+  </section>
+
+  <!-- BGM -->
+  <audio id="bgm" preload="auto" loop>
+    <source src="audio/bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="bgmBtn" class="bgm-btn" type="button" aria-label="BGMの切り替え">
+    <span class="bgm-dot" aria-hidden="true"></span>
+    <small id="bgmLabel">BGM OFF</small>
+  </button>
+
   <!-- splash -->
   <div id="splash" class="splash" aria-label="読み込み中">
     <div class="splash-inner">
@@ -344,24 +218,18 @@
     </div>
   </div>
 
-  <!-- background -->
-  <div class="home-bg" aria-hidden="true"></div>
-
   <!-- header -->
   <header class="header">
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
   </header>
 
-  <!-- overlay -->
   <div id="overlay" class="overlay" aria-hidden="true"></div>
 
-  <!-- menu -->
   <nav id="menu" class="menu" aria-hidden="true">
     <div class="menu-top">
       <div class="menu-title">MENU</div>
       <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
     </div>
-
     <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
@@ -369,92 +237,66 @@
   </nav>
 
   <script>
-    // ===== BGM ON/OFF（クリックで再生） =====
-const bgm = document.getElementById("bgm");
-const bgmBtn = document.getElementById("bgmBtn");
-const bgmLabel = document.getElementById("bgmLabel");
+    // ===== BGM =====
+    const bgm = document.getElementById("bgm");
+    const bgmBtn = document.getElementById("bgmBtn");
+    const bgmLabel = document.getElementById("bgmLabel");
+    const DEFAULT_VOLUME = 0.35;
 
-// 好みで調整OK
-const DEFAULT_VOLUME = 0.35;
+    const saved = localStorage.getItem("bgm_on") === "1";
+    bgm.volume = DEFAULT_VOLUME;
 
-// 前回の状態を復元（ON/OFFだけ）
-const saved = localStorage.getItem("bgm_on") === "1";
-bgm.volume = DEFAULT_VOLUME;
-
-function setBgmUI(isOn){
-  bgmBtn.classList.toggle("on", isOn);
-  bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
-}
-
-setBgmUI(saved);
-
-// ※自動再生はしない（スマホ対策）
-// ただし「前回ONだった」なら、最初のボタンタップで即再生できるようにはしておく
-bgmBtn.addEventListener("click", async () => {
-  try{
-    if (bgm.paused){
-      bgm.volume = DEFAULT_VOLUME;
-      await bgm.play();          // ここが“ユーザー操作”なので確実に鳴る
-      localStorage.setItem("bgm_on", "1");
-      setBgmUI(true);
-    }else{
-      bgm.pause();
-      localStorage.setItem("bgm_on", "0");
-      setBgmUI(false);
+    function setBgmUI(isOn){
+      bgmBtn.classList.toggle("on", isOn);
+      bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
     }
-  }catch(e){
-    // たまにiOS等で失敗する保険（基本は起きにくい）
-    alert("BGMを再生できませんでした。もう一度タップしてみて！");
-  }
-});
+    setBgmUI(saved);
+
+    bgmBtn.addEventListener("click", async () => {
+      try{
+        if (bgm.paused){
+          bgm.volume = DEFAULT_VOLUME;
+          await bgm.play();
+          localStorage.setItem("bgm_on", "1");
+          setBgmUI(true);
+        }else{
+          bgm.pause();
+          localStorage.setItem("bgm_on", "0");
+          setBgmUI(false);
+        }
+      }catch(e){
+        alert("BGMを再生できませんでした。もう一度タップしてみて！");
+      }
+    });
+
     // ===== menu =====
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    const openMenu = () => {
-      menu.classList.add("open");
-      overlay.classList.add("open");
-      menu.setAttribute("aria-hidden", "false");
-    };
-    const closeMenu = () => {
-      menu.classList.remove("open");
-      overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden", "true");
-    };
+    const openMenu = () => { menu.classList.add("open"); overlay.classList.add("open"); menu.setAttribute("aria-hidden","false"); };
+    const closeMenu = () => { menu.classList.remove("open"); overlay.classList.remove("open"); menu.setAttribute("aria-hidden","true"); };
 
     menuBtn.addEventListener("click", openMenu);
     closeBtn.addEventListener("click", closeMenu);
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // ===== splash（transition方式：確実にフェード） + 背景フェードイン =====
+    // ===== splash =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       if(!splash) return;
 
-      // 背景は body.loaded でフェードイン
-      document.body.classList.add("loaded");
-
-      // 一旦描画 → show（フェードイン開始）
-      requestAnimationFrame(() => {
-        splash.classList.add("show");
-      });
+      requestAnimationFrame(() => splash.classList.add("show"));
 
       const hold = 1200;
-
       setTimeout(() => {
         splash.classList.add("hide");
         splash.classList.remove("show");
-
-        setTimeout(() => {
-          splash.remove();
-        }, 750);
-
+        setTimeout(() => splash.remove(), 750);
       }, hold);
 
-      // 保険：何があっても消す
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
