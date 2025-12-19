@@ -474,52 +474,31 @@
       }
     });
 
-    // ===== splash → hero（「見える瞬間に」鳥居が動き出す版） =====
-// ===== splash → hero（「見える瞬間に」鳥居が動き出す版） =====
-window.addEventListener("load", () => {
-  const splash = document.getElementById("splash");
+    window.addEventListener("load", () => {
   const hero = document.getElementById("hero");
+  const splash = document.getElementById("splash");
+
   if (!hero) return;
 
-  // まず初期化（必須）
+  /* ① 初期状態を確定させる */
   hero.classList.remove("play");
 
-  // ★強制リフロー：これがあると transition がコケにくい
-  void hero.offsetWidth;
+  /* ★ここが最重要：ブラウザに「今の状態を確定しろ」と命令 */
+  hero.offsetHeight;
 
-  // splash を表示状態へ
-  if (splash) requestAnimationFrame(() => splash.classList.add("show"));
-
-  const HOLD = 1200;      // ロゴを見せる時間
-  const FADE = 700;       // splash の opacity 遷移時間
-
-  setTimeout(() => {
-    // 1) 先に splash をフェードアウト開始（白が薄くなる＝下が見え始める）
-    if (splash) splash.classList.add("hide");
-
-    // 2) 「フェード開始直後」に hero を動かす（見える瞬間に動いてる）
-    requestAnimationFrame(() => {
-      // もう一発リフロー保険
-      void hero.offsetWidth;
-      hero.classList.add("play");
-    });
-
-    // 3) 終わったら splash 消す
-    if (splash) setTimeout(() => splash.remove(), FADE + 80);
-  }, HOLD);
-
-  // 保険：残ったら消す
-  setTimeout(() => {
-    const s = document.getElementById("splash");
-    if (s) s.remove();
-  }, 3200);
-
-  // デバッグ用：画面タップでアニメ再生（確認が超ラク）
-  hero.addEventListener("click", () => {
-    hero.classList.remove("play");
-    void hero.offsetWidth;
-    requestAnimationFrame(() => hero.classList.add("play"));
+  /* ② 次フレームで play を付ける → transition 発火 */
+  requestAnimationFrame(() => {
+    hero.classList.add("play");
   });
+
+  /* splash は普通に消すだけ */
+  if (splash) {
+    requestAnimationFrame(() => splash.classList.add("show"));
+    setTimeout(() => {
+      splash.classList.add("hide");
+      setTimeout(() => splash.remove(), 700);
+    }, 1200);
+  }
 });
   </script>
 </body>
