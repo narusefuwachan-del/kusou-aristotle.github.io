@@ -1,65 +1,19 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <link rel="icon" href="/favicon.png">
-  <link rel="icon" href="/images/favicon.png" type="image/png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>空想世界アリストテレス神殿案内板</title>
 
+  <link rel="icon" href="/favicon.png">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ★追加：スプラッシュ背景もフェードさせる */
-    .splash{
-      transition: opacity 700ms ease;
-      will-change: opacity;
-      position: fixed;
-      inset: 0;
-      background: #f5f7fb;
-      display: grid;
-      place-items: center;
-      z-index: 9999;
-    }
-    .splash.hide{ opacity: 0; }
-
-    .splash-inner{
-      opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 700ms ease, transform 700ms ease;
-      will-change: opacity, transform;
-    }
-    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
-    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
-    .splash-inner img{ width: min(90vw, 520px); height:auto; display:block; }
-
-    /* ===== BGMボタン ===== */
-    .bgm-btn{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 1200;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border: 1px solid rgba(0,0,0,.15);
-      border-radius: 999px;
-      background: rgba(20,20,20,.72);
-      color: #fff;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .bgm-btn:active{ transform: scale(.98); }
-    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
-    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
-    .bgm-btn small{ font-weight:700; opacity:.92; }
-
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; width:100%; height:100%; }
     body{
@@ -69,6 +23,7 @@
       background:#000;
       overflow-x:hidden;
     }
+    a{ color:inherit; text-decoration:none; }
 
     /* ===== header ===== */
     .header{
@@ -76,11 +31,22 @@
       top: 0; left: 0; right: 0;
       z-index: 60;
       display:flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items:center;
       padding:12px 16px;
-      background: transparent;
-      border: none;
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .site-title{
+      font-weight:700;
+      font-size:16px;
+      letter-spacing:.04em;
+      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      user-select:none;
+      padding:6px 8px;
+      border-radius:10px;
     }
     .menu-btn{
       font-size:22px;
@@ -94,7 +60,141 @@
     }
     .menu-btn:active{ transform: scale(.98); }
 
-    /* ===== overlay/menu ===== */
+    /* ===== hero ===== */
+    .hero{
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      background: #0b0b0f;
+    }
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background: url("/images/home/sora.png") center / cover no-repeat;
+      transform: scale(1.02);
+      z-index:1;
+    }
+    .hero-torii,
+    .hero-tatie{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .hero-torii{ z-index:2; }
+    .hero-tatie{ z-index:3; }
+
+    /* 初期状態（アニメ前） */
+    .hero-torii{
+      transform: scale(0.86);
+      opacity: 0;
+      filter: blur(1px);
+    }
+    .hero-tatie{
+      transform: translateY(60px);
+      opacity: 0;
+    }
+
+    /* スプラッシュが消えた後に付くクラスでアニメ開始 */
+    body.hero-anim .hero-torii{
+      animation: toriiIn 900ms cubic-bezier(.2,.9,.2,1) 0ms forwards;
+    }
+    body.hero-anim .hero-tatie{
+      animation: tatieUp 900ms cubic-bezier(.2,.9,.2,1) 380ms forwards;
+    }
+
+    @keyframes toriiIn{
+      to{ transform: scale(1); opacity:1; filter: blur(0); }
+    }
+    @keyframes tatieUp{
+      to{ transform: translateY(0); opacity:1; }
+    }
+
+    /* ===== content (scroll) ===== */
+    main{
+      position: relative;
+      z-index: 5;
+      padding: 22px 16px 70px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.68) 20%, rgba(0,0,0,.92) 60%, #000 100%);
+      margin-top: -18vh; /* ヒーローに被せ気味 */
+    }
+    .box{
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    h1{
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing:.04em;
+    }
+    p{
+      margin: 0 0 16px;
+      color: rgba(255,255,255,.84);
+      font-size: 14px;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width:720px){
+      .cards{ grid-template-columns: repeat(3, 1fr); }
+    }
+    .card{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .card:active{ transform: scale(.99); }
+    .card .title{
+      font-weight: 800;
+      letter-spacing:.04em;
+      margin-bottom: 6px;
+    }
+    .card .desc{
+      color: rgba(255,255,255,.80);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* ===== splash ===== */
+    .splash{
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 700ms ease;
+      will-change: opacity;
+    }
+    .splash.hide{ opacity: 0; }
+
+    .splash-inner{
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 700ms ease, transform 700ms ease;
+      will-change: opacity, transform;
+    }
+    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
+    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+    .splash-inner img{
+      width: min(90vw, 520px);
+      height:auto;
+      display:block;
+    }
+
+    /* ===== menu overlay ===== */
     .overlay{
       position: fixed;
       inset: 0;
@@ -125,13 +225,15 @@
       touch-action: pan-y;
     }
     .menu.open{ transform: translateX(0); }
+
     .menu-top{
       display:flex; justify-content:space-between; align-items:center;
       padding-bottom:10px;
       border-bottom: 1px solid rgba(255,255,255,.14);
       margin-bottom:8px;
+      color:#fff;
     }
-    .menu-title{ font-weight: 700; letter-spacing: .06em; color:#fff; }
+    .menu-title{ font-weight: 800; letter-spacing: .06em; }
     .close-btn{
       font-size:20px; background:none; border:none; cursor:pointer;
       padding:8px 10px; border-radius:10px; color:#fff;
@@ -139,71 +241,95 @@
     .menu a{
       display:block;
       padding:14px 6px;
-      font-weight:700;
+      font-weight:800;
       letter-spacing:.03em;
       border-bottom: 1px solid rgba(255,255,255,.10);
       color:#fff;
       text-decoration:none;
     }
 
-    /* ===== hero（ここがメインビジュアル） ===== */
-    .hero{
-      position: relative;
-      z-index: 2; /* menuより下、背景より上 */
-      height: min(92vh, 900px);
-      overflow: hidden;
-      background: #0b0b0f;
+    /* ===== BGM button ===== */
+    .bgm-btn{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 1200;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 999px;
+      background: rgba(20,20,20,.72);
+      color: #fff;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
     }
-    .hero-bg{
-      position: absolute;
-      inset: 0;
-      background: url("/images/home/sora.png") center / cover no-repeat;
-      transform: scale(1.02);
-      z-index: 1;
-    }
-    .hero-torii{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(0.86);
-      opacity: 0;
-      filter: blur(1px);
-      animation: toriiIn 900ms cubic-bezier(.2,.9,.2,1) 120ms forwards;
-      z-index: 2;
-    }
-    .hero-chara{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: translateY(60px);
-      opacity: 0;
-      animation: charaUp 900ms cubic-bezier(.2,.9,.2,1) 520ms forwards;
-      z-index: 3;
-    }
-    @keyframes toriiIn{ to{ transform: scale(1); opacity:1; filter: blur(0); } }
-    @keyframes charaUp{ to{ transform: translateY(0); opacity:1; } }
+    .bgm-btn:active{ transform: scale(.98); }
+    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
+    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
+    .bgm-btn small{ font-weight:800; opacity:.92; }
 
     @media (prefers-reduced-motion: reduce){
-      .hero-torii,.hero-chara{ animation:none; opacity:1; transform:none; filter:none; }
+      body.hero-anim .hero-torii,
+      body.hero-anim .hero-tatie{ animation:none; }
+      .hero-torii,.hero-tatie{ opacity:1; transform:none; filter:none; }
+      .splash,.splash-inner{ transition:none; }
+      .splash-inner{ opacity:1; transform:none; }
     }
   </style>
 </head>
 
 <body>
-  <!-- ★heroはここ（body内） -->
+  <!-- splash -->
+  <div id="splash" class="splash" aria-label="読み込み中">
+    <div class="splash-inner">
+      <img src="/images/logo.png" alt="空想世界アリストテレス">
+    </div>
+  </div>
+
+  <!-- header -->
+  <header class="header">
+    <a class="site-title" href="/" aria-label="ホームへ">空想世界アリストテレス</a>
+    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
+  </header>
+
+  <!-- hero -->
   <section class="hero" aria-label="メインビジュアル">
     <div class="hero-bg"></div>
     <img class="hero-torii" src="/images/home/torii.png" alt="">
-    <img class="hero-chara" src="/images/home/tatie.png" alt="">
+    <img class="hero-tatie" src="/images/home/tatie.png" alt="">
   </section>
+
+  <!-- content -->
+  <main>
+    <div class="box">
+      <h1>神殿案内板</h1>
+      <p>こちらは「空想世界アリストテレス」公式サイトです。気になる項目を選んでください。</p>
+
+      <div class="cards" role="navigation" aria-label="案内">
+        <a class="card" href="/character/">
+          <div class="title">Character</div>
+          <div class="desc">登場人物一覧／プロフィール（1期・2期）</div>
+        </a>
+        <a class="card" href="/story/">
+          <div class="title">Story</div>
+          <div class="desc">あらすじ／章構成／世界観の入口</div>
+        </a>
+        <a class="card" href="/guide/">
+          <div class="title">Guide</div>
+          <div class="desc">用語／注意事項／読み方ガイド</div>
+        </a>
+      </div>
+    </div>
+  </main>
 
   <!-- BGM -->
   <audio id="bgm" preload="auto" loop>
-    <source src="audio/bgm.mp3" type="audio/mpeg">
+    <source src="/audio/bgm.mp3" type="audio/mpeg">
   </audio>
 
   <button id="bgmBtn" class="bgm-btn" type="button" aria-label="BGMの切り替え">
@@ -211,18 +337,7 @@
     <small id="bgmLabel">BGM OFF</small>
   </button>
 
-  <!-- splash -->
-  <div id="splash" class="splash" aria-label="読み込み中">
-    <div class="splash-inner">
-      <img src="images/logo.png" alt="空想世界アリストテレス">
-    </div>
-  </div>
-
-  <!-- header -->
-  <header class="header">
-    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
-  </header>
-
+  <!-- overlay/menu -->
   <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <nav id="menu" class="menu" aria-hidden="true">
@@ -230,7 +345,6 @@
       <div class="menu-title">MENU</div>
       <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
     </div>
-    <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
     <a href="/guide/">Guide</a>
@@ -283,24 +397,40 @@
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // ===== splash =====
+    // ===== splash + hero animation start =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
-      if(!splash) return;
+      if(!splash){
+        document.body.classList.add("hero-anim");
+        return;
+      }
 
+      // フェードイン開始
       requestAnimationFrame(() => splash.classList.add("show"));
 
-      const hold = 1200;
+      const hold = 1000;        // 表示維持
+      const fade = 700;         // CSSと一致
+
       setTimeout(() => {
+        // フェードアウト開始
         splash.classList.add("hide");
         splash.classList.remove("show");
-        setTimeout(() => splash.remove(), 750);
+
+        // ★ここでアニメ開始（スプラッシュが薄くなり始める頃）
+        setTimeout(() => {
+          document.body.classList.add("hero-anim");
+        }, 60);
+
+        // splash除去
+        setTimeout(() => splash.remove(), fade + 60);
       }, hold);
 
+      // 保険：絶対消す
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
-      }, 3000);
+        document.body.classList.add("hero-anim");
+      }, 3200);
     });
   </script>
 </body>
