@@ -60,6 +60,7 @@
       height: 100vh;
       overflow: hidden;
       background: #0b0b0f;
+      isolation: isolate; /* ←保険：z-indexの重なり事故を防ぐ */
     }
 
     .hero-bg{
@@ -108,6 +109,7 @@
       will-change: transform, opacity;
     }
 
+    /* ★ここが動く条件 */
     .hero.play .hero-torii{
       transform: scale(1);
       opacity: 1;
@@ -449,6 +451,7 @@
 
     bgm.volume = DEFAULT_VOLUME;
     const saved = localStorage.getItem("bgm_on") === "1";
+
     function setBgmUI(isOn){
       bgmBtn.classList.toggle("on", isOn);
       bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
@@ -471,20 +474,32 @@
       }
     });
 
-    // ===== splash → hero（止まらない版：ここが鳥居復活の核心） =====
+    // ===== splash → hero（確実に鳥居を動かす） =====
     window.addEventListener("load", () => {
       const splash = document.getElementById("splash");
       const hero = document.getElementById("hero");
 
-      if (hero) hero.classList.remove("play");
+      if (!hero) return;
+
+      // いったん初期化（更新時のキャッシュ対策）
+      hero.classList.remove("play");
+
+      // splashロゴ出す
       if (splash) requestAnimationFrame(() => splash.classList.add("show"));
 
-      setTimeout(() => {
-        if (hero){
+      // ★「レイアウト確定後」にplayを付ける（ここが効く）
+      const firePlay = () => {
+        requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => hero.classList.add("play"));
+            hero.classList.add("play");
           });
-        }
+        });
+      };
+
+      // 1200ms後に発火（画像が遅くても止まらない）
+      setTimeout(() => {
+        firePlay();
+
         if (splash){
           splash.classList.add("hide");
           splash.classList.remove("show");
@@ -492,6 +507,12 @@
         }
       }, 1200);
 
+      // さらに保険：2.8秒後にもう一回playを付け直す（環境差吸収）
+      setTimeout(() => {
+        hero.classList.add("play");
+      }, 2800);
+
+      // 何があってもスプラッシュは消す
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
