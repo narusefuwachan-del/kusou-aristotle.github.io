@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.png">
   <link rel="icon" href="/images/favicon.png" type="image/png">
 
-  <!-- Google Fonts：Shippori Mincho -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,15 +16,15 @@
   <style>
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; width:100%; height:100%; }
+
     body{
       font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
-      line-height: 1.8;
       color:#fff;
       background:#000;
       overflow-x:hidden;
     }
 
-    /* ===== splash（transition方式） ===== */
+    /* ================= splash ================= */
     .splash{
       position: fixed;
       inset: 0;
@@ -32,54 +32,54 @@
       display: grid;
       place-items: center;
       z-index: 9999;
-
       opacity: 1;
       transition: opacity 700ms ease;
-      will-change: opacity;
     }
-    .splash.hide{ opacity: 0; }
+    .splash.hide{ opacity:0; }
 
     .splash-inner{
       opacity: 0;
       transform: scale(1.08);
       transition: opacity 700ms ease, transform 700ms ease;
-      will-change: opacity, transform;
     }
-    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
-    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+    .splash.show .splash-inner{
+      opacity: 1;
+      transform: scale(1);
+    }
+    .splash.hide .splash-inner{
+      opacity: 0;
+      transform: scale(0.82);
+    }
 
     .splash-inner img{
       width: min(90vw, 520px);
-      height:auto;
       display:block;
     }
 
-    /* ===== hero（メインビジュアル） ===== */
+    /* ================= hero ================= */
     .hero{
       position: relative;
-      z-index: 2;
       height: min(92vh, 900px);
       overflow: hidden;
-      background: #0b0b0f;
+      background:#0b0b0f;
     }
 
-    /* 紫色の空 */
+    /* 背景（紫空） */
     .hero-bg{
       position:absolute;
       inset:0;
       background: url("/images/home/sora.png") center / cover no-repeat;
-      transform: scale(1.02);
-      z-index: 1;
+      z-index:1;
     }
 
-    /* 鳥居（transitionで“縮小→通常”） */
+    /* 鳥居 */
     .hero-torii{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       object-fit: cover;
-      z-index: 2;
+      z-index:2;
 
       transform: scale(0.86);
       opacity: 0;
@@ -90,17 +90,16 @@
         opacity   900ms cubic-bezier(.2,.9,.2,1),
         filter    900ms cubic-bezier(.2,.9,.2,1);
       transition-delay: 120ms;
-      will-change: transform, opacity, filter;
     }
 
-    /* 立ち絵（tatie.png：下→上） */
+    /* 立ち絵（tatie.png） */
     .hero-chara{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       object-fit: cover;
-      z-index: 3;
+      z-index:3;
 
       transform: translateY(60px);
       opacity: 0;
@@ -109,10 +108,9 @@
         transform 900ms cubic-bezier(.2,.9,.2,1),
         opacity   900ms cubic-bezier(.2,.9,.2,1);
       transition-delay: 520ms;
-      will-change: transform, opacity;
     }
 
-    /* ★スプラッシュ後に .play が付いたら動く */
+    /* 再生状態 */
     .hero.play .hero-torii{
       transform: scale(1);
       opacity: 1;
@@ -123,161 +121,95 @@
       opacity: 1;
     }
 
-    /* 動きが苦手な人向け */
+    /* 動きが苦手な人 */
     @media (prefers-reduced-motion: reduce){
-      .hero-torii, .hero-chara{
-        transition: none;
-        opacity: 1;
-        transform: none;
-        filter: none;
+      .hero-torii,.hero-chara{
+        transition:none;
+        transform:none;
+        opacity:1;
+        filter:none;
       }
     }
 
-    /* ===== header（右上にハンバーガー） ===== */
+    /* ================= header ================= */
     .header{
       position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 60;
+      top:0; left:0; right:0;
+      z-index:60;
       display:flex;
-      justify-content: flex-end;
-      align-items:center;
+      justify-content:flex-end;
       padding:12px 16px;
-      background: transparent;
-      border: none;
     }
     .menu-btn{
       font-size:22px;
       background:none;
       border:none;
-      cursor:pointer;
       color:#fff;
-      padding:8px 10px;
-      border-radius:10px;
-      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      cursor:pointer;
     }
-    .menu-btn:active{ transform: scale(.98); }
 
-    /* ===== overlay/menu ===== */
+    /* ================= menu ================= */
     .overlay{
       position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .25s ease;
-      z-index: 1000;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:1000;
     }
-    .overlay.open{ opacity: 1; pointer-events: auto; }
+    .overlay.open{ opacity:1; pointer-events:auto; }
 
     .menu{
       position: fixed;
-      top: 0;
-      right: 0;
-      width: 340px;
-      max-width: 78vw;
-      height: 100vh;
-      background: rgba(0,0,0,.86);
+      top:0; right:0;
+      width:340px;
+      max-width:78vw;
+      height:100vh;
+      background:rgba(0,0,0,.86);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 18px 16px;
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1001;
-      overflow-y:auto;
-      -webkit-overflow-scrolling:touch;
-      touch-action: pan-y;
+      transform:translateX(100%);
+      transition:.25s;
+      z-index:1001;
+      padding:18px 16px;
     }
-    .menu.open{ transform: translateX(0); }
+    .menu.open{ transform:translateX(0); }
 
-    .menu-top{
-      display:flex; justify-content:space-between; align-items:center;
-      padding-bottom:10px;
-      border-bottom: 1px solid rgba(255,255,255,.14);
-      margin-bottom:8px;
-    }
-    .menu-title{ font-weight: 700; letter-spacing: .06em; color:#fff; }
-    .close-btn{
-      font-size:20px; background:none; border:none; cursor:pointer;
-      padding:8px 10px; border-radius:10px; color:#fff;
-    }
     .menu a{
       display:block;
       padding:14px 6px;
-      font-weight:700;
-      letter-spacing:.03em;
-      border-bottom: 1px solid rgba(255,255,255,.10);
       color:#fff;
+      font-weight:700;
       text-decoration:none;
+      border-bottom:1px solid rgba(255,255,255,.1);
     }
-
-    /* ===== BGMボタン（右下固定） ===== */
-    .bgm-btn{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 1200;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-
-      padding: 10px 12px;
-      border: 1px solid rgba(0,0,0,.15);
-      border-radius: 999px;
-      background: rgba(20,20,20,.72);
-      color: #fff;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .bgm-btn:active{ transform: scale(.98); }
-    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
-    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
-    .bgm-btn small{ font-weight:700; opacity:.92; }
   </style>
 </head>
 
 <body>
-  <!-- hero（body内に置く！） -->
-  <section class="hero" id="hero" aria-label="メインビジュアル">
+
+  <!-- hero -->
+  <section class="hero" id="hero">
     <div class="hero-bg"></div>
     <img class="hero-torii" src="/images/home/torii.png" alt="">
     <img class="hero-chara" src="/images/home/tatie.png" alt="">
   </section>
 
-  <!-- BGM（自動再生しない） -->
-  <audio id="bgm" preload="auto" loop>
-    <source src="audio/bgm.mp3" type="audio/mpeg">
-  </audio>
-
-  <button id="bgmBtn" class="bgm-btn" type="button" aria-label="BGMの切り替え">
-    <span class="bgm-dot" aria-hidden="true"></span>
-    <small id="bgmLabel">BGM OFF</small>
-  </button>
-
   <!-- splash -->
-  <div id="splash" class="splash" aria-label="読み込み中">
+  <div id="splash" class="splash">
     <div class="splash-inner">
-      <img src="images/logo.png" alt="空想世界アリストテレス">
+      <img src="/images/logo.png" alt="空想世界アリストテレス">
     </div>
   </div>
 
   <!-- header -->
   <header class="header">
-    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
+    <button class="menu-btn" id="menuBtn">☰</button>
   </header>
 
-  <!-- overlay/menu -->
-  <div id="overlay" class="overlay" aria-hidden="true"></div>
-
-  <nav id="menu" class="menu" aria-hidden="true">
-    <div class="menu-top">
-      <div class="menu-title">MENU</div>
-      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
-    </div>
-
+  <!-- menu -->
+  <div id="overlay" class="overlay"></div>
+  <nav id="menu" class="menu">
     <a href="/">Home</a>
     <a href="/character/">Character</a>
     <a href="/story/">Story</a>
@@ -285,144 +217,39 @@
   </nav>
 
   <script>
-    // ===== BGM ON/OFF =====
-    const bgm = document.getElementById("bgm");
-    const bgmBtn = document.getElementById("bgmBtn");
-    const bgmLabel = document.getElementById("bgmLabel");
-    const DEFAULT_VOLUME = 0.35;
-
-    const saved = localStorage.getItem("bgm_on") === "1";
-    bgm.volume = DEFAULT_VOLUME;
-
-    function setBgmUI(isOn){
-      bgmBtn.classList.toggle("on", isOn);
-      bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
-    }
-    setBgmUI(saved);
-
-    bgmBtn.addEventListener("click", async () => {
-      try{
-        if (bgm.paused){
-          bgm.volume = DEFAULT_VOLUME;
-          await bgm.play();
-          localStorage.setItem("bgm_on", "1");
-          setBgmUI(true);
-        }else{
-          bgm.pause();
-          localStorage.setItem("bgm_on", "0");
-          setBgmUI(false);
-        }
-      }catch(e){
-        alert("BGMを再生できませんでした。もう一度タップしてみて！");
-      }
-    });
-
     // ===== menu =====
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
-    const menuBtn = document.getElementById("menuBtn");
-    const closeBtn = document.getElementById("closeBtn");
-
-    const openMenu = () => {
+    document.getElementById("menuBtn").onclick = () => {
       menu.classList.add("open");
       overlay.classList.add("open");
-      menu.setAttribute("aria-hidden","false");
     };
-    const closeMenu = () => {
+    overlay.onclick = () => {
       menu.classList.remove("open");
       overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden","true");
     };
 
-    menuBtn.addEventListener("click", openMenu);
-    closeBtn.addEventListener("click", closeMenu);
-    overlay.addEventListener("click", closeMenu);
-    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+    // ===== splash → hero animation =====
+    window.addEventListener("load", async () => {
+      const splash = document.getElementById("splash");
+      const hero = document.getElementById("hero");
 
-  // ===== splash + hero transition発火（確実に動かす版） =====
-  window.addEventListener("load", async () => {
-    const splash = document.getElementById("splash");
-    const hero = document.getElementById("hero");
+      // 画像読み込み待ち（重要）
+      const imgs = document.querySelectorAll(".hero img");
+      await Promise.all([...imgs].map(img =>
+        img.decode ? img.decode().catch(()=>{}) :
+        new Promise(res => img.complete ? res() : img.onload = res)
+      ));
 
-    // ★保険：毎回「未再生状態」に戻してから始める
-    if (hero) hero.classList.remove("play");
-
-    // ★画像の読み込みを待つ（これが超重要）
-    const toriiImg = document.querySelector(".hero-torii");
-    const charaImg = document.querySelector(".hero-chara");
-
-    const waitImg = (img) => {
-      if (!img) return Promise.resolve();
-      // decodeが使えるならそれ優先（チラつき減る）
-      if (img.decode) return img.decode().catch(() => {});
-      // 古い環境用
-      return new Promise((res) => {
-        if (img.complete) return res();
-        img.addEventListener("load", res, { once: true });
-        img.addEventListener("error", res, { once: true });
-      });
-    };
-
-    await Promise.all([waitImg(toriiImg), waitImg(charaImg)]);
-
-    // splash が無い場合でも hero を動かす
-    if (!splash) {
-      if (hero) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => hero.classList.add("play"));
-        });
-      }
-      return;
-    }
-
-    // まずロゴをフェードイン
-    requestAnimationFrame(() => splash.classList.add("show"));
-
-    const hold = 1200;
-
-    setTimeout(() => {
-      // ★ここでトップ画像のtransition発火（2回RAFで確実に「変化」にする）
-      if (hero) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => hero.classList.add("play"));
-        });
-      }
-
-      // その後スプラッシュを消す
-      splash.classList.add("hide");
-      splash.classList.remove("show");
-
-      setTimeout(() => splash.remove(), 750);
-    }, hold);
-
-    // 保険：何があっても消す
-    setTimeout(() => {
-      const s = document.getElementById("splash");
-      if (s) s.remove();
-    }, 3000);
-  });
-      // まずロゴをフェードイン
       requestAnimationFrame(() => splash.classList.add("show"));
 
-      const hold = 1200;
-
       setTimeout(() => {
-        // ★ここでトップ画像のtransition発火
-        if(hero) hero.classList.add("play");
-
-        // その後スプラッシュを消す
+        hero.classList.add("play");
         splash.classList.add("hide");
-        splash.classList.remove("show");
-
         setTimeout(() => splash.remove(), 750);
-      }, hold);
-
-      // 保険：何があっても消す
-      setTimeout(() => {
-        const s = document.getElementById("splash");
-        if (s) s.remove();
-      }, 3000);
+      }, 1200);
     });
   </script>
+
 </body>
 </html>
