@@ -13,6 +13,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ★追加：スプラッシュ背景もフェードさせる */
+.splash{
+  transition: opacity 700ms ease;
+  will-change: opacity;
+}
+
+.splash.hide{
+  opacity: 0;
+}
     /* ===== BGMボタン（右下固定） ===== */
 .bgm-btn{
   position: fixed;
