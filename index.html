@@ -405,6 +405,17 @@
   </button>
 
   <script>
+    // ===== SHARE（X / LINE） =====
+(() => {
+  const url = encodeURIComponent(location.href);
+  const title = encodeURIComponent(document.title);
+
+  const shareX = document.getElementById("shareX");
+  const shareLINE = document.getElementById("shareLINE");
+
+  if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
+  if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+})();
     // menu
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
