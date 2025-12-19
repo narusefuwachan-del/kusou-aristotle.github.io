@@ -245,6 +245,80 @@
     }
 
     /* （テキストは消してるので、本文は置かない） */
+    .hero{
+  position: relative;
+  height: min(92vh, 900px);
+  overflow: hidden;
+  background: #0b0b0f;
+}
+
+/* ===== 紫色の空 ===== */
+.hero-bg{
+  position: absolute;
+  inset: 0;
+  background: url("/images/home/sora.png") center / cover no-repeat;
+  transform: scale(1.02);
+  z-index: 1;
+}
+
+/* ===== 鳥居 ===== */
+.hero-torii{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  transform: scale(0.86);
+  opacity: 0;
+  filter: blur(1px);
+
+  animation: toriiIn 900ms cubic-bezier(.2,.9,.2,1) 120ms forwards;
+  z-index: 2;
+}
+
+/* ===== 立ち絵 ===== */
+.hero-chara{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  transform: translateY(60px);
+  opacity: 0;
+
+  animation: charaUp 900ms cubic-bezier(.2,.9,.2,1) 520ms forwards;
+  z-index: 3;
+}
+
+/* ===== 鳥居アニメ ===== */
+@keyframes toriiIn{
+  to{
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* ===== 立ち絵アニメ ===== */
+@keyframes charaUp{
+  to{
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===== 動きが苦手な人向け ===== */
+@media (prefers-reduced-motion: reduce){
+  .hero-torii,
+  .hero-chara{
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
   </style>
 </head>
 
