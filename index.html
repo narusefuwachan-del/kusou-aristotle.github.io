@@ -15,12 +15,11 @@
 
   <style>
     *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; width:100%; height:100%; }
-
+    html,body{ margin:0; padding:0; width:100%; }
     body{
-      font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
-      color:#fff;
+      font-family:"Shippori Mincho","Yu Mincho","MS Mincho",serif;
       background:#000;
+      color:#fff;
       overflow-x:hidden;
     }
 
@@ -69,11 +68,10 @@
       height:100%;
       object-fit:cover;
       z-index:2;
-
       transform:scale(.86);
       opacity:0;
       filter:blur(1px);
-      transition:all .9s cubic-bezier(.2,.9,.2,1);
+      transition:transform .9s ease, opacity .9s ease, filter .9s ease;
     }
 
     .hero-chara{
@@ -83,24 +81,42 @@
       height:100%;
       object-fit:cover;
       z-index:3;
-
       transform:translateY(60px);
       opacity:0;
-      transition:all .9s cubic-bezier(.2,.9,.2,1);
-      transition-delay:.4s;
+      transition:transform .9s ease, opacity .9s ease;
     }
 
     .hero.play .hero-torii{
       transform:scale(1);
       opacity:1;
-      filter:none;
+      filter:blur(0);
     }
     .hero.play .hero-chara{
-      transform:none;
+      transform:translateY(0);
       opacity:1;
     }
 
-    /* ===== header ===== */
+    /* ===== 黒背景セクション ===== */
+    .black{
+      min-height:100vh;
+      background:#000;
+      display:grid;
+      place-items:center;
+      padding:40px 16px;
+    }
+
+    .welcome-img{
+      width:min(720px,90vw);
+      height:auto;
+    }
+
+    .noise-img{
+      width:min(1000px,92vw);
+      height:auto;
+      opacity:.95;
+    }
+
+    /* ===== header/menu ===== */
     .header{
       position:fixed;
       top:0; right:0;
@@ -115,59 +131,74 @@
       cursor:pointer;
     }
 
-    /* ===== 黒背景セクション ===== */
-    .black{
-      min-height:100vh;
-      background:#000;
-      display:grid;
-      place-items:center;
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:1000;
+    }
+    .overlay.open{ opacity:1; pointer-events:auto; }
+
+    .menu{
+      position:fixed;
+      top:0; right:0;
+      width:340px;
+      height:100vh;
+      background:rgba(0,0,0,.86);
+      backdrop-filter:blur(10px);
+      transform:translateX(100%);
+      transition:.25s;
+      z-index:1001;
+      padding:18px;
+    }
+    .menu.open{ transform:translateX(0); }
+
+    .menu a{
+      display:block;
+      padding:14px 6px;
+      color:#fff;
+      text-decoration:none;
+      border-bottom:1px solid rgba(255,255,255,.1);
     }
 
-    .welcome-img{
-      width:min(720px,90vw);
-      height:auto;
-      opacity:.95;
+    /* ===== BGM ===== */
+    .bgm-btn{
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:1200;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(20,20,20,.7);
+      border:1px solid rgba(255,255,255,.2);
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      gap:8px;
+      align-items:center;
     }
-
-    /* ===== ごちゃ文字 ===== */
-    .gacha{
-      min-height:100vh;
-      background:#000;
-      display:grid;
-      place-items:center;
+    .bgm-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#777;
     }
-
-    .noise-img{
-      width:min(1100px,92vw);
-      height:auto;
-      opacity:.95;
-    }
+    .bgm-btn.on .bgm-dot{ background:#7fda9b; }
 
     /* ===== footer ===== */
     .footer{
-      padding:48px 16px;
+      background:rgba(0,0,0,.35);
       text-align:center;
-      background:#000;
+      padding:56px 16px;
       border-top:1px solid rgba(255,255,255,.1);
     }
     .footer-logo{
-      width:240px;
-      max-width:70vw;
+      width:min(260px,70vw);
       margin-bottom:20px;
     }
-
-    .footer-sns{
-      display:flex;
-      justify-content:center;
-      gap:16px;
-      margin-bottom:18px;
-    }
-
-    .sns-btn img{
-      width:22px;
-      height:22px;
-    }
-
     .footer-note{
       font-size:12px;
       opacity:.6;
@@ -185,56 +216,74 @@
 </section>
 
 <!-- splash -->
-<div class="splash" id="splash">
+<div id="splash" class="splash">
   <div class="splash-inner">
-    <img src="/images/logo.png" alt="空想世界アリストテレス" style="width:520px;max-width:90vw;">
+    <img src="/images/logo.png" alt="">
   </div>
 </div>
 
 <!-- welcome -->
 <section class="black">
-  <img src="/images/home/welcome.png" alt="ようこそ、空想世界アリストテレスへ" class="welcome-img">
+  <img src="/images/home/welcome.png" class="welcome-img" alt="">
 </section>
 
-<!-- noise text -->
-<section class="gacha">
-  <img src="/images/home/noise-text.png" alt="" aria-hidden="true" class="noise-img">
+<!-- noise -->
+<section class="black">
+  <img src="/images/home/noise-text.png" class="noise-img" alt="">
 </section>
 
 <!-- footer -->
 <footer class="footer">
-  <img src="/images/logo.png" class="footer-logo" alt="空想世界アリストテレス">
-
-  <div class="footer-sns">
-    <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank">
-      <img src="/images/icons/x.png" alt="">
-    </a>
-    <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank">
-      <img src="/images/icons/youtube.png" alt="">
-    </a>
-    <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank">
-      <img src="/images/icons/nola.png" alt="">
-    </a>
-  </div>
-
+  <img src="/images/logo.png" class="footer-logo" alt="">
   <div class="footer-note">© 空想世界アリストテレス</div>
 </footer>
 
+<!-- BGM -->
+<audio id="bgm" loop>
+  <source src="/audio/bgm.mp3" type="audio/mpeg">
+</audio>
+<button class="bgm-btn" id="bgmBtn">
+  <span class="bgm-dot"></span>
+  <small id="bgmLabel">BGM OFF</small>
+</button>
+
 <script>
-  window.addEventListener("load",()=>{
-    const hero=document.getElementById("hero");
-    const splash=document.getElementById("splash");
+/* splash → hero（reflow） */
+window.addEventListener("load",()=>{
+  const hero=document.getElementById("hero");
+  const splash=document.getElementById("splash");
 
-    hero.classList.remove("play");
-    void hero.offsetWidth;
-    requestAnimationFrame(()=>hero.classList.add("play"));
+  hero.classList.remove("play");
+  void hero.offsetWidth;
 
+  requestAnimationFrame(()=>hero.classList.add("play"));
+
+  if(splash){
     splash.classList.add("show");
     setTimeout(()=>{
       splash.classList.add("hide");
       setTimeout(()=>splash.remove(),700);
     },1200);
-  });
+  }
+});
+
+/* BGM */
+const bgm=document.getElementById("bgm");
+const btn=document.getElementById("bgmBtn");
+const label=document.getElementById("bgmLabel");
+bgm.volume=.35;
+
+btn.onclick=async()=>{
+  if(bgm.paused){
+    await bgm.play();
+    btn.classList.add("on");
+    label.textContent="BGM ON";
+  }else{
+    bgm.pause();
+    btn.classList.remove("on");
+    label.textContent="BGM OFF";
+  }
+};
 </script>
 
 </body>
