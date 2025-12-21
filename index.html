@@ -60,7 +60,7 @@
       height: 100vh;
       overflow: hidden;
       background: #0b0b0f;
-      isolation: isolate; /* ←保険：z-indexの重なり事故を防ぐ */
+      isolation: isolate;
     }
 
     .hero-bg{
@@ -109,7 +109,6 @@
       will-change: transform, opacity;
     }
 
-    /* ★ここが動く条件 */
     .hero.play .hero-torii{
       transform: scale(1);
       opacity: 1;
@@ -239,6 +238,66 @@
     .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
     .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
     .bgm-btn small{ font-weight:700; opacity:.92; }
+
+    /* =========================================================
+       ★ ここから今回追加：スクロール演出
+       ========================================================= */
+
+    /* 黒背景に落ちる“間” */
+    .black-stage{
+      position: relative;
+      background: #000;
+      min-height: 130vh; /* ちょいスクロールさせる */
+      display: grid;
+      place-items: center;
+      padding: 28vh 16px 24vh;
+    }
+
+    /* 「ようこそ…」を画像で出す想定 */
+    .welcome-img{
+      width: min(92vw, 760px);
+      height: auto;
+      display:block;
+      opacity: .98;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,.65));
+    }
+
+    /* ごちゃごちゃ文字：2画面ぶんスクロールで“見切れ→見える” */
+    .noise-stage{
+      background:#000;
+      position: relative;
+      height: 220vh;        /* ←ここでスクロール量を作る（2画面ちょい） */
+      padding: 0;
+      overflow: clip;
+    }
+
+    .noise-sticky{
+      position: sticky;
+      top: 0;
+      height: 100vh;        /* 画面いっぱい固定 */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .noise-img{
+      /* 拡大して、1枚が画面に収まりきらない状態を作る */
+      width: 180vw;         /* ←拡大率。好みで 140〜220vw とかに調整 */
+      max-width: none;
+      height: auto;
+      display:block;
+      opacity: .98;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+      filter: drop-shadow(0 12px 40px rgba(0,0,0,.7));
+    }
+
+    /* PCだと横がデカすぎるなら少し抑える */
+    @media (min-width: 900px){
+      .noise-img{ width: 140vw; }
+      .noise-stage{ height: 200vh; }
+    }
 
     /* ===== footer ===== */
     .footer{
@@ -373,6 +432,23 @@
     <small id="bgmLabel">BGM OFF</small>
   </button>
 
+  <!-- =======================================================
+       ★ ここから今回追加：スクロールで黒背景→welcome→ノイズ文字
+       ======================================================= -->
+
+  <!-- 黒背景（少しスクロールしたら切り替わる） -->
+  <section class="black-stage" aria-label="黒背景エリア">
+    <!-- 「ようこそ…」は画像で出す想定 -->
+    <img class="welcome-img" src="/images/home/welcome.png" alt="ようこそ、空想世界アリストテレスへ">
+  </section>
+
+  <!-- ごちゃごちゃ文字（1枚を拡大して2画面スクロール） -->
+  <section class="noise-stage" aria-label="ごちゃごちゃ文字">
+    <div class="noise-sticky">
+      <img class="noise-img" src="/images/home/noise-text.png" alt="">
+    </div>
+  </section>
+
   <!-- footer -->
   <footer class="footer" aria-label="フッター">
     <div class="footer-inner">
@@ -482,10 +558,10 @@
     // 1) 初期状態に戻す
     hero.classList.remove("play");
 
-    // 2) ★ここが核心：強制的にレイアウト計算させて「初期状態」を確定
+    // 2) 強制レイアウト計算で初期状態を確定
     void hero.offsetWidth;
 
-    // 3) 次のフレームでplay付与 → transitionが必ず走る
+    // 3) 次のフレームでplay付与
     requestAnimationFrame(() => {
       hero.classList.add("play");
     });
@@ -494,7 +570,6 @@
   function startSplashSequence(){
     const splash = document.getElementById("splash");
 
-    // splashがあるなら表示 → 1.2秒後に消しながらアニメ開始
     if (splash){
       requestAnimationFrame(() => splash.classList.add("show"));
 
@@ -506,21 +581,18 @@
         setTimeout(() => splash.remove(), 750);
       }, 1200);
 
-      // 保険：何があっても3秒で消す
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
       }, 3000);
     }else{
-      // splash無しでも必ず動かす
       startHeroAnimation();
     }
   }
 
-  // load時
   window.addEventListener("load", startSplashSequence);
 
-  // ★超重要：戻る/進む（bfcache）でも動くようにする
+  // 戻る/進む（bfcache）でも再発火
   window.addEventListener("pageshow", (e) => {
     if (e.persisted) startSplashSequence();
   });
