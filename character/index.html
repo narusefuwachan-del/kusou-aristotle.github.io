@@ -11,6 +11,62 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    .footer{
+  position: relative;
+  z-index: 5;
+  padding: 44px 16px 56px;
+  text-align: center;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.footer-inner{
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.footer-logo{
+  width: min(64vw, 260px);
+  margin: 0 auto 18px;
+  display: block;
+}
+
+.footer-title{
+  font-size: 13px;
+  letter-spacing: .08em;
+  opacity: .8;
+  margin: 12px 0;
+}
+
+.footer-sns,
+.share-row{
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sns-btn{
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+}
+
+.icon-img{
+  width: 22px;
+  height: 22px;
+}
+
+.footer-note{
+  margin-top: 18px;
+  font-size: 12px;
+  opacity: .6;
+}
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
     body{
@@ -370,6 +426,40 @@
 </head>
 
 <body>
+  <!-- footer -->
+<footer class="footer" aria-label="フッター">
+  <div class="footer-inner">
+    <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
+
+    <!-- SHARE -->
+    <div class="share" aria-label="シェア">
+      <div class="share-row">
+        <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
+          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+        </a>
+        <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
+          <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
+        </a>
+      </div>
+    </div>
+
+    <!-- OFFICIAL -->
+    <div class="footer-title">OFFICIAL</div>
+    <div class="footer-sns" aria-label="公式SNS">
+      <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener">
+        <img class="icon-img" src="/images/icons/x.png" alt="">
+      </a>
+      <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank" rel="noopener">
+        <img class="icon-img" src="/images/icons/youtube.png" alt="">
+      </a>
+      <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank" rel="noopener">
+        <img class="icon-img" src="/images/icons/nola.png" alt="">
+      </a>
+    </div>
+
+    <div class="footer-note">© 空想世界アリストテレス</div>
+  </div>
+</footer>
   <header class="header">
     <a href="/" class="site-title">空想世界アリストテレス</a>
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
