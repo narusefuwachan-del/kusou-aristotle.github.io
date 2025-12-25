@@ -21,6 +21,8 @@
       background:#0b0b0f;
       overflow-x:hidden;
     }
+
+    /* ===== header ===== */
     .header{
       position: sticky; top:0; z-index:60;
       display:flex; justify-content:space-between; align-items:center;
@@ -30,7 +32,7 @@
       -webkit-backdrop-filter: blur(8px);
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
-    .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; }
+    .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; text-decoration:none; }
     .menu-btn{ font-size:22px; background:none; border:none; cursor:pointer; color:#fff; padding:8px 10px; border-radius:10px; }
 
     .box{ max-width:920px; margin:0 auto; padding:18px 16px 56px; }
@@ -39,7 +41,15 @@
     a{ color:#b7c6ff; text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:1000; }
+    /* ===== overlay/menu ===== */
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease;
+      z-index:1000;
+    }
     .overlay.open{ opacity:1; pointer-events:auto; }
 
     .menu{
@@ -57,10 +67,107 @@
       touch-action: pan-y;
     }
     .menu.open{ transform:translateX(0); }
-    .menu-top{ display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.14); margin-bottom:8px; color:#fff; }
+    .menu-top{
+      display:flex; justify-content:space-between; align-items:center;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,.14);
+      margin-bottom:8px;
+      color:#fff;
+    }
     .menu-title{ font-weight:700; letter-spacing:.06em; }
-    .close-btn{ font-size:20px; background:none; border:none; cursor:pointer; padding:8px 10px; border-radius:10px; color:#fff; }
-    .menu a{ display:block; padding:14px 6px; font-weight:700; letter-spacing:.03em; border-bottom:1px solid rgba(255,255,255,.10); color:#fff; }
+    .close-btn{
+      font-size:20px; background:none; border:none; cursor:pointer;
+      padding:8px 10px; border-radius:10px; color:#fff;
+    }
+    .menu a{
+      display:block;
+      padding:14px 6px;
+      font-weight:700;
+      letter-spacing:.03em;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      color:#fff;
+      text-decoration:none;
+    }
+
+    /* ===== footer（Homeと同じ） ===== */
+    .footer{
+      position: relative;
+      z-index: 5;
+      padding: 44px 16px 56px;
+      text-align: center;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+    .footer-inner{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .footer-logo{
+      width: min(64vw, 260px);
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      opacity: .92;
+      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
+    }
+    .footer-title{
+      margin: 0 0 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+    }
+    .footer-sns{
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 12px 0 6px;
+    }
+    .share{
+      margin: 10px 0 18px;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+    .share-row{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .sns-btn{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      text-decoration: none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .sns-btn:active{ transform: scale(.98); }
+    .sns-btn:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.28);
+    }
+    .icon-img{
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      display: block;
+      opacity: .92;
+    }
+    .footer-note{
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,.60);
+      letter-spacing: .03em;
+    }
   </style>
 </head>
 
@@ -88,7 +195,55 @@
     <a href="/guide/">Guide</a>
   </nav>
 
+  <!-- footer（Homeと同じ） -->
+  <footer class="footer" aria-label="フッター">
+    <div class="footer-inner">
+      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
+
+      <!-- SHARE（ロゴだけ） -->
+      <div class="share" aria-label="シェア">
+        <div class="share-row">
+          <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
+            <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+          </a>
+          <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
+            <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
+          </a>
+        </div>
+      </div>
+
+      <!-- OFFICIAL -->
+      <div class="footer-title">OFFICIAL</div>
+      <div class="footer-sns" aria-label="公式SNS">
+        <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener" aria-label="X">
+          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+        </a>
+
+        <a class="sns-btn" href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo" target="_blank" rel="noopener" aria-label="YouTube">
+          <img class="icon-img" src="/images/icons/youtube.png" alt="" aria-hidden="true">
+        </a>
+
+        <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank" rel="noopener" aria-label="Nola">
+          <img class="icon-img" src="/images/icons/nola.png" alt="" aria-hidden="true">
+        </a>
+      </div>
+
+      <div class="footer-note">© 空想世界アリストテレス</div>
+    </div>
+  </footer>
+
   <script>
+    // ===== SHARE（X / LINE） =====
+    (() => {
+      const url = encodeURIComponent(location.href);
+      const title = encodeURIComponent(document.title);
+      const shareX = document.getElementById("shareX");
+      const shareLINE = document.getElementById("shareLINE");
+      if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
+      if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+    })();
+
+    // ===== menu =====
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
@@ -102,8 +257,12 @@
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
+    // スワイプで閉じる（右→左）
     let sx=0, sy=0, tracking=false;
-    menu.addEventListener("touchstart", e=>{ const t=e.touches[0]; sx=t.clientX; sy=t.clientY; tracking=true; }, {passive:true});
+    menu.addEventListener("touchstart", e=>{
+      const t=e.touches[0]; sx=t.clientX; sy=t.clientY; tracking=true;
+    }, {passive:true});
+
     menu.addEventListener("touchmove", e=>{
       if(!tracking) return;
       const t=e.touches[0];
@@ -113,6 +272,7 @@
         if(dx < -60){ closeMenu(); tracking=false; }
       }
     }, {passive:false});
+
     menu.addEventListener("touchend", ()=>{ tracking=false; }, {passive:true});
   </script>
 </body>
