@@ -11,62 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    .footer{
-  position: relative;
-  z-index: 5;
-  padding: 44px 16px 56px;
-  text-align: center;
-  background: rgba(0,0,0,.35);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(255,255,255,.10);
-}
-
-.footer-inner{
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-.footer-logo{
-  width: min(64vw, 260px);
-  margin: 0 auto 18px;
-  display: block;
-}
-
-.footer-title{
-  font-size: 13px;
-  letter-spacing: .08em;
-  opacity: .8;
-  margin: 12px 0;
-}
-
-.footer-sns,
-.share-row{
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.sns-btn{
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.06);
-}
-
-.icon-img{
-  width: 22px;
-  height: 22px;
-}
-
-.footer-note{
-  margin-top: 18px;
-  font-size: 12px;
-  opacity: .6;
-}
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
     body{
@@ -87,7 +31,7 @@
       -webkit-backdrop-filter: blur(8px);
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
-    .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; }
+    .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; text-decoration:none; }
     .menu-btn{ font-size:22px; background:none; border:none; cursor:pointer; color:#fff; padding:8px 10px; border-radius:10px; }
 
     .box{ max-width:920px; margin:0 auto; padding:18px 16px 56px; }
@@ -294,7 +238,6 @@
       border-color: rgba(255,75,75,.35);
     }
 
-    /* ===== 画像本体（フェード） ===== */
     .modal-body{
       min-height: 120vh;
       padding-bottom: 40vh;
@@ -417,6 +360,86 @@
       color: #ffb3b3;
     }
 
+    /* ===== footer ===== */
+    .footer{
+      position: relative;
+      z-index: 5;
+      padding: 44px 16px 56px;
+      text-align: center;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+    .footer-inner{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .footer-logo{
+      width: min(64vw, 260px);
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      opacity: .92;
+      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
+    }
+    .footer-title{
+      margin: 0 0 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+    }
+    .footer-sns{
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 12px 0 6px;
+    }
+    .share{
+      margin: 10px 0 18px;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+    .share-row{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .sns-btn{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      text-decoration: none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .sns-btn:active{ transform: scale(.98); }
+    .sns-btn:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.28);
+    }
+    .icon-img{
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      display: block;
+      opacity: .92;
+    }
+    .footer-note{
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,.60);
+      letter-spacing: .03em;
+    }
+
     @media (prefers-reduced-motion: reduce){
       .pOverlay, .modal, .modal-inner, .psheet, .pstand, .spoilerOverlay, .spoilerModal{ transition:none; }
       .psheet, .pstand{ opacity:1; transform:none; }
@@ -426,40 +449,6 @@
 </head>
 
 <body>
-  <!-- footer -->
-<footer class="footer" aria-label="フッター">
-  <div class="footer-inner">
-    <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
-
-    <!-- SHARE -->
-    <div class="share" aria-label="シェア">
-      <div class="share-row">
-        <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
-          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
-        </a>
-        <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
-          <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
-        </a>
-      </div>
-    </div>
-
-    <!-- OFFICIAL -->
-    <div class="footer-title">OFFICIAL</div>
-    <div class="footer-sns" aria-label="公式SNS">
-      <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener">
-        <img class="icon-img" src="/images/icons/x.png" alt="">
-      </a>
-      <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank" rel="noopener">
-        <img class="icon-img" src="/images/icons/youtube.png" alt="">
-      </a>
-      <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank" rel="noopener">
-        <img class="icon-img" src="/images/icons/nola.png" alt="">
-      </a>
-    </div>
-
-    <div class="footer-note">© 空想世界アリストテレス</div>
-  </div>
-</footer>
   <header class="header">
     <a href="/" class="site-title">空想世界アリストテレス</a>
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
@@ -502,18 +491,15 @@
       </div>
 
       <div class="modal-body" id="modalBody">
-        <!-- ★2期だけ出す立ち絵 -->
         <div class="stand-wrap" id="standWrap">
           <img id="pstand" class="pstand" src="" alt="">
         </div>
-
-        <!-- 1期/2期/ネタバレ 共通：プロフィール -->
         <img id="psheet" class="psheet" src="" alt="">
       </div>
     </div>
   </section>
 
-  <!-- ===== ネタバレ確認（縺偵ｓ縺倥▽用） ===== -->
+  <!-- ===== ネタバレ確認 ===== -->
   <div id="spoilerOverlay" class="spoilerOverlay" aria-hidden="true"></div>
   <section id="spoilerModal" class="spoilerModal" aria-hidden="true">
     <div class="spoilerBox" role="dialog" aria-modal="true" aria-label="ネタバレ確認">
@@ -526,55 +512,82 @@
     </div>
   </section>
 
+  <!-- ===== footer（★ここが正しい位置：ページ末尾） ===== -->
+  <footer class="footer" aria-label="フッター">
+    <div class="footer-inner">
+      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
+
+      <div class="share" aria-label="シェア">
+        <div class="share-row">
+          <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
+            <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+          </a>
+          <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
+            <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-title">OFFICIAL</div>
+      <div class="footer-sns" aria-label="公式SNS">
+        <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener" aria-label="X">
+          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+        </a>
+        <a class="sns-btn" href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo" target="_blank" rel="noopener" aria-label="YouTube">
+          <img class="icon-img" src="/images/icons/youtube.png" alt="" aria-hidden="true">
+        </a>
+        <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank" rel="noopener" aria-label="Nola">
+          <img class="icon-img" src="/images/icons/nola.png" alt="" aria-hidden="true">
+        </a>
+      </div>
+
+      <div class="footer-note">© 空想世界アリストテレス</div>
+    </div>
+  </footer>
+
   <script>
+    // ===== SHARE（X / LINE） =====
+    (() => {
+      const url = encodeURIComponent(location.href);
+      const title = encodeURIComponent(document.title);
+      const shareX = document.getElementById("shareX");
+      const shareLINE = document.getElementById("shareLINE");
+      if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
+      if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+    })();
+
     // ====== 1) キャラデータ ======
-    // ★2期を分割したいキャラだけ stand を入れる（stand_S2等は不要）
     const characters = [
-      {
-        id:"sui", name:"翠",
-        icon:"/images/characters/sui_icon.png",
-        sheetS1:"/images/characters/sui_sheet_s1.png",
-
-        // 2期：立ち絵 + プロフィール（分割）
-        stand:"/images/characters/sui_stand.png",
-        sheetS2:"/images/characters/sui_sheet_s2.png",
-      },
-
-      { id:"rei",   name:"零",     icon:"/images/characters/rei_icon.png",  sheetS1:"/images/characters/rei_sheet_s1.png",  stand:"/images/characters/rei_stand.png", sheetS2:"/images/characters/rei_sheet_s2.png" },
-      { id:"kiire", name:"季依恋", icon:"/images/characters/kiire_icon.png", sheetS1:"/images/characters/kiire_sheet_s1.png", stand:"/images/characters/kiire_stand.png",sheetS2:"/images/characters/kiire_sheet_s2.png" },
-      { id:"hari",  name:"羽璃",   icon:"/images/characters/hari_icon.png",  sheetS1:"/images/characters/hari_sheet_s1.png", stand:"/images/characters/hari_stand.png", sheetS2:"/images/characters/hari_sheet_s2.png" },
-      { id:"yuugi", name:"夕霧",   icon:"/images/characters/yuugi_icon.png", sheetS1:"/images/characters/yuugi_sheet_s1.png",stand:"/images/characters/yuugi_stand.png", sheetS2:"/images/characters/yuugi_sheet_s2.png" },
-      { id:"reine", name:"零音",   icon:"/images/characters/reine_icon.png", sheetS1:"/images/characters/reine_sheet_s1.png", stand:"/images/characters/reine_stand.png",sheetS2:"/images/characters/reine_sheet_s2.png" },
-      { id:"yuri",  name:"結莉",   icon:"/images/characters/yuri_icon.png",  sheetS1:"/images/characters/yuri_sheet_s1.png", stand:"/images/characters/yuri_stand.png", sheetS2:"/images/characters/yuri_sheet_s2.png" },
-      { id:"yume",  name:"優芽",   icon:"/images/characters/yume_icon.png",  sheetS1:"/images/characters/yume_sheet_s1.png", stand:"/images/characters/yume_stand.png", sheetS2:"/images/characters/yume_sheet_s2.png" },
-      { id:"reto",  name:"怜冬",   icon:"/images/characters/reto_icon.png",  sheetS1:"/images/characters/reto_sheet_s1.png", stand:"/images/characters/reto_stand.png", sheetS2:"/images/characters/reto_sheet_s2.png" },
-      { id:"hana",  name:"白花",   icon:"/images/characters/hana_icon.png",  sheetS1:"/images/characters/hana_sheet_s1.png",stand:"/images/characters/hana_stand.png",  sheetS2:"/images/characters/hana_sheet_s2.png" },
+      { id:"sui", name:"翠", icon:"/images/characters/sui_icon.png", sheetS1:"/images/characters/sui_sheet_s1.png", stand:"/images/characters/sui_stand.png", sheetS2:"/images/characters/sui_sheet_s2.png" },
+      { id:"rei", name:"零", icon:"/images/characters/rei_icon.png", sheetS1:"/images/characters/rei_sheet_s1.png", stand:"/images/characters/rei_stand.png", sheetS2:"/images/characters/rei_sheet_s2.png" },
+      { id:"kiire", name:"季依恋", icon:"/images/characters/kiire_icon.png", sheetS1:"/images/characters/kiire_sheet_s1.png", stand:"/images/characters/kiire_stand.png", sheetS2:"/images/characters/kiire_sheet_s2.png" },
+      { id:"hari", name:"羽璃", icon:"/images/characters/hari_icon.png", sheetS1:"/images/characters/hari_sheet_s1.png", stand:"/images/characters/hari_stand.png", sheetS2:"/images/characters/hari_sheet_s2.png" },
+      { id:"yuugi", name:"夕霧", icon:"/images/characters/yuugi_icon.png", sheetS1:"/images/characters/yuugi_sheet_s1.png", stand:"/images/characters/yuugi_stand.png", sheetS2:"/images/characters/yuugi_sheet_s2.png" },
+      { id:"reine", name:"零音", icon:"/images/characters/reine_icon.png", sheetS1:"/images/characters/reine_sheet_s1.png", stand:"/images/characters/reine_stand.png", sheetS2:"/images/characters/reine_sheet_s2.png" },
+      { id:"yuri", name:"結莉", icon:"/images/characters/yuri_icon.png", sheetS1:"/images/characters/yuri_sheet_s1.png", stand:"/images/characters/yuri_stand.png", sheetS2:"/images/characters/yuri_sheet_s2.png" },
+      { id:"yume", name:"優芽", icon:"/images/characters/yume_icon.png", sheetS1:"/images/characters/yume_sheet_s1.png", stand:"/images/characters/yume_stand.png", sheetS2:"/images/characters/yume_sheet_s2.png" },
+      { id:"reto", name:"怜冬", icon:"/images/characters/reto_icon.png", sheetS1:"/images/characters/reto_sheet_s1.png", stand:"/images/characters/reto_stand.png", sheetS2:"/images/characters/reto_sheet_s2.png" },
+      { id:"hana", name:"白花", icon:"/images/characters/hana_icon.png", sheetS1:"/images/characters/hana_sheet_s1.png", stand:"/images/characters/hana_stand.png", sheetS2:"/images/characters/hana_sheet_s2.png" },
 
       { id:"yukina", name:"雪那", icon:"/images/characters/yukina_icon.png",
-        sheetS1:"/images/characters/yukina_sheet_s1.png",
-        sheetS2:"/images/characters/yukina_sheet_s2.png",
-        sheetSP:"/images/characters/yukina_sheet_sp.png",
-        spoilerOnly:true,
-      stand:"/images/characters/yukina_stand.png",
+        sheetS1:"/images/characters/yukina_sheet_s1.png", stand:"/images/characters/yukina_stand.png",
+        sheetS2:"/images/characters/yukina_sheet_s2.png", sheetSP:"/images/characters/yukina_sheet_sp.png",
+        spoilerOnly:true
       },
       { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png",
-        sheetS1:"/images/characters/nemuru_sheet_s1.png",
-        sheetS2:"/images/characters/nemuru_sheet_s2.png",
-        sheetSP:"/images/characters/nemuru_sheet_sp.png",
-        spoilerOnly:true,
-     stand:"/images/characters/nemuru_stand.png",
+        sheetS1:"/images/characters/nemuru_sheet_s1.png", stand:"/images/characters/nemuru_stand.png",
+        sheetS2:"/images/characters/nemuru_sheet_s2.png", sheetSP:"/images/characters/nemuru_sheet_sp.png",
+        spoilerOnly:true
       },
       { id:"akiha", name:"あきは", icon:"/images/characters/akiha_icon.png",
-        sheetS1:"/images/characters/akiha_sheet_s1.png",
-        sheetS2:"/images/characters/akiha_sheet_s2.png",
-        sheetSP:"/images/characters/akiha_sheet_sp.png",
-        spoilerOnly:true,
-     stand:"/images/characters/akiha_stand.png", },
+        sheetS1:"/images/characters/akiha_sheet_s1.png", stand:"/images/characters/akiha_stand.png",
+        sheetS2:"/images/characters/akiha_sheet_s2.png", sheetSP:"/images/characters/akiha_sheet_sp.png",
+        spoilerOnly:true
+      },
 
       { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png",
-        sheetS1:"/images/characters/anjela_sheet_s1.png",
-        sheetS2:"/images/characters/anjela_sheet_s2.png",
-       stand:"/images/characters/anjela_stand.png",
+        sheetS1:"/images/characters/anjela_sheet_s1.png", stand:"/images/characters/anjela_stand.png",
+        sheetS2:"/images/characters/anjela_sheet_s2.png"
       },
     ];
 
@@ -595,14 +608,12 @@
     const ptitle = document.getElementById("ptitle");
     const charClose = document.getElementById("charClose");
 
-    // ★追加：2期立ち絵
     const standWrap = document.getElementById("standWrap");
     const pstand = document.getElementById("pstand");
 
     const tabSpoiler = document.getElementById("tabSpoiler");
     const tabs = Array.from(document.querySelectorAll(".tab"));
 
-    // ネタバレ確認
     const spoilerOverlay = document.getElementById("spoilerOverlay");
     const spoilerModal = document.getElementById("spoilerModal");
     const spoilerYes = document.getElementById("spoilerYes");
@@ -621,19 +632,16 @@
       });
     };
 
-    // ★汎用フェード（どのimgにも使える）
     const fadeImgTo = (imgEl, src, alt) => {
       imgEl.classList.remove("show");
       imgEl.alt = alt || "";
-
       setTimeout(() => {
         imgEl.src = src || "";
         imgEl.onload = () => imgEl.classList.add("show");
-        setTimeout(() => imgEl.classList.add("show"), 220); // キャッシュ保険
+        setTimeout(() => imgEl.classList.add("show"), 220);
       }, 20);
     };
 
-    // ★表示リセット（季節切替時に毎回整える）
     const resetStand = () => {
       standWrap.classList.remove("show");
       pstand.classList.remove("show");
@@ -641,10 +649,26 @@
       pstand.alt = "";
     };
 
+    const openSpoilerConfirm = () => {
+      if(!currentChar || !currentChar.spoilerOnly) return;
+      pendingSeason = "sp";
+      spoilerOverlay.classList.add("open");
+      spoilerModal.classList.add("open");
+      spoilerOverlay.setAttribute("aria-hidden","false");
+      spoilerModal.setAttribute("aria-hidden","false");
+    };
+
+    const closeSpoilerConfirm = (silent=false) => {
+      spoilerModal.classList.remove("open");
+      spoilerOverlay.classList.remove("open");
+      spoilerOverlay.setAttribute("aria-hidden","true");
+      spoilerModal.setAttribute("aria-hidden","true");
+      if(!silent) pendingSeason = null;
+    };
+
     const setSheet = (season) => {
       if(!currentChar) return;
 
-      // spoilerタブを押した場合は確認
       if(season === "sp"){
         openSpoilerConfirm();
         return;
@@ -652,24 +676,18 @@
 
       currentSeason = season;
       setActiveTab(season);
-
-      // ★まず立ち絵を隠す（1期/ネタバレは不要）
       resetStand();
 
       if(season === "s2"){
-        // 2期：stand があるキャラだけ「立ち絵＋プロフィール」2枚表示
         if(currentChar.stand){
           standWrap.classList.add("show");
           fadeImgTo(pstand, currentChar.stand, currentChar.name + " 2期 立ち絵");
         }
-
-        // 2期プロフィール（必須）
         const profSrc = currentChar.sheetS2 || currentChar.sheetS1;
         fadeImgTo(psheet, profSrc, currentChar.name + " 2期プロフィール");
         return;
       }
 
-      // 1期（従来通り）
       fadeImgTo(psheet, currentChar.sheetS1, currentChar.name + " 1期プロフィール");
     };
 
@@ -677,7 +695,6 @@
       currentChar = c;
       ptitle.textContent = c.name;
 
-      // 3タブ目の表示/非表示（雪那/ねむる/あきはだけ）
       if(c.spoilerOnly){
         tabSpoiler.style.display = "inline-flex";
       }else{
@@ -692,17 +709,8 @@
       document.body.style.overflow = "hidden";
       modalInner.scrollTop = 0;
 
-      // 初期は1期
       currentSeason = "s1";
       setSheet("s1");
-    };
-
-    const closeSpoilerConfirm = (silent=false) => {
-      spoilerModal.classList.remove("open");
-      spoilerOverlay.classList.remove("open");
-      spoilerOverlay.setAttribute("aria-hidden","true");
-      spoilerModal.setAttribute("aria-hidden","true");
-      if(!silent) pendingSeason = null;
     };
 
     const closeProfile = () => {
@@ -725,7 +733,6 @@
       tabSpoiler.style.display = "none";
     };
 
-    // 一覧クリック/Enter
     const openFromEvent = (e) => {
       const card = e.target.closest(".card");
       if(!card) return;
@@ -739,7 +746,6 @@
       openFromEvent(e);
     });
 
-    // タブ切替
     tabs.forEach(t => {
       t.addEventListener("click", () => {
         if(t.style.display === "none") return;
@@ -747,18 +753,15 @@
       });
     });
 
-    // 背景タップで閉じる
     charClose.addEventListener("click", closeProfile);
     pOverlay.addEventListener("click", closeProfile);
 
-    // ESCで閉じる
     window.addEventListener("keydown", (e) => {
       if(e.key === "Escape" && charModal.classList.contains("open")){
         closeProfile();
       }
     });
 
-    // 下スワイプで閉じる（スマホ）
     let sy = 0, dragging = false;
     modalInner.addEventListener("touchstart", (e) => {
       sy = e.touches[0].clientY;
@@ -776,17 +779,6 @@
 
     modalInner.addEventListener("touchend", ()=>{ dragging=false; }, {passive:true});
 
-    // ===== ネタバレ確認 =====
-    const openSpoilerConfirm = () => {
-      if(!currentChar || !currentChar.spoilerOnly) return;
-
-      pendingSeason = "sp";
-      spoilerOverlay.classList.add("open");
-      spoilerModal.classList.add("open");
-      spoilerOverlay.setAttribute("aria-hidden","false");
-      spoilerModal.setAttribute("aria-hidden","false");
-    };
-
     spoilerNo.addEventListener("click", () => {
       closeSpoilerConfirm();
       setActiveTab(currentSeason);
@@ -795,11 +787,8 @@
       closeSpoilerConfirm();
       setActiveTab(currentSeason);
     });
-
     spoilerYes.addEventListener("click", () => {
       closeSpoilerConfirm();
-
-      // spoiler画像に切り替え（spoilerは2枚にはしない）
       resetStand();
       currentSeason = "sp";
       setActiveTab("sp");
@@ -812,8 +801,16 @@
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    const openMenu = () => { menu.classList.add("open"); overlay.classList.add("open"); };
-    const closeMenu = () => { menu.classList.remove("open"); overlay.classList.remove("open"); };
+    const openMenu = () => {
+      menu.classList.add("open");
+      overlay.classList.add("open");
+      menu.setAttribute("aria-hidden","false");
+    };
+    const closeMenu = () => {
+      menu.classList.remove("open");
+      overlay.classList.remove("open");
+      menu.setAttribute("aria-hidden","true");
+    };
 
     menuBtn.addEventListener("click", openMenu);
     closeBtn.addEventListener("click", closeMenu);
