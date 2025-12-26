@@ -19,11 +19,11 @@
       font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
       line-height:1.8;
       color:#111;
-      background:#0b0b0f; /* 暗めで統一 */
+      background:#0b0b0f;
       overflow-x:hidden;
     }
 
-    /* header */
+    /* ===== header ===== */
     .header{
       position: sticky;
       top: 0;
@@ -53,7 +53,7 @@
       border-radius:10px;
     }
 
-    /* page */
+    /* ===== page ===== */
     .box{
       max-width: 920px;
       margin: 0 auto;
@@ -70,7 +70,7 @@
     a{ color:#b7c6ff; text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    /* overlay */
+    /* ===== overlay ===== */
     .overlay{
       position: fixed;
       inset: 0;
@@ -82,7 +82,7 @@
     }
     .overlay.open{ opacity:1; pointer-events:auto; }
 
-    /* menu (black) */
+    /* ===== menu ===== */
     .menu{
       position: fixed;
       top: 0;
@@ -130,12 +130,65 @@
       border-bottom: 1px solid rgba(255,255,255,.10);
       color:#fff;
     }
+
+    /* ===== footer ===== */
+    .footer{
+      position: relative;
+      z-index: 5;
+      padding: 44px 16px 56px;
+      text-align: center;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+    .footer-inner{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .footer-logo{
+      width: min(64vw, 260px);
+      margin: 0 auto 18px;
+      display: block;
+    }
+    .footer-title{
+      font-size: 13px;
+      letter-spacing: .08em;
+      opacity: .8;
+      margin: 12px 0;
+      color:#fff;
+    }
+    .footer-sns,
+    .share-row{
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .sns-btn{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+    }
+    .icon-img{
+      width: 22px;
+      height: 22px;
+    }
+    .footer-note{
+      margin-top: 18px;
+      font-size: 12px;
+      opacity: .6;
+      color:#fff;
+    }
   </style>
 </head>
 
 <body>
   <header class="header">
-<a href="/" class="site-title">空想世界アリストテレス</a>
+    <a href="/" class="site-title">空想世界アリストテレス</a>
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
   </header>
 
@@ -156,6 +209,37 @@
     <a href="/story/">Story</a>
     <a href="/guide/">Guide</a>
   </nav>
+
+  <!-- ===== footer ===== -->
+  <footer class="footer" aria-label="フッター">
+    <div class="footer-inner">
+      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
+
+      <div class="share-row">
+        <a class="sns-btn" href="#" aria-label="Xでシェア">
+          <img class="icon-img" src="/images/icons/x.png" alt="">
+        </a>
+        <a class="sns-btn" href="#" aria-label="LINEでシェア">
+          <img class="icon-img" src="/images/icons/line.png" alt="">
+        </a>
+      </div>
+
+      <div class="footer-title">OFFICIAL</div>
+      <div class="footer-sns">
+        <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener">
+          <img class="icon-img" src="/images/icons/x.png" alt="">
+        </a>
+        <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank" rel="noopener">
+          <img class="icon-img" src="/images/icons/youtube.png" alt="">
+        </a>
+        <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank" rel="noopener">
+          <img class="icon-img" src="/images/icons/nola.png" alt="">
+        </a>
+      </div>
+
+      <div class="footer-note">© 空想世界アリストテレス</div>
+    </div>
+  </footer>
 
   <script>
     const menu = document.getElementById("menu");
@@ -179,7 +263,6 @@
     overlay.addEventListener("click", closeMenu);
     menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-    // 左スワイプで閉じる
     let sx=0, sy=0, tracking=false;
     menu.addEventListener("touchstart", e=>{
       const t=e.touches[0]; sx=t.clientX; sy=t.clientY; tracking=true;
