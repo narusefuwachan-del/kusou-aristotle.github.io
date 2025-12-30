@@ -24,7 +24,7 @@
       overflow-x:hidden;
     }
 
-    /* ===== splash（最初の1回だけ出す） ===== */
+    /* ===== splash（最初の1回だけ） ===== */
     .splash{
       position: fixed;
       inset: 0;
@@ -34,27 +34,27 @@
       z-index: 9999;
 
       opacity: 1;
-      transition: opacity 700ms ease;
+      transition: opacity 1400ms ease; /* ←フェードアウト長め */
       will-change: opacity;
     }
     .splash.hide{ opacity: 0; }
 
     .splash-inner{
       opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 700ms ease, transform 700ms ease;
+      transform: scale(1.12);
+      transition: opacity 900ms ease, transform 900ms ease;
       will-change: opacity, transform;
     }
     .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
-    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.86); }
 
     .splash-inner img{
-      width: min(90vw, 520px);
+      width: min(94vw, 680px); /* ←ロゴもっと大きく */
       height:auto;
       display:block;
     }
 
-    /* ===== hero（メインビジュアル） ===== */
+    /* ===== hero ===== */
     .hero{
       position: relative;
       z-index: 2;
@@ -128,9 +128,10 @@
         filter: none;
       }
       .splash, .splash-inner{ transition:none; }
+      .splash-inner{ opacity:1; transform:none; }
     }
 
-    /* ===== header（左ロゴ＋右ハンバーガー） ===== */
+    /* ===== header（左：ロゴ / 右：ハンバーガー） ===== */
     .header{
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -138,60 +139,52 @@
       display:flex;
       justify-content: space-between;
       align-items:center;
-      padding: 10px 12px;
+      padding: 10px 12px; /* ←左に寄せる */
       background: transparent;
       border: none;
-      pointer-events: none; /* ヘッダー全体の当たり判定を消す */
+      pointer-events: none; /* 透明時に当たり判定事故防止 */
     }
-    .header > *{ pointer-events: auto; } /* 子要素だけ触れる */
 
-    /* 左上ロゴリンク */
     .brand{
       position: relative;
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 6px 8px;
-      border-radius: 12px;
-      text-decoration:none;
-      color:#fff;
-      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      text-decoration: none;
+      pointer-events: auto;
+      border-radius: 14px;
+      padding: 6px 8px; /* タップしやすい */
       -webkit-tap-highlight-color: transparent;
     }
-    .brand:active{ transform: scale(.98); }
 
-    /* ロゴサイズ（ここで調整） */
-    .brand-logo{
-      width: 150px;            /* ←小さいって言ってたので大きめに */
-      max-width: 46vw;
-      height: auto;
-      display:block;
-      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
-      opacity: 0;              /* 読み込み完了まで透明 */
-      transform: translateY(-1px);
-      transition: opacity 260ms ease;
-      will-change: opacity;
-    }
-    .brand.loaded .brand-logo{ opacity: 1; }
-
-    /* 「白が一瞬パッ」対策：白い幕を出して、ロード後にフェードアウト */
-    .brand-white{
-      position: absolute;
-      left: 8px;               /* .brand の padding に合わせる */
-      top: 6px;
-      width: 150px;            /* brand-logo と同じ幅 */
-      max-width: 46vw;
-      height: 34px;            /* だいたいの高さ：必要なら微調整OK */
-      border-radius: 8px;
-      background: #fff;
+    /* 白いのが一瞬パッ→白プレートを出してからゆっくり消す */
+    .brand-plate{
+      position:absolute;
+      inset:-8px -10px;
+      background:#fff;
       opacity: 1;
-      transition: opacity 320ms ease;
-      will-change: opacity;
+      border-radius: 16px;
+      transition: opacity 1800ms ease; /* ←ゆっくり消える */
+      z-index: 0;
       pointer-events:none;
     }
-    .brand.loaded .brand-white{ opacity: 0; }
+    .brand.ready .brand-plate{ opacity: 0; }
+
+    .brand img{
+      position: relative;
+      z-index: 1;
+      width: 170px;           /* ←左上ロゴを大きく */
+      height: auto;
+      display:block;
+      filter: drop-shadow(0 8px 22px rgba(0,0,0,.35));
+    }
+
+    @media (min-width: 560px){
+      .brand img{ width: 200px; } /* PCちょい大きめ */
+    }
 
     .menu-btn{
+      pointer-events: auto;
       font-size:22px;
       background:none;
       border:none;
@@ -200,6 +193,7 @@
       padding:8px 10px;
       border-radius:10px;
       text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color: transparent;
     }
     .menu-btn:active{ transform: scale(.98); }
 
@@ -263,7 +257,7 @@
       text-decoration:none;
     }
 
-    /* ===== BGMボタン ===== */
+    /* ===== BGM ===== */
     .bgm-btn{
       position: fixed;
       right: 14px;
@@ -385,18 +379,18 @@
     <img src="/images/home/tatie.png" class="hero-chara" alt="">
   </section>
 
-  <!-- splash（最初の1回だけ） -->
+  <!-- splash（最初の1回だけ出す） -->
   <div id="splash" class="splash" aria-label="読み込み中">
     <div class="splash-inner">
       <img src="/images/logo.png" alt="空想世界アリストテレス">
     </div>
   </div>
 
-  <!-- header（左ロゴ→HOME / 右☰） -->
-  <header class="header" aria-label="ヘッダー">
-    <a href="/" class="brand" id="brandLink" aria-label="Homeへ">
-      <span class="brand-white" aria-hidden="true"></span>
-      <img src="/images/logo.png" class="brand-logo" id="brandLogo" alt="空想世界アリストテレス">
+  <!-- header -->
+  <header class="header">
+    <a class="brand" href="/" aria-label="Homeへ戻る">
+      <span class="brand-plate" aria-hidden="true"></span>
+      <img src="/images/logo.png" alt="空想世界アリストテレス">
     </a>
 
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
@@ -427,7 +421,7 @@
     <small id="bgmLabel">BGM OFF</small>
   </button>
 
-  <!-- footer（シェア＋公式SNS） -->
+  <!-- footer -->
   <footer class="footer" aria-label="フッター">
     <div class="footer-inner">
 
@@ -480,29 +474,6 @@
       if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
     })();
 
-    // ===== 左上ロゴ：白→フェードアウト + ロゴはフェードイン =====
-    (() => {
-      const brand = document.getElementById("brandLink");
-      const logo = document.getElementById("brandLogo");
-      if (!brand || !logo) return;
-
-      // キャッシュで即onloadが走らない端末があるので保険も入れる
-      const markLoaded = () => brand.classList.add("loaded");
-
-      if (logo.complete && logo.naturalWidth > 0) {
-        // すでに読み込まれてる
-        requestAnimationFrame(markLoaded);
-      } else {
-        logo.addEventListener("load", () => {
-          // “白が一瞬”が見えた後、自然に消える感じ
-          setTimeout(markLoaded, 60);
-        }, { once:true });
-
-        // さらに保険：一定時間で強制
-        setTimeout(markLoaded, 900);
-      }
-    })();
-
     // ===== menu =====
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
@@ -540,7 +511,6 @@
     }
     setBgmUI(saved);
 
-    // 自動再生はしない（ブラウザで弾かれるので）
     bgmBtn.addEventListener("click", async () => {
       try{
         if (bgm.paused){
@@ -558,57 +528,70 @@
       }
     });
 
-    // ===== heroアニメ（reflowで確実に発火） =====
+    // ===== 左上ロゴ：白プレートを“白→ゆっくり消す” =====
+    window.addEventListener("load", () => {
+      const brand = document.querySelector(".brand");
+      if (!brand) return;
+      requestAnimationFrame(() => brand.classList.add("ready"));
+    });
+
+    // ===== heroアニメ（確実にtransition発火） =====
     function startHeroAnimation(){
       const hero = document.getElementById("hero");
       if (!hero) return;
+
       hero.classList.remove("play");
-      void hero.offsetWidth;
+      void hero.offsetWidth; // reflow
       requestAnimationFrame(() => hero.classList.add("play"));
     }
 
     // ===== splash：最初の1回だけ =====
-    // ・同一タブ内：1回だけ（sessionStorage）
-    // ・戻る/進む(bfcache)でも出さない
-    // ・サイト内でHomeに戻る/再読込でも出さない
     function runSplashOnce(){
       const splash = document.getElementById("splash");
+      const already = sessionStorage.getItem("ka_splash_done") === "1";
 
-      // もう見せたなら即削除 + heroだけ動かす
-      if (sessionStorage.getItem("splash_shown") === "1"){
-        if (splash) splash.remove();
+      if (!splash){
         startHeroAnimation();
         return;
       }
 
-      // 初回：見せる
-      sessionStorage.setItem("splash_shown","1");
+      if (already){
+        // 2回目以降：スプラッシュを即撤去（HOME戻り/再読み込み/ bfcache想定）
+        splash.remove();
+        startHeroAnimation();
+        return;
+      }
 
-      if (splash) requestAnimationFrame(() => splash.classList.add("show"));
+      // 初回だけ
+      sessionStorage.setItem("ka_splash_done", "1");
 
+      requestAnimationFrame(() => splash.classList.add("show"));
+
+      // 表示時間（少しだけ余裕）
       setTimeout(() => {
         startHeroAnimation();
 
-        if (splash){
-          splash.classList.add("hide");
-          splash.classList.remove("show");
-          setTimeout(() => splash.remove(), 750);
-        }
-      }, 1200);
+        splash.classList.add("hide");
+        splash.classList.remove("show");
 
+        // CSSのフェードアウト（1400ms）に合わせて長めに待つ
+        setTimeout(() => splash.remove(), 1600);
+      }, 1400);
+
+      // 何があっても安全撤去（保険）
       setTimeout(() => {
         const s = document.getElementById("splash");
         if (s) s.remove();
-      }, 3000);
+      }, 5000);
     }
 
     window.addEventListener("load", runSplashOnce);
 
-    // bfcache（戻る/進む）では splash を絶対出さない：heroだけ整える
+    // bfcache（戻る/進む）でもスプラッシュ出さない＆heroだけ整える
     window.addEventListener("pageshow", (e) => {
       if (e.persisted){
-        const s = document.getElementById("splash");
-        if (s) s.remove();
+        const splash = document.getElementById("splash");
+        if (splash) splash.remove();
         startHeroAnimation();
       }
     });
