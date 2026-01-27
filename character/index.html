@@ -1,168 +1,160 @@
 <!doctype html>
 <html lang="ja">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character | 空想世界アリストテレス</title>
   <link rel="icon" href="/favicon.png">
-  <link rel="icon" href="/images/favicon.png" type="image/png">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Character | Kusou-Aristotle</title>
 
-  <!-- Shippori Mincho -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
-
+  <!-- ===== 和樹令和 Light ===== -->
   <style>
+    @font-face {
+      font-family: "KazukiReiwa";
+      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
+
     body{
-      font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
+      font-family: "KazukiReiwa", serif;
       background:#0b0b0f;
       color:#fff;
+      line-height:1.9;
       overflow-x:hidden;
     }
 
-    /* ===== header ===== */
+    /* ===== HEADER ===== */
     .header{
-      position: sticky;
+      position:sticky;
       top:0;
-      z-index:60;
+      z-index:50;
       display:flex;
       justify-content:space-between;
       align-items:center;
       padding:12px 16px;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
     .site-title{
-      font-weight:600;
-      font-size:18px;
-      letter-spacing:.04em;
-      color:#fff;
+      font-size:15px;
+      letter-spacing:.22em;
       text-decoration:none;
+      color:#fff;
+      opacity:.9;
     }
     .menu-btn{
       font-size:22px;
       background:none;
       border:none;
-      cursor:pointer;
       color:#fff;
-      padding:8px 10px;
+      cursor:pointer;
     }
 
-    /* ===== main visual ===== */
+    /* ===== HERO ===== */
     .hero{
-      min-height: 70vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
+      padding:64px 16px 44px;
       text-align:center;
-      padding: 40px 16px;
-    }
-
-    .hero-ruby{
-      font-size:13px;
-      letter-spacing:.18em;
-      opacity:.65;
-      margin-bottom:6px;
     }
 
     .hero-title{
-      font-size:34px; /* 空想世界名簿記録：大きめ */
-      font-weight:700;
-      letter-spacing:.12em;
-      margin:0 0 14px;
+      font-size:28px;
+      letter-spacing:.28em;
+      margin-bottom:12px;
+      font-weight:300;
     }
 
     .hero-sub{
-      font-size:20px; /* Character：少し控えめ */
-      letter-spacing:.14em;
-      opacity:.85;
+      font-size:13px;
+      letter-spacing:.42em;
+      opacity:.65;
     }
 
-    /* ===== tab ===== */
-    .tabs{
+    /* ===== MAIN / SUB ===== */
+    .section-switch{
       display:flex;
       justify-content:center;
-      gap:14px;
-      margin: 30px 0 10px;
+      gap:22px;
+      margin-top:36px;
     }
 
-    .tab{
-      padding:10px 22px;
+    .section-btn{
+      padding:10px 28px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.25);
-      background: rgba(255,255,255,.05);
-      color:#fff;
-      font-weight:700;
-      letter-spacing:.08em;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .tab.active{
-      background: rgba(255,255,255,.18);
-      border-color: rgba(255,255,255,.45);
-    }
-
-    /* ===== content ===== */
-    .content{
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 20px 16px 80px;
-      text-align:center;
-    }
-
-    .coming{
-      opacity:.65;
-      letter-spacing:.08em;
-      margin-top:30px;
-    }
-
-    /* ===== footer ===== */
-    .footer{
-      padding: 44px 16px 56px;
-      text-align: center;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      border-top: 1px solid rgba(255,255,255,.10);
-    }
-    .footer-logo{
-      width: min(64vw, 260px);
-      margin: 0 auto 18px;
-      display:block;
-    }
-    .footer-title{
+      background:rgba(255,255,255,.05);
+      font-family:"KazukiReiwa", serif;
+      letter-spacing:.26em;
       font-size:13px;
-      letter-spacing:.08em;
-      opacity:.8;
-      margin: 12px 0;
+      color:#fff;
+      cursor:pointer;
     }
-    .footer-sns,
-    .share-row{
+
+    .section-btn.active{
+      background:rgba(255,255,255,.18);
+      border-color:rgba(255,255,255,.45);
+    }
+
+    /* ===== CONTENT ===== */
+    .content{
+      max-width:900px;
+      margin:48px auto 96px;
+      padding:0 16px;
+      text-align:center;
+      opacity:.7;
+      font-size:13px;
+      letter-spacing:.18em;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer{
+      padding:48px 16px 56px;
+      text-align:center;
+      background:rgba(0,0,0,.35);
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+
+    .footer-logo{
+      width:min(260px,70vw);
+      margin:0 auto 18px;
+      display:block;
+      opacity:.88;
+    }
+
+    .footer-sns{
       display:flex;
       justify-content:center;
       gap:16px;
-      flex-wrap:wrap;
+      margin:16px 0;
     }
+
     .sns-btn{
       width:44px;
       height:44px;
       border-radius:999px;
       display:grid;
       place-items:center;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.05);
+      text-decoration:none;
     }
-    .icon-img{
+
+    .sns-btn img{
       width:22px;
       height:22px;
+      opacity:.9;
     }
+
     .footer-note{
       margin-top:18px;
       font-size:12px;
       opacity:.6;
+      letter-spacing:.14em;
+      line-height:1.8;
     }
   </style>
 </head>
@@ -174,67 +166,43 @@
   <button class="menu-btn">☰</button>
 </header>
 
-<!-- ===== hero ===== -->
-<section class="hero">
-  <div class="hero-ruby">CHARACTER</div>
-  <h1 class="hero-title">空想世界名簿記録</h1>
-  <div class="hero-sub">Character</div>
-</section>
+<main>
+  <section class="hero">
+    <div class="hero-title">CHARACTER</div>
+    <div class="hero-sub">空想世界名簿記録</div>
 
-<!-- ===== tabs ===== -->
-<div class="tabs">
-  <button class="tab active" id="tabMain">MAIN</button>
-  <button class="tab" id="tabSub">SUB</button>
-</div>
+    <div class="section-switch">
+      <button class="section-btn active">MAIN</button>
+      <button class="section-btn">SUB</button>
+    </div>
+  </section>
 
-<!-- ===== content ===== -->
-<div class="content" id="contentMain">
-  <!-- ここにあとでキャラ立ち絵＋フレームを入れていく -->
-</div>
+  <section class="content">
+    MAIN：キャラクター名簿（後から配置）<br>
+    SUB：準備中
+  </section>
+</main>
 
-<div class="content" id="contentSub" style="display:none;">
-  <div class="coming">SUBキャラクターは準備中です</div>
-</div>
-
-<!-- ===== footer ===== -->
 <footer class="footer">
-  <img src="/images/logo.png" class="footer-logo" alt="空想世界アリストテレス">
+  <img src="/images/logo.png" alt="空想世界アリストテレス" class="footer-logo">
 
-  <div class="footer-title">OFFICIAL</div>
   <div class="footer-sns">
     <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank">
-      <img src="/images/icons/x.png" class="icon-img" alt="">
+      <img src="/images/icons/x.png" alt="">
     </a>
     <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank">
-      <img src="/images/icons/youtube.png" class="icon-img" alt="">
+      <img src="/images/icons/youtube.png" alt="">
     </a>
     <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank">
-      <img src="/images/icons/nola.png" class="icon-img" alt="">
+      <img src="/images/icons/nola.png" alt="">
     </a>
   </div>
 
-  <div class="footer-note">© 空想世界アリストテレス</div>
+  <div class="footer-note">
+    © 空想世界アリストテレス<br>
+    当サイトの内容・文章・画像等の無断使用を固く禁じます。
+  </div>
 </footer>
-
-<script>
-  const tabMain = document.getElementById("tabMain");
-  const tabSub = document.getElementById("tabSub");
-  const main = document.getElementById("contentMain");
-  const sub = document.getElementById("contentSub");
-
-  tabMain.onclick = () => {
-    tabMain.classList.add("active");
-    tabSub.classList.remove("active");
-    main.style.display = "";
-    sub.style.display = "none";
-  };
-  tabSub.onclick = () => {
-    tabSub.classList.add("active");
-    tabMain.classList.remove("active");
-    main.style.display = "none";
-    sub.style.display = "";
-  };
-</script>
 
 </body>
 </html>
