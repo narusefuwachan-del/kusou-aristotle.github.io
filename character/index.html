@@ -5,221 +5,296 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Character | 空想世界アリストテレス</title>
 
-  <!-- 和樹令和 Light -->
-  <link href="https://fonts.googleapis.com/css2?family=Kazuki+Reiwa:opsz,wght@16..144,300&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.png">
+
+  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
+  <style>
+    @font-face{
+      font-family: "Kazuki Reiwa";
+      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 
   <style>
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
 
     body{
-      font-family: "Kazuki Reiwa", serif;
+      font-family:"Kazuki Reiwa", serif;
       background:#0b0b0f;
       color:#fff;
       overflow-x:hidden;
     }
 
     /* ===== header ===== */
-    header{
+    .header{
       position:sticky;
       top:0;
-      z-index:50;
+      z-index:60;
       display:flex;
       justify-content:space-between;
       align-items:center;
       padding:12px 16px;
-      background:rgba(0,0,0,.35);
+      background:rgba(0,0,0,.4);
       backdrop-filter:blur(8px);
       border-bottom:1px solid rgba(255,255,255,.08);
     }
-    header a{
+    .site-title{
+      font-size:18px;
+      letter-spacing:.08em;
       color:#fff;
       text-decoration:none;
-      font-size:18px;
-      letter-spacing:.05em;
+    }
+    .menu-btn{
+      font-size:22px;
+      background:none;
+      border:none;
+      color:#fff;
+      cursor:pointer;
     }
 
-    /* ===== title area ===== */
-    .title-wrap{
+    /* ===== hamburger ===== */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:1000;
+    }
+    .overlay.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+    nav.menu{
+      position:fixed;
+      top:0;
+      right:0;
+      width:320px;
+      max-width:80vw;
+      height:100vh;
+      background:rgba(0,0,0,.88);
+      backdrop-filter:blur(10px);
+      transform:translateX(100%);
+      transition:.25s;
+      z-index:1001;
+      padding:20px 16px;
+    }
+    nav.menu.open{ transform:translateX(0); }
+
+    .menu-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid rgba(255,255,255,.15);
+      padding-bottom:10px;
+      margin-bottom:10px;
+    }
+    .menu-title{ letter-spacing:.2em; }
+    .close-btn{
+      font-size:20px;
+      background:none;
+      border:none;
+      color:#fff;
+      cursor:pointer;
+    }
+    nav.menu a{
+      display:block;
+      padding:14px 6px;
+      color:#fff;
+      text-decoration:none;
+      letter-spacing:.14em;
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
+
+    /* ===== page ===== */
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:56px 16px 80px;
       text-align:center;
-      padding:64px 16px 40px;
-    }
-
-    .title-en{
-      font-size:18px;
-      letter-spacing:.2em;
-      opacity:.7;
-      margin-bottom:8px;
-    }
-
-    .title-main{
-      font-size:34px;
-      letter-spacing:.12em;
-      margin:0;
     }
 
     .title-ruby{
-      font-size:14px;
-      letter-spacing:.3em;
+      font-size:13px;
+      letter-spacing:.35em;
       opacity:.55;
-      margin-top:6px;
+      margin-bottom:6px;
+    }
+    .page-title{
+      font-size:40px;
+      letter-spacing:.16em;
+      margin:0;
+      font-weight:300; /* ← 太字にしない */
     }
 
-    /* ===== tabs ===== */
-    .tabs{
+    /* ===== switch ===== */
+    .switch{
       display:flex;
-      justify-content:center;
-      gap:14px;
-      margin:24px 0 40px;
-    }
-
-    .tab{
-      padding:10px 22px;
-      border-radius:999px;
+      margin:44px auto 36px;
+      max-width:360px;
       border:1px solid rgba(255,255,255,.25);
-      background:rgba(255,255,255,.05);
+    }
+    .switch button{
+      flex:1;
+      padding:14px 0;
+      background:none;
+      border:none;
       color:#fff;
-      cursor:pointer;
       font-family:inherit;
-      letter-spacing:.1em;
+      letter-spacing:.22em;
+      cursor:pointer;
+    }
+    .switch button.active{
+      background:#1aa5a5;
+      color:#000;
     }
 
-    .tab.active{
-      background:rgba(255,255,255,.18);
-      border-color:rgba(255,255,255,.45);
+    /* ===== grid ===== */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
     }
-
-    /* ===== content ===== */
-    .content{
-      max-width:1000px;
-      margin:0 auto;
-      padding:0 16px 80px;
-      text-align:center;
+    @media(min-width:700px){
+      .grid{ grid-template-columns:repeat(4,1fr); }
     }
-
-    .placeholder{
-      padding:80px 16px;
-      opacity:.6;
+    .card{
+      position:relative;
+      aspect-ratio:3/2;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.25);
+      overflow:hidden;
+    }
+    .card img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .num{
+      position:absolute;
+      right:12px;
+      bottom:8px;
+      font-size:32px;
+      opacity:.85;
       letter-spacing:.1em;
     }
 
     /* ===== footer ===== */
     footer{
-      padding:56px 16px;
+      padding:48px 16px 56px;
       text-align:center;
       background:rgba(0,0,0,.35);
       border-top:1px solid rgba(255,255,255,.1);
     }
-
     .footer-logo{
       width:min(260px,70vw);
-      margin-bottom:20px;
+      margin:0 auto 18px;
+      display:block;
     }
-
-    .footer-sns{
-      display:flex;
-      justify-content:center;
-      gap:16px;
-      margin:16px 0;
-    }
-
-    .sns-btn{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.18);
-    }
-
-    .sns-btn img{
-      width:22px;
-      height:22px;
-      object-fit:contain;
-    }
-
     .footer-note{
-      margin-top:20px;
       font-size:12px;
       opacity:.6;
-      letter-spacing:.05em;
+      line-height:1.7;
+      letter-spacing:.06em;
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <a href="/">空想世界アリストテレス</a>
+<header class="header">
+  <a href="/" class="site-title">空想世界アリストテレス</a>
+  <button class="menu-btn" id="menuBtn">☰</button>
 </header>
 
-<!-- ===== title ===== -->
-<section class="title-wrap">
-  <div class="title-en">CHARACTER</div>
-  <h1 class="title-main">空想世界名簿記録</h1>
+<div class="overlay" id="overlay"></div>
+<nav class="menu" id="menu">
+  <div class="menu-top">
+    <div class="menu-title">MENU</div>
+    <button class="close-btn" id="closeBtn">✕</button>
+  </div>
+  <a href="/">Home</a>
+  <a href="/character/">Character</a>
+  <a href="/story/">Story</a>
+  <a href="/guide/">Guide</a>
+</nav>
+
+<main class="container">
   <div class="title-ruby">character</div>
-</section>
+  <h1 class="page-title">空想世界 名簿記録</h1>
 
-<!-- ===== tabs ===== -->
-<div class="tabs">
-  <button class="tab active" data-tab="main">MAIN</button>
-  <button class="tab" data-tab="sub">SUB</button>
-</div>
-
-<!-- ===== content ===== -->
-<section class="content">
-  <div id="main" class="panel">
-    <div class="placeholder">
-      キャラクター一覧（ここに配置予定）
-    </div>
+  <div class="switch">
+    <button id="btnMain" class="active">MAIN</button>
+    <button id="btnSub">SUB</button>
   </div>
 
-  <div id="sub" class="panel" style="display:none;">
-    <div class="placeholder">
-      SUBキャラクターは準備中です
-    </div>
-  </div>
-</section>
+  <div id="grid" class="grid"></div>
+</main>
 
-<!-- ===== footer ===== -->
 <footer>
-  <img src="/images/logo.png" class="footer-logo" alt="空想世界アリストテレス">
-
-  <div class="footer-sns">
-    <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank">
-      <img src="/images/icons/x.png" alt="">
-    </a>
-    <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank">
-      <img src="/images/icons/youtube.png" alt="">
-    </a>
-    <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank">
-      <img src="/images/icons/nola.png" alt="">
-    </a>
-  </div>
-
+  <img src="/images/logo.png" class="footer-logo" alt="">
   <div class="footer-note">
     © 空想世界アリストテレス<br>
-    当サイトの内容・画像等の無断使用を固く禁じます。
+    当サイトの内容・文章・画像等の無断使用を固く禁じます。
   </div>
 </footer>
 
 <script>
-  const tabs = document.querySelectorAll(".tab");
-  const panels = {
-    main: document.getElementById("main"),
-    sub: document.getElementById("sub")
+  const grid = document.getElementById("grid");
+  const btnMain = document.getElementById("btnMain");
+  const btnSub = document.getElementById("btnSub");
+
+  const mainImages = Array.from({length:14},(_,i)=>
+    `/images/character/main${String(i+1).padStart(2,"0")}.png`
+  );
+
+  function renderMain(){
+    grid.innerHTML = mainImages.map((src,i)=>`
+      <div class="card">
+        <img src="${src}" alt="">
+        <div class="num">${String(i+1).padStart(2,"0")}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderSub(){
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;opacity:.6;letter-spacing:.25em;padding:80px 0;">
+        SUBは準備中です
+      </div>`;
+  }
+
+  renderMain();
+
+  btnMain.onclick=()=>{
+    btnMain.classList.add("active");
+    btnSub.classList.remove("active");
+    renderMain();
+  };
+  btnSub.onclick=()=>{
+    btnSub.classList.add("active");
+    btnMain.classList.remove("active");
+    renderSub();
   };
 
-  tabs.forEach(tab=>{
-    tab.addEventListener("click", ()=>{
-      tabs.forEach(t=>t.classList.remove("active"));
-      tab.classList.add("active");
+  const menuBtn=document.getElementById("menuBtn");
+  const closeBtn=document.getElementById("closeBtn");
+  const menu=document.getElementById("menu");
+  const overlay=document.getElementById("overlay");
 
-      Object.values(panels).forEach(p=>p.style.display="none");
-      panels[tab.dataset.tab].style.display="block";
-    });
-  });
+  menuBtn.onclick=()=>{
+    menu.classList.add("open");
+    overlay.classList.add("open");
+  };
+  closeBtn.onclick=overlay.onclick=()=>{
+    menu.classList.remove("open");
+    overlay.classList.remove("open");
+  };
 </script>
 
 </body>
