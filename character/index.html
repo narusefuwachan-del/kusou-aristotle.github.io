@@ -1,301 +1,667 @@
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Character | 空想世界アリストテレス</title>
+<!doctype html>  
+<html lang="ja">  
+<head>  
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  <title>Character | 空想世界アリストテレス</title>  
 
-  <link rel="icon" href="/favicon.png">
+  <link rel="icon" href="/favicon.png">  
 
-  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
-  <style>
-    @font-face{
-      font-family: "Kazuki Reiwa";
-      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
-  </style>
+  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->  
+  <style>  
+    @font-face{  
+      font-family: "Kazuki Reiwa";  
+      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");  
+      font-weight: 300;  
+      font-style: normal;  
+      font-display: swap;  
+    }  
+  </style>  
 
-  <style>
-    *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; }
+  <style>  
+    *{ box-sizing:border-box; }  
+    html,body{ margin:0; padding:0; }  
 
-    body{
-      font-family:"Kazuki Reiwa", serif;
-      background:#0b0b0f;
-      color:#fff;
-      overflow-x:hidden;
-    }
+    body{  
+      font-family:"Kazuki Reiwa", serif;  
+      background:#0b0b0f;  
+      color:#fff;  
+      overflow-x:hidden;  
+    }  
 
-    /* ===== header ===== */
-    .header{
-      position:sticky;
-      top:0;
-      z-index:60;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:12px 16px;
-      background:rgba(0,0,0,.4);
-      backdrop-filter:blur(8px);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .site-title{
-      font-size:18px;
-      letter-spacing:.08em;
-      color:#fff;
-      text-decoration:none;
-    }
-    .menu-btn{
-      font-size:22px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
-    }
+    /* ===== header ===== */  
+    .header{  
+      position:sticky;  
+      top:0;  
+      z-index:60;  
+      display:flex;  
+      justify-content:space-between;  
+      align-items:center;  
+      padding:12px 16px;  
+      background:rgba(0,0,0,.4);  
+      backdrop-filter:blur(8px);  
+      border-bottom:1px solid rgba(255,255,255,.08);  
+    }  
+    .site-title{  
+      font-size:18px;  
+      letter-spacing:.08em;  
+      color:#fff;  
+      text-decoration:none;  
+    }  
+    .menu-btn{  
+      font-size:22px;  
+      background:none;  
+      border:none;  
+      color:#fff;  
+      cursor:pointer;  
+    }  
 
-    /* ===== hamburger ===== */
-    .overlay{
+    /* ===== hamburger ===== */  
+    .overlay{  
+      position:fixed;  
+      inset:0;  
+      background:rgba(0,0,0,.55);  
+      opacity:0;  
+      pointer-events:none;  
+      transition:.25s;  
+      z-index:1000;  
+    }  
+    .overlay.open{  
+      opacity:1;  
+      pointer-events:auto;  
+    }  
+    nav.menu{  
+      position:fixed;  
+      top:0;  
+      right:0;  
+      width:320px;  
+      max-width:80vw;  
+      height:100vh;  
+      background:rgba(0,0,0,.88);  
+      backdrop-filter:blur(10px);  
+      transform:translateX(100%);  
+      transition:.25s;  
+      z-index:1001;  
+      padding:20px 16px;  
+    }  
+    nav.menu.open{ transform:translateX(0); }  
+
+    .menu-top{  
+      display:flex;  
+      justify-content:space-between;  
+      align-items:center;  
+      border-bottom:1px solid rgba(255,255,255,.15);  
+      padding-bottom:10px;  
+      margin-bottom:10px;  
+    }  
+    .menu-title{ letter-spacing:.2em; }  
+    .close-btn{  
+      font-size:20px;  
+      background:none;  
+      border:none;  
+      color:#fff;  
+      cursor:pointer;  
+    }  
+    nav.menu a{  
+      display:block;  
+      padding:14px 6px;  
+      color:#fff;  
+      text-decoration:none;  
+      letter-spacing:.14em;  
+      border-bottom:1px solid rgba(255,255,255,.1);  
+    }  
+
+    /* ===== page ===== */  
+    .container{  
+      max-width:1100px;  
+      margin:0 auto;  
+      padding:56px 16px 80px;  
+      text-align:center;  
+    }  
+
+    .title-ruby{  
+      font-size:13px;  
+      letter-spacing:.35em;  
+      opacity:.55;  
+      margin-bottom:6px;  
+    }  
+    .page-title{  
+      font-size:40px;  
+      letter-spacing:.16em;  
+      margin:0;  
+      font-weight:300; /* ← 太字にしない */  
+    }  
+
+    /* ===== switch ===== */  
+    .switch{  
+      display:flex;  
+      margin:44px auto 36px;  
+      max-width:360px;  
+      border:1px solid rgba(255,255,255,.25);  
+    }  
+    .switch button{  
+      flex:1;  
+      padding:14px 0;  
+      background:none;  
+      border:none;  
+      color:#fff;  
+      font-family:inherit;  
+      letter-spacing:.22em;  
+      cursor:pointer;  
+    }  
+    .switch button.active{  
+      background:#1aa5a5;  
+      color:#000;  
+    }  
+
+    /* ===== grid ===== */  
+    .grid{  
+      display:grid;  
+      grid-template-columns:repeat(2,1fr);  
+      gap:12px;  
+    }  
+    @media(min-width:700px){  
+      .grid{ grid-template-columns:repeat(4,1fr); }  
+    }  
+    .card{  
+      position:relative;  
+      aspect-ratio:3/2;  
+      background:rgba(255,255,255,.04);  
+      border:1px solid rgba(255,255,255,.25);  
+      overflow:hidden;  
+      cursor:pointer;  
+      user-select:none;  
+      -webkit-tap-highlight-color: transparent;  
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;  
+    }  
+    .card:hover{  
+      border-color: rgba(255,255,255,.40);  
+      background: rgba(255,255,255,.06);  
+    }  
+    .card:active{ transform: scale(.99); }  
+    .card img{  
+      width:100%;  
+      height:100%;  
+      object-fit:cover;  
+      display:block;  
+    }  
+    .num{  
+      position:absolute;  
+      right:12px;  
+      bottom:8px;  
+      font-size:32px;  
+      opacity:.85;  
+      letter-spacing:.1em;  
+      pointer-events:none;  
+    }  
+
+    /* ===== footer ===== */  
+    footer{  
+      padding:48px 16px 56px;  
+      text-align:center;  
+      background:rgba(0,0,0,.35);  
+      border-top:1px solid rgba(255,255,255,.1);  
+    }  
+    .footer-logo{  
+      width:min(260px,70vw);  
+      margin:0 auto 18px;  
+      display:block;  
+    }  
+    .footer-note{  
+      font-size:12px;  
+      opacity:.6;  
+      line-height:1.7;  
+      letter-spacing:.06em;  
+    }  
+
+    /* =========================================================
+       Password Overlay + Modal
+    ========================================================= */
+    .lockOverlay{
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,.55);
+      background: rgba(0,0,0,.74);
       opacity:0;
       pointer-events:none;
-      transition:.25s;
-      z-index:1000;
+      transition: opacity .22s ease;
+      z-index: 2000;
     }
-    .overlay.open{
+    .lockOverlay.open{
       opacity:1;
       pointer-events:auto;
     }
-    nav.menu{
-      position:fixed;
-      top:0;
-      right:0;
-      width:320px;
-      max-width:80vw;
-      height:100vh;
-      background:rgba(0,0,0,.88);
-      backdrop-filter:blur(10px);
-      transform:translateX(100%);
-      transition:.25s;
-      z-index:1001;
-      padding:20px 16px;
-    }
-    nav.menu.open{ transform:translateX(0); }
 
-    .menu-top{
+    .lockBox{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index: 2001;
+
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+    }
+    .lockBox.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .lockCard{
+      width: min(92vw, 420px);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(10,10,14,.92);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 18px 16px 16px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.55);
+      text-align: left;
+    }
+    .lockTitle{
+      font-size: 13px;
+      letter-spacing: .22em;
+      opacity: .75;
+      margin: 0 0 10px;
+    }
+    .lockRow{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .lockLabel{
+      font-size: 12px;
+      letter-spacing: .18em;
+      opacity: .65;
+      min-width: 86px;
+    }
+    .lockField{
+      flex:1;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      padding: 0 12px;
+      font-size: 18px;
+      letter-spacing: .22em;
+    }
+    .cursor{
+      width: 10px;
+      height: 18px;
+      margin-left: 2px;
+      background: rgba(255,255,255,.8);
+      animation: blink 1s steps(1,end) infinite;
+      display:inline-block;
+    }
+    @keyframes blink{
+      50%{ opacity:0; }
+    }
+    .lockStatus{
+      margin-top: 12px;
+      font-size: 12px;
+      letter-spacing: .18em;
+      opacity: .7;
+    }
+    .lockStatus.ok{
+      color: #8fffe6;
+      opacity: .95;
+    }
+
+    /* Profile Modal */
+    .profileOverlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.72);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+      z-index: 2100;
+    }
+    .profileOverlay.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .profileModal{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:end center;
+      z-index: 2101;
+
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+    }
+    .profileModal.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .profileInner{
+      width: min(94vw, 780px);
+      max-height: 88vh;
+      overflow:hidden;
+      border-radius: 18px 18px 0 0;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(10,10,14,.92);
+      backdrop-filter: blur(10px);
+
+      transform: translateY(18px);
+      transition: transform .22s ease;
+    }
+    .profileModal.open .profileInner{
+      transform: translateY(0);
+    }
+
+    .profileTop{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      border-bottom:1px solid rgba(255,255,255,.15);
-      padding-bottom:10px;
-      margin-bottom:10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.35);
     }
-    .menu-title{ letter-spacing:.2em; }
-    .close-btn{
-      font-size:20px;
+    .profileTitle{
+      letter-spacing: .18em;
+      font-size: 13px;
+      opacity: .85;
+    }
+    .profileClose{
+      font-size: 20px;
       background:none;
       border:none;
       color:#fff;
       cursor:pointer;
+      padding: 6px 10px;
+      border-radius: 10px;
     }
-    nav.menu a{
-      display:block;
-      padding:14px 6px;
-      color:#fff;
-      text-decoration:none;
-      letter-spacing:.14em;
-      border-bottom:1px solid rgba(255,255,255,.1);
+    .profileBody{
+      overflow:auto;
+      max-height: calc(88vh - 52px);
+      -webkit-overflow-scrolling: touch;
+      padding: 14px;
     }
-
-    /* ===== page ===== */
-    .container{
-      max-width:1100px;
-      margin:0 auto;
-      padding:56px 16px 80px;
-      text-align:center;
-    }
-
-    .title-ruby{
-      font-size:13px;
-      letter-spacing:.35em;
-      opacity:.55;
-      margin-bottom:6px;
-    }
-    .page-title{
-      font-size:40px;
-      letter-spacing:.16em;
-      margin:0;
-      font-weight:300; /* ← 太字にしない */
-    }
-
-    /* ===== switch ===== */
-    .switch{
-      display:flex;
-      margin:44px auto 36px;
-      max-width:360px;
-      border:1px solid rgba(255,255,255,.25);
-    }
-    .switch button{
-      flex:1;
-      padding:14px 0;
-      background:none;
-      border:none;
-      color:#fff;
-      font-family:inherit;
-      letter-spacing:.22em;
-      cursor:pointer;
-    }
-    .switch button.active{
-      background:#1aa5a5;
-      color:#000;
-    }
-
-    /* ===== grid ===== */
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-    }
-    @media(min-width:700px){
-      .grid{ grid-template-columns:repeat(4,1fr); }
-    }
-    .card{
-      position:relative;
-      aspect-ratio:3/2;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.25);
-      overflow:hidden;
-    }
-    .card img{
+    .profileImg{
       width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-    .num{
-      position:absolute;
-      right:12px;
-      bottom:8px;
-      font-size:32px;
-      opacity:.85;
-      letter-spacing:.1em;
-    }
-
-    /* ===== footer ===== */
-    footer{
-      padding:48px 16px 56px;
-      text-align:center;
-      background:rgba(0,0,0,.35);
-      border-top:1px solid rgba(255,255,255,.1);
-    }
-    .footer-logo{
-      width:min(260px,70vw);
-      margin:0 auto 18px;
+      height:auto;
       display:block;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
     }
-    .footer-note{
-      font-size:12px;
-      opacity:.6;
-      line-height:1.7;
-      letter-spacing:.06em;
+
+    @media (prefers-reduced-motion: reduce){
+      .lockOverlay,.lockBox,.profileOverlay,.profileModal,.profileInner{ transition:none; }
+      .cursor{ animation:none; }
     }
-  </style>
-</head>
+  </style>  
+</head>  
 
-<body>
+<body>  
 
-<header class="header">
-  <a href="/" class="site-title">空想世界アリストテレス</a>
-  <button class="menu-btn" id="menuBtn">☰</button>
-</header>
+<header class="header">  
+  <a href="/" class="site-title">空想世界アリストテレス</a>  
+  <button class="menu-btn" id="menuBtn">☰</button>  
+</header>  
 
-<div class="overlay" id="overlay"></div>
-<nav class="menu" id="menu">
-  <div class="menu-top">
-    <div class="menu-title">MENU</div>
-    <button class="close-btn" id="closeBtn">✕</button>
+<div class="overlay" id="overlay"></div>  
+<nav class="menu" id="menu">  
+  <div class="menu-top">  
+    <div class="menu-title">MENU</div>  
+    <button class="close-btn" id="closeBtn">✕</button>  
+  </div>  
+  <a href="/">Home</a>  
+  <a href="/character/">Character</a>  
+  <a href="/story/">Story</a>  
+  <a href="/guide/">Guide</a>  
+</nav>  
+
+<main class="container">  
+  <div class="title-ruby">character</div>  
+  <h1 class="page-title">空想世界 名簿記録</h1>  
+
+  <div class="switch">  
+    <button id="btnMain" class="active">MAIN</button>  
+    <button id="btnSub">SUB</button>  
+  </div>  
+
+  <div id="grid" class="grid"></div>  
+</main>  
+
+<footer>  
+  <img src="/images/logo.png" class="footer-logo" alt="">  
+  <div class="footer-note">  
+    © 空想世界アリストテレス<br>  
+    当サイトの内容・文章・画像等の無断使用を固く禁じます。  
+  </div>  
+</footer>  
+
+<!-- ================= Password Overlay ================= -->
+<div class="lockOverlay" id="lockOverlay" aria-hidden="true"></div>
+<section class="lockBox" id="lockBox" aria-hidden="true">
+  <div class="lockCard" role="dialog" aria-modal="true" aria-label="パスワード認証">
+    <div class="lockTitle">ACCESS AUTH</div>
+    <div class="lockRow">
+      <div class="lockLabel">PASSWORD</div>
+      <div class="lockField">
+        <span id="pwText"></span><span class="cursor" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="lockStatus" id="pwStatus">…</div>
   </div>
-  <a href="/">Home</a>
-  <a href="/character/">Character</a>
-  <a href="/story/">Story</a>
-  <a href="/guide/">Guide</a>
-</nav>
+</section>
 
-<main class="container">
-  <div class="title-ruby">character</div>
-  <h1 class="page-title">空想世界 名簿記録</h1>
-
-  <div class="switch">
-    <button id="btnMain" class="active">MAIN</button>
-    <button id="btnSub">SUB</button>
+<!-- ================= Profile Modal ================= -->
+<div class="profileOverlay" id="profileOverlay" aria-hidden="true"></div>
+<section class="profileModal" id="profileModal" aria-hidden="true">
+  <div class="profileInner" role="dialog" aria-modal="true" aria-label="プロフィール">
+    <div class="profileTop">
+      <div class="profileTitle" id="profileTitle">PROFILE</div>
+      <button class="profileClose" id="profileClose" aria-label="閉じる">✕</button>
+    </div>
+    <div class="profileBody">
+      <!-- ここは「画像1枚」方式。後からテキスト方式にもできるよ -->
+      <img id="profileImg" class="profileImg" src="" alt="">
+    </div>
   </div>
+</section>
 
-  <div id="grid" class="grid"></div>
-</main>
+<script>  
+  const grid = document.getElementById("grid");  
+  const btnMain = document.getElementById("btnMain");  
+  const btnSub = document.getElementById("btnSub");  
 
-<footer>
-  <img src="/images/logo.png" class="footer-logo" alt="">
-  <div class="footer-note">
-    © 空想世界アリストテレス<br>
-    当サイトの内容・文章・画像等の無断使用を固く禁じます。
-  </div>
-</footer>
+  const mainImages = Array.from({length:14},(_,i)=>  
+    `/images/character/main${String(i+1).padStart(2,"0")}.png`  
+  );  
 
-<script>
-  const grid = document.getElementById("grid");
-  const btnMain = document.getElementById("btnMain");
-  const btnSub = document.getElementById("btnSub");
-
-  const mainImages = Array.from({length:14},(_,i)=>
-    `/images/character/main${String(i+1).padStart(2,"0")}.png`
+  // ★プロフィール画像（とりあえず仮）：
+  // 例: /images/profile/01.png みたいに置けばOK
+  const profileImages = Array.from({length:14},(_,i)=>
+    `/images/profile/${String(i+1).padStart(2,"0")}.png`
   );
 
-  function renderMain(){
-    grid.innerHTML = mainImages.map((src,i)=>`
-      <div class="card">
-        <img src="${src}" alt="">
-        <div class="num">${String(i+1).padStart(2,"0")}</div>
-      </div>
-    `).join("");
+  // ★パスワード（君の表）
+  const passcodes = [
+    "1023", // 01
+    "1124", // 02
+    "1203", // 03
+    "0312", // 04
+    "0211", // 05
+    "0224", // 06
+    "0528", // 07
+    "0528", // 08
+    "0718", // 09
+    "1228", // 10
+    "0114", // 11
+    "0521", // 12
+    "0807", // 13
+    "0122"  // 14
+  ];
+
+  function renderMain(){  
+    grid.innerHTML = mainImages.map((src,i)=>`  
+      <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${String(i+1).padStart(2,"0")}を開く">  
+        <img src="${src}" alt="">  
+        <div class="num">${String(i+1).padStart(2,"0")}</div>  
+      </div>  
+    `).join("");  
+  }  
+
+  function renderSub(){  
+    grid.innerHTML = `  
+      <div style="grid-column:1/-1;opacity:.6;letter-spacing:.25em;padding:80px 0;">  
+        SUBは準備中です  
+      </div>`;  
+  }  
+
+  renderMain();  
+
+  btnMain.onclick=()=>{  
+    btnMain.classList.add("active");  
+    btnSub.classList.remove("active");  
+    renderMain();  
+  };  
+  btnSub.onclick=()=>{  
+    btnSub.classList.add("active");  
+    btnMain.classList.remove("active");  
+    renderSub();  
+  };  
+
+  /* ===== hamburger ===== */
+  const menuBtn=document.getElementById("menuBtn");  
+  const closeBtn=document.getElementById("closeBtn");  
+  const menu=document.getElementById("menu");  
+  const overlay=document.getElementById("overlay");  
+
+  menuBtn.onclick=()=>{  
+    menu.classList.add("open");  
+    overlay.classList.add("open");  
+  };  
+  closeBtn.onclick=overlay.onclick=()=>{  
+    menu.classList.remove("open");  
+    overlay.classList.remove("open");  
+  };
+
+  /* =========================================================
+     Password Animation -> Profile Modal
+  ========================================================= */
+  const lockOverlay = document.getElementById("lockOverlay");
+  const lockBox = document.getElementById("lockBox");
+  const pwText = document.getElementById("pwText");
+  const pwStatus = document.getElementById("pwStatus");
+
+  const profileOverlay = document.getElementById("profileOverlay");
+  const profileModal = document.getElementById("profileModal");
+  const profileClose = document.getElementById("profileClose");
+  const profileImg = document.getElementById("profileImg");
+  const profileTitle = document.getElementById("profileTitle");
+
+  let animTimer = null;
+  let animRunning = false;
+
+  const openLock = () => {
+    lockOverlay.classList.add("open");
+    lockBox.classList.add("open");
+    lockOverlay.setAttribute("aria-hidden","false");
+    lockBox.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLock = () => {
+    lockOverlay.classList.remove("open");
+    lockBox.classList.remove("open");
+    lockOverlay.setAttribute("aria-hidden","true");
+    lockBox.setAttribute("aria-hidden","true");
+  };
+
+  const openProfile = (idx) => {
+    // タイトルはとりあえず番号表記。あとで名前に変えられる👌
+    const no = String(idx+1).padStart(2,"0");
+    profileTitle.textContent = `PROFILE  ${no}`;
+    profileImg.src = profileImages[idx];
+    profileImg.alt = `プロフィール ${no}`;
+
+    profileOverlay.classList.add("open");
+    profileModal.classList.add("open");
+    profileOverlay.setAttribute("aria-hidden","false");
+    profileModal.setAttribute("aria-hidden","false");
+  };
+
+  const closeProfile = () => {
+    profileModal.classList.remove("open");
+    profileOverlay.classList.remove("open");
+    profileOverlay.setAttribute("aria-hidden","true");
+    profileModal.setAttribute("aria-hidden","true");
+    profileImg.src = "";
+    profileImg.alt = "";
+    document.body.style.overflow = "";
+  };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  async function playPasswordAndOpen(idx){
+    if(animRunning) return;
+    animRunning = true;
+
+    // 1) lockを開く
+    pwText.textContent = "";
+    pwStatus.className = "lockStatus";
+    pwStatus.textContent = "…";
+    openLock();
+
+    // 2) ちょい待ってから入力開始
+    await sleep(220);
+
+    const code = passcodes[idx] || "0000";
+
+    // 3) 1文字ずつ入力
+    for(let i=0;i<code.length;i++){
+      pwText.textContent += code[i];
+      await sleep(120);
+    }
+
+    // 4) complete
+    await sleep(160);
+    pwStatus.textContent = "COMPLETE";
+    pwStatus.classList.add("ok");
+
+    // 5) lock閉じて profile開く
+    await sleep(300);
+    closeLock();
+    await sleep(140);
+    openProfile(idx);
+
+    animRunning = false;
   }
 
-  function renderSub(){
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;opacity:.6;letter-spacing:.25em;padding:80px 0;">
-        SUBは準備中です
-      </div>`;
+  // MAINカードクリックで起動
+  function onCardActivate(e){
+    const card = e.target.closest(".card");
+    if(!card) return;
+    const idx = Number(card.dataset.index);
+    playPasswordAndOpen(idx);
   }
 
-  renderMain();
+  grid.addEventListener("click", onCardActivate);
+  grid.addEventListener("keydown", (e)=>{
+    if(e.key !== "Enter") return;
+    onCardActivate(e);
+  });
 
-  btnMain.onclick=()=>{
-    btnMain.classList.add("active");
-    btnSub.classList.remove("active");
-    renderMain();
-  };
-  btnSub.onclick=()=>{
-    btnSub.classList.add("active");
-    btnMain.classList.remove("active");
-    renderSub();
-  };
+  // モーダル閉じる
+  profileClose.addEventListener("click", closeProfile);
+  profileOverlay.addEventListener("click", closeProfile);
 
-  const menuBtn=document.getElementById("menuBtn");
-  const closeBtn=document.getElementById("closeBtn");
-  const menu=document.getElementById("menu");
-  const overlay=document.getElementById("overlay");
+  window.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape"){
+      if(profileModal.classList.contains("open")) closeProfile();
+    }
+  });
 
-  menuBtn.onclick=()=>{
-    menu.classList.add("open");
-    overlay.classList.add("open");
-  };
-  closeBtn.onclick=overlay.onclick=()=>{
-    menu.classList.remove("open");
-    overlay.classList.remove("open");
-  };
-</script>
+</script>  
 
-</body>
+</body>  
 </html>
