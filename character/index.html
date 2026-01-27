@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <link rel="icon" href="/favicon.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Character | Kusou-Aristotle</title>
 
+  <link rel="icon" href="/favicon.png">
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,822 +15,215 @@
   <style>
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
+
     body{
-      font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
-      line-height:1.8;
-      color:#111;
+      font-family:"Shippori Mincho","Yu Mincho",serif;
       background:#0b0b0f;
-      overflow-x:hidden;
+      color:#fff;
     }
 
     /* ===== header ===== */
     .header{
-      position: sticky; top:0; z-index:60;
-      display:flex; justify-content:space-between; align-items:center;
-      padding:12px 16px;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .site-title{ font-weight:600; font-size:18px; letter-spacing:.04em; color:#fff; text-decoration:none; }
-    .menu-btn{ font-size:22px; background:none; border:none; cursor:pointer; color:#fff; padding:8px 10px; border-radius:10px; }
-
-    .box{ max-width:920px; margin:0 auto; padding:18px 16px 56px; }
-    h1{ margin:18px 0 10px; font-size:26px; font-weight:700; letter-spacing:.03em; color:#fff; }
-    p{ margin:0 0 14px; color: rgba(255,255,255,.86); }
-    a{ color:#b7c6ff; text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-
-    /* ===== ハンバーガー overlay/menu ===== */
-    .overlay{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.55);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .25s ease;
-      z-index:1000;
-    }
-    .overlay.open{ opacity:1; pointer-events:auto; }
-
-    .menu{
-      position:fixed; top:0; right:0;
-      width:340px; max-width:78vw; height:100vh;
-      background: rgba(0,0,0,.86);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding:18px 16px;
-      transform:translateX(100%);
-      transition:transform .25s ease;
-      z-index:1001;
-      overflow-y:auto;
-      -webkit-overflow-scrolling:touch;
-      touch-action: pan-y;
-    }
-    .menu.open{ transform:translateX(0); }
-    .menu-top{
-      display:flex; justify-content:space-between; align-items:center;
-      padding-bottom:10px;
-      border-bottom:1px solid rgba(255,255,255,.14);
-      margin-bottom:8px;
-      color:#fff;
-    }
-    .menu-title{ font-weight:700; letter-spacing:.06em; }
-    .close-btn{
-      font-size:20px; background:none; border:none; cursor:pointer;
-      padding:8px 10px; border-radius:10px; color:#fff;
-    }
-    .menu a{
-      display:block; padding:14px 6px;
-      font-weight:700; letter-spacing:.03em;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      color:#fff;
-    }
-
-    /* ===== キャラ一覧（アイコン） ===== */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-      margin-top:14px;
-    }
-    @media (min-width:700px){
-      .grid{ grid-template-columns: repeat(5, 1fr); gap:14px; }
-    }
-    .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      padding: 10px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .12s ease, background .12s ease;
-    }
-    .card:active{ transform: scale(.98); }
-    .avatar{
-      width:100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 14px;
-      display:block;
-      object-fit: cover;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-    }
-    .cname{
-      margin-top:8px;
-      font-weight:700;
-      letter-spacing:.03em;
-      color:#fff;
-      font-size:14px;
-      text-align:center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ===== プロフィール画像モーダル overlay ===== */
-    .pOverlay{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.72);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .22s ease, visibility 0s linear .22s;
-      z-index: 2000;
-    }
-    .pOverlay.open{
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .22s ease, visibility 0s;
-    }
-
-    /* ===== モーダル本体 ===== */
-    .modal{
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: end center;
-      z-index: 2001;
-
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .22s ease, visibility 0s linear .22s;
-    }
-    .modal.open{
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .22s ease, visibility 0s;
-    }
-
-    .modal-inner{
-      width: min(92vw, 720px);
-      max-height: 88vh;
-      background: rgba(10,10,14,.92);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 18px 18px 0 0;
-
-      overflow-y: scroll;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-
-      transform: translateY(16px);
-      opacity: 0;
-      transition: transform .22s ease, opacity .22s ease;
-    }
-    .modal.open .modal-inner{
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .modal-top{
-      position: sticky;
-      top: 0;
+      position:sticky;
+      top:0;
+      z-index:50;
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding: 12px 14px;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      z-index: 3;
-      color:#fff;
+      padding:12px 16px;
+      background:rgba(0,0,0,.4);
+      backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .modal-title{ font-weight: 700; letter-spacing: .06em; }
-    .mclose{
-      font-size: 20px;
-      background: none;
-      border: none;
-      cursor: pointer;
+    .site-title{
+      font-size:18px;
+      font-weight:600;
+      letter-spacing:.05em;
       color:#fff;
-      padding: 6px 10px;
-      border-radius: 10px;
+      text-decoration:none;
+    }
+    .menu-btn{
+      font-size:22px;
+      background:none;
+      border:none;
+      color:#fff;
+      cursor:pointer;
     }
 
-    /* ===== 1期/2期/縺偵ｓ縺倥▽ タブ ===== */
-    .tabs{
-      display:flex;
-      gap:10px;
-      padding: 12px 14px 10px;
-      position: sticky;
-      top: 52px;
-      background: rgba(10,10,14,.92);
-      z-index: 2;
-      border-bottom: 1px solid rgba(255,255,255,.06);
+    /* ===== page ===== */
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:48px 16px 80px;
     }
-    .tab{
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
+
+    .page-title{
+      font-size:48px;
+      letter-spacing:.08em;
+      margin:0;
+    }
+    .page-sub{
+      margin-top:6px;
+      font-size:18px;
+      letter-spacing:.12em;
+      opacity:.8;
+    }
+
+    /* ===== switch ===== */
+    .switch{
+      display:flex;
+      margin:40px 0 32px;
+      border:1px solid rgba(255,255,255,.25);
+    }
+    .switch button{
+      flex:1;
+      padding:14px 0;
+      background:none;
+      border:none;
       color:#fff;
-      font-family: inherit;
+      font-family:inherit;
+      font-size:16px;
+      letter-spacing:.2em;
+      cursor:pointer;
+    }
+    .switch button.active{
+      background:#1aa5a5;
+      color:#000;
       font-weight:700;
-      letter-spacing:.03em;
-      cursor:pointer;
-      white-space: nowrap;
-    }
-    .tab.active{
-      background: rgba(255,255,255,.14);
-      border-color: rgba(255,255,255,.35);
-    }
-    .tab.spoiler{
-      color: #ff4b4b;
-      border-color: rgba(255,75,75,.35);
     }
 
-    .modal-body{
-      min-height: 120vh;
-      padding-bottom: 40vh;
+    /* ===== grid ===== */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+    @media(min-width:700px){
+      .grid{ grid-template-columns:repeat(4,1fr); }
     }
 
-    /* ★2期：立ち絵枠 */
-    .stand-wrap{
-      padding: 14px;
-      border-top: 1px solid rgba(255,255,255,.06);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      background: rgba(255,255,255,.02);
-      display:none;
-    }
-    .stand-wrap.show{ display:block; }
-
-    .pstand{
-      width: 100%;
-      max-height: 66vh;
-      object-fit: contain;
-      display:block;
-      background: rgba(255,255,255,.04);
-
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity .28s ease, transform .28s ease;
-    }
-    .pstand.show{
-      opacity: 1;
-      transform: translateY(0);
+    .card{
+      position:relative;
+      aspect-ratio: 3 / 2;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.25);
+      overflow:hidden;
     }
 
-    .psheet{
-      width: 100%;
-      height: auto;
-      display: block;
-      background: rgba(255,255,255,.04);
-      border-top: 1px solid rgba(255,255,255,.06);
-
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity .28s ease, transform .28s ease;
-    }
-    .psheet.show{
-      opacity: 1;
-      transform: translateY(0);
+    .card img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:.95;
     }
 
-    /* ===== ネタバレ確認モーダル ===== */
-    .spoilerOverlay{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.75);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .22s ease, visibility 0s linear .22s;
-      z-index: 3000;
-    }
-    .spoilerOverlay.open{
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .22s ease, visibility 0s;
-    }
-
-    .spoilerModal{
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      z-index: 3001;
-
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .22s ease, visibility 0s linear .22s;
-    }
-    .spoilerModal.open{
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .22s ease, visibility 0s;
-    }
-
-    .spoilerBox{
-      width: min(92vw, 560px);
-      background: rgba(10,10,14,.96);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 16px;
-      padding: 16px 14px;
-      color:#fff;
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
-    .spoilerTitle{
-      font-weight:800;
-      letter-spacing:.04em;
-      margin: 0 0 10px;
-    }
-    .spoilerText{
-      margin: 0 0 14px;
-      color: rgba(255,255,255,.88);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-    .spoilerBtns{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-    }
-    .btn{
-      font-family: inherit;
-      font-weight: 700;
-      letter-spacing:.03em;
-      border-radius: 12px;
-      padding: 10px 14px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color: #fff;
-      cursor:pointer;
-    }
-    .btn.primary{
-      border-color: rgba(255,75,75,.38);
-      background: rgba(255,75,75,.12);
-      color: #ffb3b3;
+    .num{
+      position:absolute;
+      right:12px;
+      bottom:8px;
+      font-size:36px;
+      letter-spacing:.1em;
+      opacity:.85;
     }
 
     /* ===== footer ===== */
     .footer{
-      position: relative;
-      z-index: 5;
-      padding: 44px 16px 56px;
-      text-align: center;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-top: 1px solid rgba(255,255,255,.10);
-    }
-    .footer-inner{
-      max-width: 960px;
-      margin: 0 auto;
+      padding:48px 16px 56px;
+      text-align:center;
+      background:rgba(0,0,0,.35);
+      border-top:1px solid rgba(255,255,255,.1);
     }
     .footer-logo{
-      width: min(64vw, 260px);
-      height: auto;
-      display: block;
-      margin: 0 auto 18px;
-      opacity: .92;
-      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
-    }
-    .footer-title{
-      margin: 0 0 10px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      font-size: 13px;
-      color: rgba(255,255,255,.78);
-    }
-    .footer-sns{
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin: 12px 0 6px;
-    }
-    .share{
-      margin: 10px 0 18px;
-      display: grid;
-      gap: 10px;
-      justify-items: center;
-    }
-    .share-row{
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .sns-btn{
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color: #fff;
-      text-decoration: none;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .sns-btn:active{ transform: scale(.98); }
-    .sns-btn:hover{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.28);
-    }
-    .icon-img{
-      width: 22px;
-      height: 22px;
-      object-fit: contain;
-      display: block;
-      opacity: .92;
+      width:min(260px,70vw);
+      margin:0 auto 18px;
+      display:block;
     }
     .footer-note{
-      margin-top: 18px;
-      font-size: 12px;
-      color: rgba(255,255,255,.60);
-      letter-spacing: .03em;
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .pOverlay, .modal, .modal-inner, .psheet, .pstand, .spoilerOverlay, .spoilerModal{ transition:none; }
-      .psheet, .pstand{ opacity:1; transform:none; }
-      .modal-inner{ opacity:1; transform:none; }
+      font-size:12px;
+      opacity:.6;
+      line-height:1.7;
     }
   </style>
 </head>
 
 <body>
-  <header class="header">
-    <a href="/" class="site-title">空想世界アリストテレス</a>
-    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
-  </header>
 
-  <div class="box">
-    <h1>Character</h1>
-    <p>キャラクター一覧</p>
+<header class="header">
+  <a href="/" class="site-title">空想世界アリストテレス</a>
+  <button class="menu-btn">☰</button>
+</header>
 
-    <div id="grid" class="grid" aria-label="キャラクター一覧"></div>
+<main class="container">
+  <h1 class="page-title">Character</h1>
+  <div class="page-sub">空想世界 名簿記録</div>
+
+  <!-- MAIN / SUB -->
+  <div class="switch">
+    <button id="btnMain" class="active">MAIN</button>
+    <button id="btnSub">SUB</button>
   </div>
 
-  <div id="overlay" class="overlay" aria-hidden="true"></div>
+  <!-- GRID -->
+  <div id="grid" class="grid"></div>
+</main>
 
-  <nav id="menu" class="menu" aria-hidden="true">
-    <div class="menu-top">
-      <div class="menu-title">MENU</div>
-      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
-    </div>
-    <a href="/">Home</a>
-    <a href="/character/">Character</a>
-    <a href="/story/">Story</a>
-    <a href="/guide/">Guide</a>
-  </nav>
+<footer class="footer">
+  <img src="/images/logo.png" alt="空想世界アリストテレス" class="footer-logo">
+  <div class="footer-note">
+    © 空想世界アリストテレス<br>
+    当サイトの内容・文章・画像等の無断使用を固く禁じます。
+  </div>
+</footer>
 
-  <!-- ===== プロフィール画像モーダル ===== -->
-  <div id="pOverlay" class="pOverlay" aria-hidden="true"></div>
+<script>
+  const grid = document.getElementById("grid");
 
-  <section id="charModal" class="modal" aria-hidden="true">
-    <div class="modal-inner" id="modalInner">
-      <div class="modal-top">
-        <div class="modal-title" id="ptitle">PROFILE</div>
-        <button class="mclose" id="charClose" aria-label="閉じる">✕</button>
-      </div>
+  const mainImages = [
+    "/images/character/main01.png",
+    "/images/character/main02.png",
+    "/images/character/main03.png",
+    "/images/character/main04.png",
+    "/images/character/main05.png",
+    "/images/character/main06.png",
+    "/images/character/main07.png",
+    "/images/character/main08.png",
+    "/images/character/main09.png",
+    "/images/character/main10.png",
+    "/images/character/main11.png",
+    "/images/character/main12.png",
+    "/images/character/main13.png",
+    "/images/character/main14.png",
+  ];
 
-      <div class="tabs" role="tablist" aria-label="期の切り替え">
-        <button type="button" class="tab active" data-season="s1" role="tab" aria-selected="true">1期</button>
-        <button type="button" class="tab" data-season="s2" role="tab" aria-selected="false">2期</button>
-        <button type="button" class="tab spoiler" id="tabSpoiler" data-season="sp" role="tab" aria-selected="false" style="display:none;">縺偵ｓ縺倥▽</button>
-      </div>
+  const subImages = [
+    "/images/character/sub01.png",
+    "/images/character/sub02.png",
+    "/images/character/sub03.png",
+    "/images/character/sub04.png",
+  ];
 
-      <div class="modal-body" id="modalBody">
-        <div class="stand-wrap" id="standWrap">
-          <img id="pstand" class="pstand" src="" alt="">
-        </div>
-        <img id="psheet" class="psheet" src="" alt="">
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ネタバレ確認 ===== -->
-  <div id="spoilerOverlay" class="spoilerOverlay" aria-hidden="true"></div>
-  <section id="spoilerModal" class="spoilerModal" aria-hidden="true">
-    <div class="spoilerBox" role="dialog" aria-modal="true" aria-label="ネタバレ確認">
-      <h2 class="spoilerTitle">確認</h2>
-      <p class="spoilerText">空想世界アリストテレス1期のネタバレを含む内容ですが、よろしいですか？</p>
-      <div class="spoilerBtns">
-        <button type="button" class="btn" id="spoilerNo">いいえ</button>
-        <button type="button" class="btn primary" id="spoilerYes">はい</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== footer（★ここが正しい位置：ページ末尾） ===== -->
-  <footer class="footer" aria-label="フッター">
-    <div class="footer-inner">
-      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
-
-      <div class="share" aria-label="シェア">
-        <div class="share-row">
-          <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
-            <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
-          </a>
-          <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
-            <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
-          </a>
-        </div>
-      </div>
-
-      <div class="footer-title">OFFICIAL</div>
-      <div class="footer-sns" aria-label="公式SNS">
-        <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener" aria-label="X">
-          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
-        </a>
-        <a class="sns-btn" href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo" target="_blank" rel="noopener" aria-label="YouTube">
-          <img class="icon-img" src="/images/icons/youtube.png" alt="" aria-hidden="true">
-        </a>
-        <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank" rel="noopener" aria-label="Nola">
-          <img class="icon-img" src="/images/icons/nola.png" alt="" aria-hidden="true">
-        </a>
-      </div>
-
-      <div class="footer-note">© 空想世界アリストテレス</div>
-    </div>
-  </footer>
-
-  <script>
-    // ===== SHARE（X / LINE） =====
-    (() => {
-      const url = encodeURIComponent(location.href);
-      const title = encodeURIComponent(document.title);
-      const shareX = document.getElementById("shareX");
-      const shareLINE = document.getElementById("shareLINE");
-      if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
-      if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
-    })();
-
-    // ====== 1) キャラデータ ======
-    const characters = [
-      { id:"sui", name:"翠", icon:"/images/characters/sui_icon.png", sheetS1:"/images/characters/sui_sheet_s1.png", stand:"/images/characters/sui_stand.png", sheetS2:"/images/characters/sui_sheet_s2.png" },
-      { id:"rei", name:"零", icon:"/images/characters/rei_icon.png", sheetS1:"/images/characters/rei_sheet_s1.png", stand:"/images/characters/rei_stand.png", sheetS2:"/images/characters/rei_sheet_s2.png" },
-      { id:"kiire", name:"季依恋", icon:"/images/characters/kiire_icon.png", sheetS1:"/images/characters/kiire_sheet_s1.png", stand:"/images/characters/kiire_stand.png", sheetS2:"/images/characters/kiire_sheet_s2.png" },
-      { id:"hari", name:"羽璃", icon:"/images/characters/hari_icon.png", sheetS1:"/images/characters/hari_sheet_s1.png", stand:"/images/characters/hari_stand.png", sheetS2:"/images/characters/hari_sheet_s2.png" },
-      { id:"yuugi", name:"夕霧", icon:"/images/characters/yuugi_icon.png", sheetS1:"/images/characters/yuugi_sheet_s1.png", stand:"/images/characters/yuugi_stand.png", sheetS2:"/images/characters/yuugi_sheet_s2.png" },
-      { id:"reine", name:"零音", icon:"/images/characters/reine_icon.png", sheetS1:"/images/characters/reine_sheet_s1.png", stand:"/images/characters/reine_stand.png", sheetS2:"/images/characters/reine_sheet_s2.png" },
-      { id:"yuri", name:"結莉", icon:"/images/characters/yuri_icon.png", sheetS1:"/images/characters/yuri_sheet_s1.png", stand:"/images/characters/yuri_stand.png", sheetS2:"/images/characters/yuri_sheet_s2.png" },
-      { id:"yume", name:"優芽", icon:"/images/characters/yume_icon.png", sheetS1:"/images/characters/yume_sheet_s1.png", stand:"/images/characters/yume_stand.png", sheetS2:"/images/characters/yume_sheet_s2.png" },
-      { id:"reto", name:"怜冬", icon:"/images/characters/reto_icon.png", sheetS1:"/images/characters/reto_sheet_s1.png", stand:"/images/characters/reto_stand.png", sheetS2:"/images/characters/reto_sheet_s2.png" },
-      { id:"hana", name:"白花", icon:"/images/characters/hana_icon.png", sheetS1:"/images/characters/hana_sheet_s1.png", stand:"/images/characters/hana_stand.png", sheetS2:"/images/characters/hana_sheet_s2.png" },
-
-      { id:"yukina", name:"雪那", icon:"/images/characters/yukina_icon.png",
-        sheetS1:"/images/characters/yukina_sheet_s1.png", stand:"/images/characters/yukina_stand.png",
-        sheetS2:"/images/characters/yukina_sheet_s2.png", sheetSP:"/images/characters/yukina_sheet_sp.png",
-        spoilerOnly:true
-      },
-      { id:"nemuru", name:"ねむる", icon:"/images/characters/nemuru_icon.png",
-        sheetS1:"/images/characters/nemuru_sheet_s1.png", stand:"/images/characters/nemuru_stand.png",
-        sheetS2:"/images/characters/nemuru_sheet_s2.png", sheetSP:"/images/characters/nemuru_sheet_sp.png",
-        spoilerOnly:true
-      },
-      { id:"akiha", name:"あきは", icon:"/images/characters/akiha_icon.png",
-        sheetS1:"/images/characters/akiha_sheet_s1.png", stand:"/images/characters/akiha_stand.png",
-        sheetS2:"/images/characters/akiha_sheet_s2.png", sheetSP:"/images/characters/akiha_sheet_sp.png",
-        spoilerOnly:true
-      },
-
-      { id:"anjela", name:"アンジェラ", icon:"/images/characters/anjela_icon.png",
-        sheetS1:"/images/characters/anjela_sheet_s1.png", stand:"/images/characters/anjela_stand.png",
-        sheetS2:"/images/characters/anjela_sheet_s2.png"
-      },
-    ];
-
-    // ====== 2) 一覧生成 ======
-    const grid = document.getElementById("grid");
-    grid.innerHTML = characters.map((c, i) => `
-      <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${c.name}のプロフィールを開く">
-        <img class="avatar" src="${c.icon}" alt="${c.name}">
-        <div class="cname">${c.name}</div>
+  function render(list){
+    grid.innerHTML = list.map((src,i)=>`
+      <div class="card">
+        <img src="${src}" alt="">
+        <div class="num">${String(i+1).padStart(2,"0")}</div>
       </div>
     `).join("");
+  }
 
-    // ====== 3) プロフモーダル制御 ======
-    const pOverlay = document.getElementById("pOverlay");
-    const charModal = document.getElementById("charModal");
-    const modalInner = document.getElementById("modalInner");
-    const psheet = document.getElementById("psheet");
-    const ptitle = document.getElementById("ptitle");
-    const charClose = document.getElementById("charClose");
+  render(mainImages);
 
-    const standWrap = document.getElementById("standWrap");
-    const pstand = document.getElementById("pstand");
+  btnMain.onclick = ()=>{
+    btnMain.classList.add("active");
+    btnSub.classList.remove("active");
+    render(mainImages);
+  };
+  btnSub.onclick = ()=>{
+    btnSub.classList.add("active");
+    btnMain.classList.remove("active");
+    render(subImages);
+  };
+</script>
 
-    const tabSpoiler = document.getElementById("tabSpoiler");
-    const tabs = Array.from(document.querySelectorAll(".tab"));
-
-    const spoilerOverlay = document.getElementById("spoilerOverlay");
-    const spoilerModal = document.getElementById("spoilerModal");
-    const spoilerYes = document.getElementById("spoilerYes");
-    const spoilerNo = document.getElementById("spoilerNo");
-
-    let currentChar = null;
-    let currentSeason = "s1";
-    let pendingSeason = null;
-
-    const setActiveTab = (season) => {
-      tabs.forEach(t => {
-        if (t.style.display === "none") return;
-        const on = (t.dataset.season === season);
-        t.classList.toggle("active", on);
-        t.setAttribute("aria-selected", on ? "true" : "false");
-      });
-    };
-
-    const fadeImgTo = (imgEl, src, alt) => {
-      imgEl.classList.remove("show");
-      imgEl.alt = alt || "";
-      setTimeout(() => {
-        imgEl.src = src || "";
-        imgEl.onload = () => imgEl.classList.add("show");
-        setTimeout(() => imgEl.classList.add("show"), 220);
-      }, 20);
-    };
-
-    const resetStand = () => {
-      standWrap.classList.remove("show");
-      pstand.classList.remove("show");
-      pstand.src = "";
-      pstand.alt = "";
-    };
-
-    const openSpoilerConfirm = () => {
-      if(!currentChar || !currentChar.spoilerOnly) return;
-      pendingSeason = "sp";
-      spoilerOverlay.classList.add("open");
-      spoilerModal.classList.add("open");
-      spoilerOverlay.setAttribute("aria-hidden","false");
-      spoilerModal.setAttribute("aria-hidden","false");
-    };
-
-    const closeSpoilerConfirm = (silent=false) => {
-      spoilerModal.classList.remove("open");
-      spoilerOverlay.classList.remove("open");
-      spoilerOverlay.setAttribute("aria-hidden","true");
-      spoilerModal.setAttribute("aria-hidden","true");
-      if(!silent) pendingSeason = null;
-    };
-
-    const setSheet = (season) => {
-      if(!currentChar) return;
-
-      if(season === "sp"){
-        openSpoilerConfirm();
-        return;
-      }
-
-      currentSeason = season;
-      setActiveTab(season);
-      resetStand();
-
-      if(season === "s2"){
-        if(currentChar.stand){
-          standWrap.classList.add("show");
-          fadeImgTo(pstand, currentChar.stand, currentChar.name + " 2期 立ち絵");
-        }
-        const profSrc = currentChar.sheetS2 || currentChar.sheetS1;
-        fadeImgTo(psheet, profSrc, currentChar.name + " 2期プロフィール");
-        return;
-      }
-
-      fadeImgTo(psheet, currentChar.sheetS1, currentChar.name + " 1期プロフィール");
-    };
-
-    const openProfile = (c) => {
-      currentChar = c;
-      ptitle.textContent = c.name;
-
-      if(c.spoilerOnly){
-        tabSpoiler.style.display = "inline-flex";
-      }else{
-        tabSpoiler.style.display = "none";
-      }
-
-      pOverlay.classList.add("open");
-      charModal.classList.add("open");
-      pOverlay.setAttribute("aria-hidden","false");
-      charModal.setAttribute("aria-hidden","false");
-
-      document.body.style.overflow = "hidden";
-      modalInner.scrollTop = 0;
-
-      currentSeason = "s1";
-      setSheet("s1");
-    };
-
-    const closeProfile = () => {
-      charModal.classList.remove("open");
-      pOverlay.classList.remove("open");
-      pOverlay.setAttribute("aria-hidden","true");
-      charModal.setAttribute("aria-hidden","true");
-
-      closeSpoilerConfirm(true);
-
-      psheet.classList.remove("show");
-      psheet.src = "";
-      resetStand();
-
-      document.body.style.overflow = "";
-      currentChar = null;
-      currentSeason = "s1";
-      pendingSeason = null;
-      setActiveTab("s1");
-      tabSpoiler.style.display = "none";
-    };
-
-    const openFromEvent = (e) => {
-      const card = e.target.closest(".card");
-      if(!card) return;
-      const idx = Number(card.dataset.index);
-      openProfile(characters[idx]);
-    };
-
-    grid.addEventListener("click", openFromEvent);
-    grid.addEventListener("keydown", (e) => {
-      if(e.key !== "Enter") return;
-      openFromEvent(e);
-    });
-
-    tabs.forEach(t => {
-      t.addEventListener("click", () => {
-        if(t.style.display === "none") return;
-        setSheet(t.dataset.season);
-      });
-    });
-
-    charClose.addEventListener("click", closeProfile);
-    pOverlay.addEventListener("click", closeProfile);
-
-    window.addEventListener("keydown", (e) => {
-      if(e.key === "Escape" && charModal.classList.contains("open")){
-        closeProfile();
-      }
-    });
-
-    let sy = 0, dragging = false;
-    modalInner.addEventListener("touchstart", (e) => {
-      sy = e.touches[0].clientY;
-      dragging = true;
-    }, {passive:true});
-
-    modalInner.addEventListener("touchmove", (e) => {
-      if(!dragging) return;
-      const dy = e.touches[0].clientY - sy;
-      if(modalInner.scrollTop === 0 && dy > 80){
-        closeProfile();
-        dragging = false;
-      }
-    }, {passive:true});
-
-    modalInner.addEventListener("touchend", ()=>{ dragging=false; }, {passive:true});
-
-    spoilerNo.addEventListener("click", () => {
-      closeSpoilerConfirm();
-      setActiveTab(currentSeason);
-    });
-    spoilerOverlay.addEventListener("click", () => {
-      closeSpoilerConfirm();
-      setActiveTab(currentSeason);
-    });
-    spoilerYes.addEventListener("click", () => {
-      closeSpoilerConfirm();
-      resetStand();
-      currentSeason = "sp";
-      setActiveTab("sp");
-      fadeImgTo(psheet, currentChar.sheetSP, currentChar.name + " 縺偵ｓ縺倥▽");
-    });
-
-    // ====== 4) ハンバーガーメニュー ======
-    const menu = document.getElementById("menu");
-    const overlay = document.getElementById("overlay");
-    const menuBtn = document.getElementById("menuBtn");
-    const closeBtn = document.getElementById("closeBtn");
-
-    const openMenu = () => {
-      menu.classList.add("open");
-      overlay.classList.add("open");
-      menu.setAttribute("aria-hidden","false");
-    };
-    const closeMenu = () => {
-      menu.classList.remove("open");
-      overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden","true");
-    };
-
-    menuBtn.addEventListener("click", openMenu);
-    closeBtn.addEventListener("click", closeMenu);
-    overlay.addEventListener("click", closeMenu);
-    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
-
-    let sx=0, ssy=0, tracking=false;
-    menu.addEventListener("touchstart", e=>{ const t=e.touches[0]; sx=t.clientX; ssy=t.clientY; tracking=true; }, {passive:true});
-    menu.addEventListener("touchmove", e=>{
-      if(!tracking) return;
-      const t=e.touches[0];
-      const dx=t.clientX-sx, dy=t.clientY-ssy;
-      if(Math.abs(dx)>Math.abs(dy)){
-        e.preventDefault();
-        if(dx < -60){ closeMenu(); tracking=false; }
-      }
-    }, {passive:false});
-    menu.addEventListener("touchend", ()=>{ tracking=false; }, {passive:true});
-  </script>
 </body>
 </html>
