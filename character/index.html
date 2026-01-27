@@ -4,31 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Character | 空想世界アリストテレス</title>
-  <link rel="icon" href="/favicon.png">
 
-  <!-- ===== 和樹令和 Light ===== -->
+  <!-- 和樹令和 Light -->
+  <link href="https://fonts.googleapis.com/css2?family=Kazuki+Reiwa:opsz,wght@16..144,300&display=swap" rel="stylesheet">
+
   <style>
-    @font-face {
-      font-family: "KazukiReiwa";
-      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
-
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
 
     body{
-      font-family: "KazukiReiwa", serif;
+      font-family: "Kazuki Reiwa", serif;
       background:#0b0b0f;
       color:#fff;
-      line-height:1.9;
       overflow-x:hidden;
     }
 
-    /* ===== HEADER ===== */
-    .header{
+    /* ===== header ===== */
+    header{
       position:sticky;
       top:0;
       z-index:50;
@@ -40,79 +32,80 @@
       backdrop-filter:blur(8px);
       border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .site-title{
-      font-size:15px;
-      letter-spacing:.22em;
+    header a{
+      color:#fff;
       text-decoration:none;
-      color:#fff;
-      opacity:.9;
-    }
-    .menu-btn{
-      font-size:22px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
+      font-size:18px;
+      letter-spacing:.05em;
     }
 
-    /* ===== HERO ===== */
-    .hero{
-      padding:64px 16px 44px;
+    /* ===== title area ===== */
+    .title-wrap{
       text-align:center;
+      padding:64px 16px 40px;
     }
 
-    .hero-title{
-      font-size:28px;
-      letter-spacing:.28em;
-      margin-bottom:12px;
-      font-weight:300;
+    .title-en{
+      font-size:18px;
+      letter-spacing:.2em;
+      opacity:.7;
+      margin-bottom:8px;
     }
 
-    .hero-sub{
-      font-size:13px;
-      letter-spacing:.42em;
-      opacity:.65;
+    .title-main{
+      font-size:34px;
+      letter-spacing:.12em;
+      margin:0;
     }
 
-    /* ===== MAIN / SUB ===== */
-    .section-switch{
+    .title-ruby{
+      font-size:14px;
+      letter-spacing:.3em;
+      opacity:.55;
+      margin-top:6px;
+    }
+
+    /* ===== tabs ===== */
+    .tabs{
       display:flex;
       justify-content:center;
-      gap:22px;
-      margin-top:36px;
+      gap:14px;
+      margin:24px 0 40px;
     }
 
-    .section-btn{
-      padding:10px 28px;
+    .tab{
+      padding:10px 22px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.25);
       background:rgba(255,255,255,.05);
-      font-family:"KazukiReiwa", serif;
-      letter-spacing:.26em;
-      font-size:13px;
       color:#fff;
       cursor:pointer;
+      font-family:inherit;
+      letter-spacing:.1em;
     }
 
-    .section-btn.active{
+    .tab.active{
       background:rgba(255,255,255,.18);
       border-color:rgba(255,255,255,.45);
     }
 
-    /* ===== CONTENT ===== */
+    /* ===== content ===== */
     .content{
-      max-width:900px;
-      margin:48px auto 96px;
-      padding:0 16px;
+      max-width:1000px;
+      margin:0 auto;
+      padding:0 16px 80px;
       text-align:center;
-      opacity:.7;
-      font-size:13px;
-      letter-spacing:.18em;
     }
 
-    /* ===== FOOTER ===== */
-    .footer{
-      padding:48px 16px 56px;
+    .placeholder{
+      padding:80px 16px;
+      opacity:.6;
+      letter-spacing:.1em;
+    }
+
+    /* ===== footer ===== */
+    footer{
+      padding:56px 16px;
       text-align:center;
       background:rgba(0,0,0,.35);
       border-top:1px solid rgba(255,255,255,.1);
@@ -120,9 +113,7 @@
 
     .footer-logo{
       width:min(260px,70vw);
-      margin:0 auto 18px;
-      display:block;
-      opacity:.88;
+      margin-bottom:20px;
     }
 
     .footer-sns{
@@ -135,56 +126,65 @@
     .sns-btn{
       width:44px;
       height:44px;
-      border-radius:999px;
+      border-radius:50%;
       display:grid;
       place-items:center;
+      background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.05);
-      text-decoration:none;
     }
 
     .sns-btn img{
       width:22px;
       height:22px;
-      opacity:.9;
+      object-fit:contain;
     }
 
     .footer-note{
-      margin-top:18px;
+      margin-top:20px;
       font-size:12px;
       opacity:.6;
-      letter-spacing:.14em;
-      line-height:1.8;
+      letter-spacing:.05em;
     }
   </style>
 </head>
 
 <body>
 
-<header class="header">
-  <a href="/" class="site-title">空想世界アリストテレス</a>
-  <button class="menu-btn">☰</button>
+<header>
+  <a href="/">空想世界アリストテレス</a>
 </header>
 
-<main>
-  <section class="hero">
-    <div class="hero-title">CHARACTER</div>
-    <div class="hero-sub">空想世界名簿記録</div>
+<!-- ===== title ===== -->
+<section class="title-wrap">
+  <div class="title-en">CHARACTER</div>
+  <h1 class="title-main">空想世界名簿記録</h1>
+  <div class="title-ruby">character</div>
+</section>
 
-    <div class="section-switch">
-      <button class="section-btn active">MAIN</button>
-      <button class="section-btn">SUB</button>
+<!-- ===== tabs ===== -->
+<div class="tabs">
+  <button class="tab active" data-tab="main">MAIN</button>
+  <button class="tab" data-tab="sub">SUB</button>
+</div>
+
+<!-- ===== content ===== -->
+<section class="content">
+  <div id="main" class="panel">
+    <div class="placeholder">
+      キャラクター一覧（ここに配置予定）
     </div>
-  </section>
+  </div>
 
-  <section class="content">
-    MAIN：キャラクター名簿（後から配置）<br>
-    SUB：準備中
-  </section>
-</main>
+  <div id="sub" class="panel" style="display:none;">
+    <div class="placeholder">
+      SUBキャラクターは準備中です
+    </div>
+  </div>
+</section>
 
-<footer class="footer">
-  <img src="/images/logo.png" alt="空想世界アリストテレス" class="footer-logo">
+<!-- ===== footer ===== -->
+<footer>
+  <img src="/images/logo.png" class="footer-logo" alt="空想世界アリストテレス">
 
   <div class="footer-sns">
     <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank">
@@ -193,16 +193,34 @@
     <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank">
       <img src="/images/icons/youtube.png" alt="">
     </a>
-    <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank">
+    <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank">
       <img src="/images/icons/nola.png" alt="">
     </a>
   </div>
 
   <div class="footer-note">
     © 空想世界アリストテレス<br>
-    当サイトの内容・文章・画像等の無断使用を固く禁じます。
+    当サイトの内容・画像等の無断使用を固く禁じます。
   </div>
 </footer>
+
+<script>
+  const tabs = document.querySelectorAll(".tab");
+  const panels = {
+    main: document.getElementById("main"),
+    sub: document.getElementById("sub")
+  };
+
+  tabs.forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      tabs.forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+
+      Object.values(panels).forEach(p=>p.style.display="none");
+      panels[tab.dataset.tab].style.display="block";
+    });
+  });
+</script>
 
 </body>
 </html>
