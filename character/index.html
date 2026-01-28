@@ -12,67 +12,49 @@
   font-weight:300;
 }
 
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
 body{
   font-family:"Kazuki Reiwa",serif;
   background:#0b0b0f;
   color:#fff;
 }
 
-/* ===== Profile Modal : FULLSCREEN ===== */
+/* ===== 共通 ===== */
+.hidden{display:none;}
+main{min-height:100vh;}
 
-.profileOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  opacity:0;
-  pointer-events:none;
-  transition:.2s;
-  z-index:2000;
+/* ===== 一覧 ===== */
+#list{
+  max-width:1100px;
+  margin:0 auto;
+  padding:60px 16px 80px;
 }
-.profileOverlay.open{opacity:1;pointer-events:auto}
-
-.profileModal{
-  position:fixed;
-  inset:0;
-  z-index:2001;
-  opacity:0;
-  pointer-events:none;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
 }
-.profileModal.open{opacity:1;pointer-events:auto}
-
-.profileInner{
-  --accent:#4fbfc2;
-  width:100vw;
-  height:100vh;
-  background:#0b0b0f;
-  overflow:auto;
+@media(min-width:700px){
+  .grid{grid-template-columns:repeat(4,1fr);}
 }
-
-/* ===== Top ===== */
-
-.profileTop{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 16px;
-  z-index:5;
-}
-.profileClose{
-  font-size:20px;
-  background:none;
-  border:none;
-  color:#fff;
+.card{
+  aspect-ratio:3/2;
   cursor:pointer;
+  border:1px solid rgba(255,255,255,.2);
+}
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-/* ===== HERO ===== */
+/* ===== 詳細 ===== */
+#profile{
+  min-height:100vh;
+}
 
+/* 上：立ち絵 */
 .hero{
   position:relative;
 }
@@ -82,193 +64,171 @@ body{
   display:block;
 }
 
-/* グラデーションで一体化 */
+/* 下グラデ */
 .hero::after{
   content:"";
   position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:45%;
+  left:0;right:0;bottom:0;
+  height:40%;
   background:linear-gradient(
     to bottom,
-    rgba(11,11,15,0) 0%,
-    rgba(11,11,15,.6) 45%,
-    rgba(11,11,15,.85) 75%,
-    #0b0b0f 100%
+    transparent,
+    rgba(0,0,0,.7),
+    #000
   );
 }
 
-/* ===== S2 BUTTON ===== */
-
-.heroTools{
+/* S2ボタン */
+.s2btn{
   position:absolute;
   top:16px;
   right:16px;
-  z-index:4;
-}
-.s2btn{
-  width:64px;
-  height:64px;
+  width:60px;
+  height:60px;
   border-radius:50%;
   border:none;
   background:var(--accent);
+  color:#000;
   font-size:14px;
-  letter-spacing:.12em;
   cursor:pointer;
-  display:grid;
-  place-items:center;
 }
 
-/* ===== INFO (一体化) ===== */
-
-.info{
-  margin-top:-72px;
-  padding:0 20px 40px;
-  position:relative;
-  z-index:2;
-}
-
-.nameImg{
-  width:min(260px,72vw);
-  display:block;
-  margin:0 auto 12px;
-  filter:drop-shadow(0 8px 24px rgba(0,0,0,.6));
-}
-
-.desc{
-  max-width:720px;
+/* 情報エリア */
+.profile-info{
+  padding:24px 16px 60px;
+  max-width:820px;
   margin:0 auto;
+}
+
+/* 名前画像 */
+.nameImg{
+  width:min(360px,90vw);
+  margin-bottom:12px;
+}
+
+/* 線 */
+.line{
+  height:1px;
+  background:linear-gradient(
+    90deg,
+    var(--accent),
+    transparent
+  );
+  margin:12px 0 16px;
+}
+
+/* 説明 */
+.desc{
   line-height:1.9;
-  font-size:15px;
-  color:color-mix(in srgb,var(--accent) 88%,white 12%);
+  color:var(--accent);
 }
 
-.meta{
-  max-width:720px;
-  margin:10px auto 0;
-  font-size:12px;
-  opacity:.7;
-}
-
-/* ===== NAV ===== */
-
-.navRow{
-  margin-top:36px;
+/* ナビ */
+.nav{
+  margin-top:32px;
   display:flex;
   justify-content:center;
-  gap:16px;
 }
-
-.navBtn,
-.backBtn{
-  border:none;
-  background:rgba(255,255,255,.06);
-  color:#fff;
+.back{
   cursor:pointer;
-  padding:12px 16px;
-  border-radius:999px;
+  font-size:16px;
 }
-
-.backBtn{
-  font-size:15px;
-  letter-spacing:.18em;
+.back span{
+  margin:0 .1em;
 }
 </style>
 </head>
 
 <body>
 
-<div class="profileOverlay" id="profileOverlay"></div>
+<main>
 
-<section class="profileModal" id="profileModal">
-  <div class="profileInner" id="profileInner">
+<!-- ===== 一覧 ===== -->
+<section id="list">
+  <div class="grid" id="grid"></div>
+</section>
 
-    <div class="profileTop">
-      <div></div>
-      <button class="profileClose" id="profileClose">✕</button>
-    </div>
+<!-- ===== 詳細 ===== -->
+<section id="profile" class="hidden">
+  <div class="hero">
+    <button class="s2btn" id="s2Btn">S2</button>
+    <img id="heroImg" src="" alt="">
+  </div>
 
-    <div class="hero">
-      <div class="heroTools">
-        <button class="s2btn" id="btnS2">S2</button>
-      </div>
-      <img id="heroImg" src="">
-    </div>
+  <div class="profile-info">
+    <img id="nameImg" class="nameImg" src="" alt="">
+    <div class="line"></div>
+    <div class="desc" id="desc"></div>
 
-    <div class="info">
-      <img id="nameImg" class="nameImg" src="">
-      <div class="desc" id="descText">説明文</div>
-      <div class="meta" id="metaText">補足</div>
-
-      <div class="navRow">
-        <button class="navBtn" id="prevBtn">&lt;</button>
-        <button class="backBtn" id="backBtn">&lt; Back to list &gt;</button>
-        <button class="navBtn" id="nextBtn">&gt;</button>
+    <div class="nav">
+      <div class="back" id="backBtn">
+        <span>&lt;</span>Back to list<span>&gt;</span>
       </div>
     </div>
-
   </div>
 </section>
 
+</main>
+
 <script>
+const grid = document.getElementById("grid");
+const list = document.getElementById("list");
+const profile = document.getElementById("profile");
+
+const heroImg = document.getElementById("heroImg");
+const nameImg = document.getElementById("nameImg");
+const desc = document.getElementById("desc");
+const backBtn = document.getElementById("backBtn");
+const s2Btn = document.getElementById("s2Btn");
+
+let current = 0;
+let season = "s1";
+
+/* ===== データ ===== */
 const accents=[
 "#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34",
 "#50e65d","#05079c","#6cbecc","#e83a83","#499151","#e0e0e0",
 "#ae76db","#c9a824"
 ];
 
-const heroS1=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`);
-const heroS2=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`);
-const nameImgs=Array.from({length:14},(_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
+const heroS1=i=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`;
+const heroS2=i=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`;
+const nameSrc=i=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`;
 
-let idx=0,season="s1";
+const descs=Array.from({length:14},(_,i)=>`説明文 ${i+1}`);
 
-const modal=document.getElementById("profileModal");
-const overlay=document.getElementById("profileOverlay");
-const heroImg=document.getElementById("heroImg");
-const nameImg=document.getElementById("nameImg");
-const btnS2=document.getElementById("btnS2");
-const backBtn=document.getElementById("backBtn");
+/* ===== 一覧生成 ===== */
+Array.from({length:14},(_,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`<img src="/images/character/main${String(i+1).padStart(2,"0")}.png">`;
+  d.onclick=()=>openProfile(i);
+  grid.appendChild(d);
+});
 
-function idealTextColor(hex){
- const r=parseInt(hex.substr(1,2),16);
- const g=parseInt(hex.substr(3,2),16);
- const b=parseInt(hex.substr(5,2),16);
- return ((r*299+g*587+b*114)/1000)>170?"#000":"#fff";
-}
-
+/* ===== 表示切替 ===== */
 function openProfile(i){
- idx=i;
- modal.classList.add("open");
- overlay.classList.add("open");
- document.body.style.overflow="hidden";
- load();
+  current=i;
+  season="s1";
+  document.documentElement.style.setProperty("--accent",accents[i]);
+  heroImg.src=heroS1(i);
+  nameImg.src=nameSrc(i);
+  desc.textContent=descs[i];
+
+  list.classList.add("hidden");
+  profile.classList.remove("hidden");
+  window.scrollTo(0,0);
 }
 
-function closeProfile(){
- modal.classList.remove("open");
- overlay.classList.remove("open");
- document.body.style.overflow="";
-}
-
-function load(){
- const a=accents[idx];
- document.getElementById("profileInner").style.setProperty("--accent",a);
- btnS2.style.color=idealTextColor(a);
- heroImg.src=season==="s1"?heroS1[idx]:heroS2[idx];
- nameImg.src=nameImgs[idx];
-}
-
-btnS2.onclick=()=>{
- season=season==="s1"?"s2":"s1";
- load();
+backBtn.onclick=()=>{
+  profile.classList.add("hidden");
+  list.classList.remove("hidden");
 };
-backBtn.onclick=closeProfile;
-document.getElementById("profileClose").onclick=closeProfile;
 
-/* DEMO起動用（本番では削除OK） */
-openProfile(0);
+s2Btn.onclick=()=>{
+  season = season==="s1"?"s2":"s1";
+  heroImg.src = season==="s1"?heroS1(current):heroS2(current);
+};
 </script>
 
 </body>
