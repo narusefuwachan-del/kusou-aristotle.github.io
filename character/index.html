@@ -23,18 +23,19 @@ body{
   overflow-x:hidden;
 }
 
-/* ===== HEADER ===== */
+/* ================= HEADER ================= */
 .header{
-  position:sticky;top:0;z-index:50;
+  position:sticky;top:0;z-index:60;
   display:flex;justify-content:space-between;align-items:center;
   padding:12px 16px;
-  background:rgba(0,0,0,.45);
+  background:rgba(0,0,0,.4);
   backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 .site-title{color:#fff;text-decoration:none;letter-spacing:.08em}
 .menu-btn{font-size:22px;background:none;border:none;color:#fff}
 
-/* ===== LIST ===== */
+/* ================= GRID ================= */
 .container{
   max-width:1100px;
   margin:0 auto;
@@ -45,7 +46,6 @@ body{
 .page-title{font-size:40px;letter-spacing:.16em;font-weight:300}
 
 .grid{
-  margin-top:40px;
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:12px;
@@ -57,38 +57,60 @@ body{
   position:relative;
   aspect-ratio:3/2;
   overflow:hidden;
+  border:1px solid rgba(255,255,255,.25);
   cursor:pointer;
 }
 .card img{width:100%;height:100%;object-fit:cover}
 .num{
-  position:absolute;right:10px;bottom:6px;
-  font-size:28px;opacity:.85;
+  position:absolute;
+  right:12px;bottom:8px;
+  font-size:32px;opacity:.85;
 }
 
-/* ===== PROFILE PAGE ===== */
-.hidden{display:none}
+/* ================= PROFILE MODAL ================= */
+.profileOverlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.72);
+  opacity:0;pointer-events:none;
+  transition:.22s;
+  z-index:2100;
+}
+.profileOverlay.open{opacity:1;pointer-events:auto}
 
-.profilePage{
-  max-width:1100px;
-  margin:0 auto;
-  padding:0 0 80px;
+.profileModal{
+  position:fixed;inset:0;
+  display:grid;
+  place-items:end center;
+  opacity:0;pointer-events:none;
+  transition:.22s;
+  z-index:2101;
+}
+.profileModal.open{opacity:1;pointer-events:auto}
+
+.profileInner{
   --accent:#4fbfc2;
+  width:min(94vw,820px);
+  max-height:90vh;
+  border-radius:18px 18px 0 0;
+  background:rgba(10,10,14,.92);
+  backdrop-filter:blur(10px);
+  overflow:hidden;
 }
 
-/* ===== HERO ===== */
-.heroStage{
+/* ================= HERO ================= */
+.hero{
   position:relative;
 }
-.heroStage img{
+.hero img{
   width:100%;
   display:block;
 }
 
-/* グラデーション（下ギリギリ） */
+/* ↓↓↓ グラデーション：文字に被らない“下ギリギリ” ↓↓↓ */
 .heroFade{
   position:absolute;
   left:0;right:0;bottom:0;
-  height:22%;
+  height:20%;
   background:linear-gradient(
     to bottom,
     rgba(11,11,15,0) 0%,
@@ -97,66 +119,68 @@ body{
     rgba(11,11,15,1) 100%
   );
   pointer-events:none;
+  transition:opacity .25s ease;
 }
 
-/* S2 */
+/* S2時だけ少し強く */
+.hero[data-season="s2"] .heroFade{
+  opacity:1;
+}
+.hero[data-season="s1"] .heroFade{
+  opacity:.65;
+}
+
+/* S2ボタン */
 .heroTools{
-  position:absolute;top:12px;right:12px;z-index:3;
+  position:absolute;top:10px;right:10px;z-index:3;
 }
 .s2btn{
-  width:60px;height:60px;
+  width:56px;height:56px;
   border-radius:999px;
   border:none;
   background:var(--accent);
   font-family:inherit;
-  font-size:14px;
   letter-spacing:.14em;
   cursor:pointer;
 }
 
-/* ===== INFO ===== */
-.profileInfo{
-  padding:8px 16px 0;
-  text-align:left;
+/* ================= NAME OVERLAY ================= */
+/* ★ ヒーロー画像に半分重ねる */
+.nameOverlay{
+  position:relative;
+  margin-top:-56px; /* ← 重なり量 */
+  padding-left:14px;
+  z-index:4;
 }
 .nameImg{
-  width:min(360px,86vw);
-  display:block;
-  filter:drop-shadow(0 12px 34px rgba(0,0,0,.45));
-}
-.accentRule{
-  margin-top:10px;
-  height:1px;
-  background:rgba(255,255,255,.1);
-  position:relative;
-}
-.accentRule::after{
-  content:"";
-  position:absolute;inset:0;
-  background:linear-gradient(
-    90deg,
-    color-mix(in srgb,var(--accent) 80%,transparent),
-    transparent 70%
-  );
-}
-.desc{
-  margin-top:12px;
-  line-height:1.9;
-  font-size:14px;
-  color:color-mix(in srgb,var(--accent) 90%,white 10%);
-}
-.meta{
-  margin-top:8px;
-  font-size:12px;
-  opacity:.75;
+  width:min(320px,78vw);
+  filter:drop-shadow(0 14px 36px rgba(0,0,0,.55));
 }
 
-/* ===== NAV ===== */
+/* ================= INFO ================= */
+.info{
+  margin-top:8px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.desc{
+  padding:14px;
+  color:color-mix(in srgb,var(--accent) 92%,white 8%);
+  line-height:1.85;
+}
+.meta{
+  padding:0 14px 14px;
+  font-size:12px;
+  opacity:.8;
+}
+
+/* ================= NAV ================= */
 .navRow{
-  margin-top:12px;
   display:flex;
   align-items:center;
-  gap:10px;
+  justify-content:space-between;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid rgba(255,255,255,.08);
 }
 .navBtn{
   width:44px;height:44px;
@@ -167,42 +191,12 @@ body{
 }
 .backBtn{
   flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:.18em;
-  padding:14px 18px;
-  border-radius:999px;
   border:none;
+  border-radius:999px;
+  padding:12px;
   background:rgba(255,255,255,.05);
   color:color-mix(in srgb,var(--accent) 92%,white 8%);
-  font-size:15px;
-}
-.backBtn .arrow{font-size:16px}
-
-/* ===== PASSWORD ===== */
-.lockOverlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.75);
-  display:none;
-}
-.lockOverlay.open{display:block}
-.lockBox{
-  position:fixed;inset:0;
-  display:grid;place-items:center;
-  pointer-events:none;
-}
-.lockCard{
-  background:#0b0b0f;
-  padding:20px;
-  border-radius:14px;
-}
-
-/* ===== FOOTER ===== */
-footer{
-  padding:40px 16px;
-  text-align:center;
-  opacity:.6;
+  letter-spacing:.18em;
 }
 </style>
 </head>
@@ -214,78 +208,77 @@ footer{
   <button class="menu-btn">☰</button>
 </header>
 
-<!-- LIST -->
-<main class="container" id="list">
+<main class="container">
   <div class="title-ruby">character</div>
   <h1 class="page-title">空想世界 名簿記録</h1>
   <div id="grid" class="grid"></div>
 </main>
 
 <!-- PROFILE -->
-<section class="profilePage hidden" id="profile">
-  <div class="heroStage" id="heroStage">
-    <div class="heroTools">
-      <button class="s2btn" id="btnS2">S2</button>
+<div class="profileOverlay" id="profileOverlay"></div>
+<section class="profileModal" id="profileModal">
+  <div class="profileInner" id="profileInner">
+
+    <div class="hero" id="hero" data-season="s1">
+      <div class="heroTools">
+        <button class="s2btn" id="btnS2">S2</button>
+      </div>
+      <img id="heroImg" src="">
+      <div class="heroFade"></div>
     </div>
-    <img id="heroImg" src="">
-    <div class="heroFade"></div>
-  </div>
 
-  <div class="profileInfo">
-    <img id="nameImg" class="nameImg" src="">
-    <div class="accentRule"></div>
-
-    <div class="desc" id="descText"></div>
-    <div class="meta" id="metaText"></div>
-
-    <div class="navRow">
-      <button class="navBtn" id="prevBtn">&lt;</button>
-
-      <button class="backBtn" id="backBtn">
-        <span class="arrow">&lt;</span>
-        <span>Back to list</span>
-        <span class="arrow">&gt;</span>
-      </button>
-
-      <button class="navBtn" id="nextBtn">&gt;</button>
+    <!-- ★ 名前を重ねる -->
+    <div class="nameOverlay">
+      <img id="nameImg" class="nameImg" src="">
     </div>
+
+    <div class="info">
+      <div class="desc" id="descText"></div>
+      <div class="meta" id="metaText"></div>
+
+      <div class="navRow">
+        <button class="navBtn" id="prevBtn">&lt;</button>
+        <button class="backBtn" id="backBtn">Back to list</button>
+        <button class="navBtn" id="nextBtn">&gt;</button>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<footer>© 空想世界アリストテレス</footer>
-
 <script>
 const grid=document.getElementById("grid");
-const list=document.getElementById("list");
-const profile=document.getElementById("profile");
-
+const profileOverlay=document.getElementById("profileOverlay");
+const profileModal=document.getElementById("profileModal");
+const profileInner=document.getElementById("profileInner");
+const hero=document.getElementById("hero");
 const heroImg=document.getElementById("heroImg");
 const nameImg=document.getElementById("nameImg");
+const btnS2=document.getElementById("btnS2");
 const descText=document.getElementById("descText");
 const metaText=document.getElementById("metaText");
-const btnS2=document.getElementById("btnS2");
-
 const backBtn=document.getElementById("backBtn");
 const prevBtn=document.getElementById("prevBtn");
 const nextBtn=document.getElementById("nextBtn");
 
-const accents=["#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34",
-"#50e65d","#05079c","#6cbecc","#e83a83","#499151","#e0e0e0","#ae76db","#c9a824"];
+const accents=[
+ "#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34",
+ "#50e65d","#05079c","#6cbecc","#e83a83","#499151","#e0e0e0",
+ "#ae76db","#c9a824"
+];
 
-const heroS1=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`);
-const heroS2=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`);
-const nameImgs=Array.from({length:14},(_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
+const heroS1=[...Array(14)].map((_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`);
+const heroS2=[...Array(14)].map((_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`);
+const nameImgs=[...Array(14)].map((_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
 
 let idx=0,season="s1";
 
-function render(){
-  grid.innerHTML=heroS1.map((_,i)=>`
-    <div class="card" data-i="${i}">
-      <img src="/images/character/main${String(i+1).padStart(2,"0")}.png">
-      <div class="num">${String(i+1).padStart(2,"0")}</div>
-    </div>`).join("");
-}
-render();
+grid.innerHTML=[...Array(14)].map((_,i)=>`
+  <div class="card" data-i="${i}">
+    <img src="/images/character/main${String(i+1).padStart(2,"0")}.png">
+    <div class="num">${String(i+1).padStart(2,"0")}</div>
+  </div>
+`).join("");
 
 grid.onclick=e=>{
   const c=e.target.closest(".card");
@@ -295,20 +288,19 @@ grid.onclick=e=>{
 };
 
 function openProfile(){
-  list.classList.add("hidden");
-  profile.classList.remove("hidden");
+  profileOverlay.classList.add("open");
+  profileModal.classList.add("open");
   load();
-  window.scrollTo(0,0);
 }
 function closeProfile(){
-  profile.classList.add("hidden");
-  list.classList.remove("hidden");
-  window.scrollTo(0,0);
+  profileOverlay.classList.remove("open");
+  profileModal.classList.remove("open");
 }
 
 function load(){
-  profile.style.setProperty("--accent",accents[idx]);
-  heroImg.src=season==="s1"?heroS1[idx]:heroS2[idx];
+  profileInner.style.setProperty("--accent",accents[idx]);
+  hero.dataset.season=season;
+  heroImg.src=(season==="s1"?heroS1:heroS2)[idx];
   nameImg.src=nameImgs[idx];
   descText.textContent=`説明文（${String(idx+1).padStart(2,"0")}）`;
   metaText.textContent=`補足欄（${String(idx+1).padStart(2,"0")}）`;
@@ -318,7 +310,9 @@ btnS2.onclick=()=>{
   season=season==="s1"?"s2":"s1";
   load();
 };
+
 backBtn.onclick=closeProfile;
+profileOverlay.onclick=closeProfile;
 prevBtn.onclick=()=>{if(idx>0){idx--;season="s1";load()}};
 nextBtn.onclick=()=>{if(idx<13){idx++;season="s1";load()}};
 </script>
