@@ -109,7 +109,7 @@
       border-bottom:1px solid rgba(255,255,255,.1);
     }
 
-    /* ===== page ===== */
+    /* ===== page (LIST) ===== */
     .container{
       max-width:1100px;
       margin:0 auto;
@@ -298,48 +298,30 @@
     }
 
     /* =========================================================
-       Profile Modal (NEW UI)
+       Profile Page (FULLSCREEN) ✅モーダルじゃない
     ========================================================= */
-    .profileOverlay{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.72);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-      z-index: 2100;
+    .profilePage{
+      --accent:#4fbfc2;
+      display:none; /* 初期は隠す */
+      min-height: calc(100vh - 56px);
+      padding: 14px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
-    .profileOverlay.open{ opacity:1; pointer-events:auto; }
+    .profilePage.open{ display:block; }
 
-    .profileModal{
-      position:fixed;
-      inset:0;
-      display:grid;
-      place-items:end center;
-      z-index: 2101;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-    }
-    .profileModal.open{ opacity:1; pointer-events:auto; }
-
-    .profileInner{
-      --accent: #4fbfc2; /* デフォルト：翠 */
-      width: min(94vw, 820px);
-      max-height: 90vh;
-      overflow:hidden;
-      border-radius: 18px 18px 0 0;
+    .profileShell{
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(10,10,14,.92);
       backdrop-filter: blur(10px);
-      transform: translateY(18px);
-      transition: transform .22s ease;
       box-shadow: 0 24px 90px rgba(0,0,0,.55);
-      display:flex;                /* ✅スクロール安定 */
-      flex-direction:column;       /* ✅スクロール安定 */
-      min-height: 0;               /* ✅iOS対策 */
+      overflow:hidden;
+
+      display:flex;
+      flex-direction:column;
+      min-height: calc(100vh - 56px - 28px);
     }
-    .profileModal.open .profileInner{ transform: translateY(0); }
 
     .profileTop{
       display:flex;
@@ -372,13 +354,12 @@
       border-radius: 10px;
     }
 
-    /* ✅ここが“スクロールできない”最大原因になりやすいので強化 */
     .profileBody{
       overflow:auto;
       -webkit-overflow-scrolling: touch;
       padding: 14px;
-      flex: 1 1 auto;   /* ✅中身だけスクロール */
-      min-height: 0;    /* ✅iOS対策 */
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
     /* ========== 上段：君が作る画像枠 ========== */
@@ -395,11 +376,10 @@
       display:block;
     }
 
-    /* ✅下グラデ：文字にかからないよう“ギリギリ下だけ” */
     .heroFade{
       position:absolute;
       left:0; right:0; bottom:0;
-      height: 18%; /* ←ここで“下だけ”に寄せる */
+      height: 18%;
       pointer-events:none;
       background: linear-gradient(
         to bottom,
@@ -410,7 +390,6 @@
       );
     }
 
-    /* 右上の S2 ボタン（円形 / アクセント色 / でかめ / 枠なし） */
     .heroTools{
       position:absolute;
       top:10px;
@@ -423,9 +402,9 @@
       width: 56px;
       height: 56px;
       border-radius: 999px;
-      border: none;                 /* 枠なし */
-      background: var(--accent);    /* キャラ色 */
-      color: #000;                  /* JSで白/黒切替する */
+      border: none;
+      background: var(--accent);
+      color: #000;
       font-family: inherit;
       font-weight: 300;
       letter-spacing: .14em;
@@ -444,7 +423,6 @@
     .s2btn:hover{ filter: brightness(1.05) saturate(1.05); }
     .s2btn:active{ transform: scale(.98); }
 
-    /* 切り替え演出：ノイズ/ブラー */
     .glitchLayer{
       position:absolute;
       inset:0;
@@ -542,24 +520,23 @@
       line-height:1.8;
     }
 
-    /* ✅ navRow：常に見えるように sticky 化（スクロールしても消えない） */
     .navRow{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:6px;                 /* ✅詰める */
+      gap:6px;
       padding: 10px 10px 12px;
       border-top: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.20);
       flex-wrap: nowrap;
       min-width: 0;
-      position: sticky;        /* ✅ここ重要 */
-      bottom: 0;               /* ✅ここ重要 */
+      position: sticky;
+      bottom: 0;
       backdrop-filter: blur(10px);
     }
     .navSide{
       display:flex;
-      gap:6px;                 /* ✅詰める */
+      gap:6px;
       align-items:center;
       min-width: 0;
       flex: 0 0 auto;
@@ -581,7 +558,6 @@
       background: rgba(255,255,255,.06);
       color: color-mix(in srgb, var(--accent) 88%, white 12%);
       font-size: 16px;
-      letter-spacing: 0;
 
       box-shadow:
         0 0 0 1px rgba(255,255,255,.08) inset,
@@ -595,7 +571,6 @@
       pointer-events:none;
     }
 
-    /* ✅ Back to list：<>見切れ防止 + さらに詰める */
     .backBtn{
       cursor:pointer;
       user-select:none;
@@ -604,10 +579,10 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:.06em;             /* ✅さらに詰める */
+      gap:.06em;
       min-width: 0;
 
-      padding: 12px 10px;    /* ✅左右少し削って見切れ防止 */
+      padding: 12px 10px;
       border-radius: 999px;
 
       border: none;
@@ -616,7 +591,7 @@
 
       font-size: 15px;
       white-space: nowrap;
-      flex: 1 1 auto;        /* ✅中央が伸びて両端が見切れない */
+      flex: 1 1 auto;
       max-width: 100%;
 
       box-shadow:
@@ -627,7 +602,7 @@
     .backBtn:hover{ background: rgba(255,255,255,.08); }
     .backBtn:active{ transform: scale(.98); }
 
-    .backBtn .text{ letter-spacing:.14em; } /* ✅少しだけ詰める */
+    .backBtn .text{ letter-spacing:.14em; }
     .backBtn .arrow{ letter-spacing:0; margin:0; }
 
     @media (max-width: 360px){
@@ -641,7 +616,7 @@
     }
 
     @media (prefers-reduced-motion: reduce){
-      .lockOverlay,.lockBox,.profileOverlay,.profileModal,.profileInner{ transition:none; }
+      .lockOverlay,.lockBox{ transition:none; }
       .cursor{ animation:none; }
       .hero.glitching .glitchLayer, .hero.glitching img{ animation:none; }
     }
@@ -667,7 +642,8 @@
   <a href="/guide/">Guide</a>
 </nav>
 
-<main class="container" id="characterTop">
+<!-- ============== LIST PAGE ============== -->
+<main class="container" id="listPage">
   <div class="title-ruby">character</div>
   <h1 class="page-title">空想世界 名簿記録</h1>
 
@@ -679,7 +655,7 @@
   <div id="grid" class="grid"></div>
 </main>
 
-<footer>
+<footer id="listFooter">
   <img src="/images/logo.png" class="footer-logo" alt="">
   <div class="footer-note">
     © 空想世界アリストテレス<br>
@@ -687,31 +663,15 @@
   </div>
 </footer>
 
-<!-- ================= Password Overlay ✅消さない ================= -->
-<div class="lockOverlay" id="lockOverlay" aria-hidden="true"></div>
-<section class="lockBox" id="lockBox" aria-hidden="true">
-  <div class="lockCard" role="dialog" aria-modal="true" aria-label="パスワード認証">
-    <div class="lockTitle">ACCESS AUTH</div>
-    <div class="lockRow">
-      <div class="lockLabel">PASSWORD</div>
-      <div class="lockField">
-        <span id="pwText"></span><span class="cursor" aria-hidden="true"></span>
-      </div>
-    </div>
-    <div class="lockStatus" id="pwStatus">…</div>
-  </div>
-</section>
-
-<!-- ================= Profile Modal ================= -->
-<div class="profileOverlay" id="profileOverlay" aria-hidden="true"></div>
-<section class="profileModal" id="profileModal" aria-hidden="true">
-  <div class="profileInner" id="profileInner" role="dialog" aria-modal="true" aria-label="プロフィール">
+<!-- ============== PROFILE PAGE (FULLSCREEN) ============== -->
+<section class="profilePage" id="profilePage" aria-hidden="true">
+  <div class="profileShell" id="profileInner" role="region" aria-label="プロフィール">
     <div class="profileTop">
       <div class="profileTitle">
         <span id="profileTitle">PROFILE</span>
         <span class="profileNo" id="profileNo">01</span>
       </div>
-      <button class="profileClose" id="profileClose" aria-label="閉じる">✕</button>
+      <button class="profileClose" id="profileClose" aria-label="一覧に戻る">✕</button>
     </div>
 
     <div class="profileBody">
@@ -758,6 +718,21 @@
   </div>
 </section>
 
+<!-- ================= Password Overlay ✅消さない ================= -->
+<div class="lockOverlay" id="lockOverlay" aria-hidden="true"></div>
+<section class="lockBox" id="lockBox" aria-hidden="true">
+  <div class="lockCard" role="dialog" aria-modal="true" aria-label="パスワード認証">
+    <div class="lockTitle">ACCESS AUTH</div>
+    <div class="lockRow">
+      <div class="lockLabel">PASSWORD</div>
+      <div class="lockField">
+        <span id="pwText"></span><span class="cursor" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="lockStatus" id="pwStatus">…</div>
+  </div>
+</section>
+
 <script>
   const grid = document.getElementById("grid");
   const btnMain = document.getElementById("btnMain");
@@ -785,12 +760,12 @@
     "#c9a824"  // 14
   ];
 
-  // ====== パスワード ✅ここ残してる ======
+  // ====== パスワード ✅残す ======
   const passcodes = [
     "1023","1124","1203","0312","0211","0224","0528","0528","0718","1228","0114","0521","0807","0122"
   ];
 
-  // ====== モーダル上段（君が作る画像） ======
+  // ====== 上段画像（S1/S2） ======
   const heroS1 = Array.from({length:14},(_,i)=>
     `/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`
   );
@@ -798,7 +773,7 @@
     `/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`
   );
 
-  // ====== 名前画像（君が作る） ======
+  // ====== 名前画像 ======
   const nameImgs = Array.from({length:14},(_,i)=>
     `/images/profile/name/${String(i+1).padStart(2,"0")}.png`
   );
@@ -854,15 +829,17 @@
   };
 
   /* =========================================================
-     Password Animation -> Profile Modal
+     Password -> Open Profile Page (FULLSCREEN)
   ========================================================= */
   const lockOverlay = document.getElementById("lockOverlay");
   const lockBox = document.getElementById("lockBox");
   const pwText = document.getElementById("pwText");
   const pwStatus = document.getElementById("pwStatus");
 
-  const profileOverlay = document.getElementById("profileOverlay");
-  const profileModal = document.getElementById("profileModal");
+  const listPage = document.getElementById("listPage");
+  const listFooter = document.getElementById("listFooter");
+
+  const profilePage = document.getElementById("profilePage");
   const profileInner = document.getElementById("profileInner");
   const profileClose = document.getElementById("profileClose");
   const profileTitle = document.getElementById("profileTitle");
@@ -880,9 +857,7 @@
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
 
-  // ✅スクロール対象（モーダル内）
-  const profileBody = document.querySelector(".profileBody");
-  const characterTop = document.getElementById("characterTop");
+  const profileBody = document.querySelector("#profilePage .profileBody");
 
   let animRunning = false;
   let currentIndex = 0;
@@ -905,30 +880,29 @@
     lockBox.setAttribute("aria-hidden","true");
   };
 
-  const openProfileShell = () => {
-    profileOverlay.classList.add("open");
-    profileModal.classList.add("open");
-    profileOverlay.setAttribute("aria-hidden","false");
-    profileModal.setAttribute("aria-hidden","false");
-    document.body.style.overflow = "hidden"; // ✅モーダル中は背景スクロール禁止
-  };
+  function showProfilePage(){
+    // 一覧を隠してプロフィールを出す
+    listPage.style.display = "none";
+    listFooter.style.display = "none";
+    profilePage.classList.add("open");
+    profilePage.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden";
 
-  // ✅× / Back to list で「キャラページ先頭へ戻す」
-  const closeProfileToTop = () => {
-    profileModal.classList.remove("open");
-    profileOverlay.classList.remove("open");
-    profileOverlay.setAttribute("aria-hidden","true");
-    profileModal.setAttribute("aria-hidden","true");
+    // 画面先頭へ
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
 
-    heroImg.src = "";
-    nameImg.src = "";
-    currentSeason = "s1";
+  function showListPage(){
+    profilePage.classList.remove("open");
+    profilePage.setAttribute("aria-hidden","true");
+    listPage.style.display = "";
+    listFooter.style.display = "";
     document.body.style.overflow = "";
 
-    // ✅キャラページ先頭へ（Character top）
-    const y = characterTop ? characterTop.offsetTop : 0;
+    // キャラ一覧の先頭へ戻す
+    const y = listPage ? listPage.offsetTop : 0;
     window.scrollTo({ top: y, behavior: "instant" });
-  };
+  }
 
   function setNavState(idx){
     prevBtn.setAttribute("aria-disabled", idx === 0 ? "true" : "false");
@@ -937,7 +911,6 @@
     nextBtn.style.visibility = (idx === 13) ? "hidden" : "visible";
   }
 
-  // 背景色からボタン文字色を自動決定（明るければ黒、暗ければ白）
   function idealTextColor(hex){
     const h = hex.replace("#","").trim();
     if(h.length !== 6) return "#fff";
@@ -950,7 +923,9 @@
 
   function applyAccent(idx){
     const a = accents[idx] || "#4fbfc2";
+    // profileInner は id="profileInner"（shell）
     profileInner.style.setProperty("--accent", a);
+    profilePage.style.setProperty("--accent", a);
     btnS2.style.color = idealTextColor(a);
   }
 
@@ -982,7 +957,7 @@
     descText.textContent = descs[idx] || "";
     metaText.textContent = metas[idx] || "";
 
-    // ✅キャラ切替時：モーダル内部のスクロールを先頭へ
+    // プロフィール内部スクロールを先頭へ
     if(profileBody) profileBody.scrollTo({ top: 0, behavior: "instant" });
   }
 
@@ -1011,7 +986,7 @@
     closeLock();
 
     await sleep(140);
-    openProfileShell();
+    showProfilePage();
     loadCharacter(idx, "s1", false);
 
     animRunning = false;
@@ -1030,19 +1005,18 @@
     onCardActivate(e);
   });
 
-  // 閉じる（× / overlay / back）→ Characterトップへ
-  profileClose.addEventListener("click", closeProfileToTop);
-  profileOverlay.addEventListener("click", closeProfileToTop);
-  backBtn.addEventListener("click", closeProfileToTop);
+  // 閉じる（× / Back）
+  profileClose.addEventListener("click", showListPage);
+  backBtn.addEventListener("click", showListPage);
 
   // ESC
   window.addEventListener("keydown", (e)=>{
     if(e.key === "Escape"){
-      if(profileModal.classList.contains("open")) closeProfileToTop();
+      if(profilePage.classList.contains("open")) showListPage();
     }
   });
 
-  // 前/次（仕様：S1固定で移動）
+  // 前/次（S1固定で移動）
   prevBtn.addEventListener("click", ()=>{
     if(currentIndex <= 0) return;
     loadCharacter(currentIndex-1, "s1", false);
