@@ -1,876 +1,326 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Character | 空想世界アリストテレス</title>
-  <link rel="icon" href="/favicon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Character | 空想世界アリストテレス</title>
+<link rel="icon" href="/favicon.png">
 
-  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
-  <style>
-    @font-face{
-      font-family: "Kazuki Reiwa";
-      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
-  </style>
+<style>
+@font-face{
+  font-family:"Kazuki Reiwa";
+  src:url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+  font-weight:300;
+  font-display:swap;
+}
 
-  <style>
-    *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; }
-    body{
-      font-family:"Kazuki Reiwa", serif;
-      background:#0b0b0f;
-      color:#fff;
-      overflow-x:hidden;
-    }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Kazuki Reiwa",serif;
+  background:#0b0b0f;
+  color:#fff;
+  overflow-x:hidden;
+}
 
-    /* ===== header ===== */
-    .header{
-      position:sticky;
-      top:0;
-      z-index:60;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:12px 16px;
-      background:rgba(0,0,0,.4);
-      backdrop-filter:blur(8px);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .site-title{
-      font-size:18px;
-      letter-spacing:.08em;
-      color:#fff;
-      text-decoration:none;
-    }
-    .menu-btn{
-      font-size:22px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
-    }
+/* ===== HEADER ===== */
+.header{
+  position:sticky;top:0;z-index:50;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(8px);
+}
+.site-title{color:#fff;text-decoration:none;letter-spacing:.08em}
+.menu-btn{font-size:22px;background:none;border:none;color:#fff}
 
-    /* ===== hamburger ===== */
-    .overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      opacity:0;
-      pointer-events:none;
-      transition:.25s;
-      z-index:1000;
-    }
-    .overlay.open{ opacity:1; pointer-events:auto; }
+/* ===== LIST ===== */
+.container{
+  max-width:1100px;
+  margin:0 auto;
+  padding:56px 16px 80px;
+  text-align:center;
+}
+.title-ruby{font-size:13px;letter-spacing:.35em;opacity:.55}
+.page-title{font-size:40px;letter-spacing:.16em;font-weight:300}
 
-    nav.menu{
-      position:fixed;
-      top:0;
-      right:0;
-      width:320px;
-      max-width:80vw;
-      height:100vh;
-      background:rgba(0,0,0,.88);
-      backdrop-filter:blur(10px);
-      transform:translateX(100%);
-      transition:.25s;
-      z-index:1001;
-      padding:20px 16px;
-    }
-    nav.menu.open{ transform:translateX(0); }
+.grid{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+@media(min-width:700px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+}
+.card{
+  position:relative;
+  aspect-ratio:3/2;
+  overflow:hidden;
+  cursor:pointer;
+}
+.card img{width:100%;height:100%;object-fit:cover}
+.num{
+  position:absolute;right:10px;bottom:6px;
+  font-size:28px;opacity:.85;
+}
 
-    .menu-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border-bottom:1px solid rgba(255,255,255,.15);
-      padding-bottom:10px;
-      margin-bottom:10px;
-    }
-    .menu-title{ letter-spacing:.2em; }
-    .close-btn{
-      font-size:20px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
-    }
-    nav.menu a{
-      display:block;
-      padding:14px 6px;
-      color:#fff;
-      text-decoration:none;
-      letter-spacing:.14em;
-      border-bottom:1px solid rgba(255,255,255,.1);
-    }
+/* ===== PROFILE PAGE ===== */
+.hidden{display:none}
 
-    /* ===== page ===== */
-    .container{
-      max-width:1100px;
-      margin:0 auto;
-      padding:56px 16px 80px;
-      text-align:center;
-    }
+.profilePage{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 0 80px;
+  --accent:#4fbfc2;
+}
 
-    .title-ruby{
-      font-size:13px;
-      letter-spacing:.35em;
-      opacity:.55;
-      margin-bottom:6px;
-    }
-    .page-title{
-      font-size:40px;
-      letter-spacing:.16em;
-      margin:0;
-      font-weight:300;
-    }
+/* ===== HERO ===== */
+.heroStage{
+  position:relative;
+}
+.heroStage img{
+  width:100%;
+  display:block;
+}
 
-    /* ===== switch ===== */
-    .switch{
-      display:flex;
-      margin:44px auto 36px;
-      max-width:360px;
-      border:1px solid rgba(255,255,255,.25);
-    }
-    .switch button{
-      flex:1;
-      padding:14px 0;
-      background:none;
-      border:none;
-      color:#fff;
-      font-family:inherit;
-      letter-spacing:.22em;
-      cursor:pointer;
-    }
-    .switch button.active{
-      background:#1aa5a5;
-      color:#000;
-    }
+/* グラデーション（下ギリギリ） */
+.heroFade{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:22%;
+  background:linear-gradient(
+    to bottom,
+    rgba(11,11,15,0) 0%,
+    rgba(11,11,15,.35) 55%,
+    rgba(11,11,15,.75) 82%,
+    rgba(11,11,15,1) 100%
+  );
+  pointer-events:none;
+}
 
-    /* ===== grid ===== */
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-    }
-    @media(min-width:700px){
-      .grid{ grid-template-columns:repeat(4,1fr); }
-    }
-    .card{
-      position:relative;
-      aspect-ratio:3/2;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.25);
-      overflow:hidden;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .card:hover{
-      border-color: rgba(255,255,255,.40);
-      background: rgba(255,255,255,.06);
-    }
-    .card:active{ transform: scale(.99); }
-    .card img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .num{
-      position:absolute;
-      right:12px;
-      bottom:8px;
-      font-size:32px;
-      opacity:.85;
-      letter-spacing:.1em;
-      pointer-events:none;
-    }
+/* S2 */
+.heroTools{
+  position:absolute;top:12px;right:12px;z-index:3;
+}
+.s2btn{
+  width:60px;height:60px;
+  border-radius:999px;
+  border:none;
+  background:var(--accent);
+  font-family:inherit;
+  font-size:14px;
+  letter-spacing:.14em;
+  cursor:pointer;
+}
 
-    /* ===== footer ===== */
-    footer{
-      padding:48px 16px 56px;
-      text-align:center;
-      background:rgba(0,0,0,.35);
-      border-top:1px solid rgba(255,255,255,.1);
-    }
-    .footer-logo{
-      width:min(260px,70vw);
-      margin:0 auto 18px;
-      display:block;
-    }
-    .footer-note{
-      font-size:12px;
-      opacity:.6;
-      line-height:1.7;
-      letter-spacing:.06em;
-    }
+/* ===== INFO ===== */
+.profileInfo{
+  padding:8px 16px 0;
+  text-align:left;
+}
+.nameImg{
+  width:min(360px,86vw);
+  display:block;
+  filter:drop-shadow(0 12px 34px rgba(0,0,0,.45));
+}
+.accentRule{
+  margin-top:10px;
+  height:1px;
+  background:rgba(255,255,255,.1);
+  position:relative;
+}
+.accentRule::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(
+    90deg,
+    color-mix(in srgb,var(--accent) 80%,transparent),
+    transparent 70%
+  );
+}
+.desc{
+  margin-top:12px;
+  line-height:1.9;
+  font-size:14px;
+  color:color-mix(in srgb,var(--accent) 90%,white 10%);
+}
+.meta{
+  margin-top:8px;
+  font-size:12px;
+  opacity:.75;
+}
 
-    /* =========================================================
-       Password Overlay (これは残す)
-    ========================================================= */
-    .lockOverlay{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.74);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-      z-index: 2000;
-    }
-    .lockOverlay.open{ opacity:1; pointer-events:auto; }
+/* ===== NAV ===== */
+.navRow{
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.navBtn{
+  width:44px;height:44px;
+  border-radius:999px;
+  border:none;
+  background:rgba(255,255,255,.06);
+  color:color-mix(in srgb,var(--accent) 88%,white 12%);
+}
+.backBtn{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:.18em;
+  padding:14px 18px;
+  border-radius:999px;
+  border:none;
+  background:rgba(255,255,255,.05);
+  color:color-mix(in srgb,var(--accent) 92%,white 8%);
+  font-size:15px;
+}
+.backBtn .arrow{font-size:16px}
 
-    .lockBox{
-      position:fixed;
-      inset:0;
-      display:grid;
-      place-items:center;
-      z-index: 2001;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-    }
-    .lockBox.open{ opacity:1; pointer-events:auto; }
+/* ===== PASSWORD ===== */
+.lockOverlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+}
+.lockOverlay.open{display:block}
+.lockBox{
+  position:fixed;inset:0;
+  display:grid;place-items:center;
+  pointer-events:none;
+}
+.lockCard{
+  background:#0b0b0f;
+  padding:20px;
+  border-radius:14px;
+}
 
-    .lockCard{
-      width: min(92vw, 420px);
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(10,10,14,.92);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 18px 16px 16px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.55);
-      text-align: left;
-    }
-    .lockTitle{
-      font-size: 13px;
-      letter-spacing: .22em;
-      opacity: .75;
-      margin: 0 0 10px;
-    }
-    .lockRow{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-    }
-    .lockLabel{
-      font-size: 12px;
-      letter-spacing: .18em;
-      opacity: .65;
-      min-width: 86px;
-    }
-    .lockField{
-      flex:1;
-      height: 44px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      padding: 0 12px;
-      font-size: 18px;
-      letter-spacing: .22em;
-    }
-    .cursor{
-      width: 10px;
-      height: 18px;
-      margin-left: 2px;
-      background: rgba(255,255,255,.8);
-      animation: blink 1s steps(1,end) infinite;
-      display:inline-block;
-    }
-    @keyframes blink{ 50%{ opacity:0; } }
-    .lockStatus{
-      margin-top: 12px;
-      font-size: 12px;
-      letter-spacing: .18em;
-      opacity: .7;
-    }
-    .lockStatus.ok{
-      color: #8fffe6;
-      opacity: .95;
-    }
-
-    /* =========================================================
-       ✅ セクション切替（モーダル撤去）
-    ========================================================= */
-    .hidden{ display:none !important; }
-
-    /* 詳細ページのコンテナ（枠なし・浮かない） */
-    .profilePage{
-      max-width:1100px;
-      margin:0 auto;
-      padding: 26px 16px 80px;
-      --accent:#4fbfc2;
-    }
-
-    /* 立ち絵エリア：枠なし・背景に溶ける */
-    .heroStage{
-      position:relative;
-      width:100%;
-      overflow:hidden;
-      /* 枠/角丸なし */
-      background: transparent;
-    }
-
-    /* 画像は幅100% */
-    .heroStage img{
-      width:100%;
-      height:auto;
-      display:block;
-    }
-
-    /* 下グラデ（MILGRAMっぽいやつ） */
-    .heroFade{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height: 34%;
-      pointer-events:none;
-      background: linear-gradient(
-        to bottom,
-        rgba(11,11,15,0) 0%,
-        rgba(11,11,15,.55) 42%,
-        rgba(11,11,15,.92) 78%,
-        rgba(11,11,15,1) 100%
-      );
-    }
-
-    /* 右上：S2ボタン（円形・枠なし・アクセント色） */
-    .heroTools{
-      position:absolute;
-      top:12px;
-      right:12px;
-      z-index:3;
-      display:flex;
-      gap:10px;
-    }
-    .s2btn{
-      width: 62px;
-      height: 62px;
-      border-radius: 999px;
-      border:none;
-      background: var(--accent);
-      color:#000; /* JSで自動 */
-      font-family: inherit;
-      font-weight: 300;
-      letter-spacing:.14em;
-      font-size:14px;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      -webkit-tap-highlight-color: transparent;
-      user-select:none;
-      box-shadow: 0 18px 50px rgba(0,0,0,.45);
-      transition: transform .12s ease, filter .12s ease;
-    }
-    .s2btn:hover{ filter: brightness(1.05) saturate(1.05); }
-    .s2btn:active{ transform: scale(.98); }
-
-    /* 切り替え演出 */
-    .glitchLayer{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:0;
-      mix-blend-mode: screen;
-      background:
-        repeating-linear-gradient(
-          0deg,
-          rgba(255,255,255,.08) 0px,
-          rgba(255,255,255,.08) 1px,
-          rgba(0,0,0,0) 2px,
-          rgba(0,0,0,0) 4px
-        );
-      filter: blur(0.6px);
-      transform: translateZ(0);
-    }
-    .heroStage.glitching .glitchLayer{
-      animation: glitch 420ms steps(2,end) 1;
-      opacity:.9;
-    }
-    .heroStage.glitching img{
-      animation: blurpop 420ms ease 1;
-    }
-    @keyframes glitch{
-      0%{ transform: translate(0,0); }
-      20%{ transform: translate(-3px, 1px); }
-      40%{ transform: translate(2px, -1px); }
-      60%{ transform: translate(-2px, -1px); }
-      80%{ transform: translate(3px, 1px); }
-      100%{ transform: translate(0,0); }
-    }
-    @keyframes blurpop{
-      0%{ filter: blur(0px) saturate(1); }
-      30%{ filter: blur(2.2px) saturate(1.35); }
-      100%{ filter: blur(0px) saturate(1); }
-    }
-
-    /* 下の情報ブロック：枠なし方向でミニマル */
-    .profileInfo{
-      margin-top: 14px;
-      text-align:left;
-    }
-
-    .nameImg{
-      width: min(360px, 86vw);
-      height:auto;
-      display:block;
-      filter: drop-shadow(0 12px 34px rgba(0,0,0,.40));
-    }
-
-    .accentRule{
-      margin-top: 10px;
-      height:1px;
-      background: rgba(255,255,255,.10);
-      position:relative;
-    }
-    .accentRule::after{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(90deg,
-        color-mix(in srgb, var(--accent) 82%, transparent),
-        transparent 70%);
-      opacity:.95;
-      pointer-events:none;
-    }
-
-    .desc{
-      margin-top: 12px;
-      line-height:1.9;
-      letter-spacing:.05em;
-      font-size: 14px;
-      color: color-mix(in srgb, var(--accent) 90%, white 10%);
-    }
-    .meta{
-      margin-top: 10px;
-      color: rgba(255,255,255,.78);
-      font-size: 12px;
-      line-height:1.8;
-    }
-
-    /* ナビ */
-    .navRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-top: 16px;
-    }
-
-    .navBtn{
-      width: 46px;
-      height: 46px;
-      border-radius: 999px;
-      border:none;
-      background: rgba(255,255,255,.06);
-      color: color-mix(in srgb, var(--accent) 88%, white 12%);
-      font-size: 16px;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-      user-select:none;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.08) inset,
-        0 10px 30px rgba(0,0,0,.35);
-      transition: transform .12s ease, background .12s ease;
-    }
-    .navBtn:hover{ background: rgba(255,255,255,.10); }
-    .navBtn:active{ transform: scale(.98); }
-    .navBtn[aria-disabled="true"]{ opacity:.25; pointer-events:none; }
-
-    .backBtn{
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:.10em;
-      padding: 12px 12px;
-      border-radius: 999px;
-      border:none;
-      background: rgba(255,255,255,.05);
-      color: color-mix(in srgb, var(--accent) 92%, white 8%);
-      font-size: 15px;
-      white-space: nowrap;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-      user-select:none;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.08) inset,
-        0 10px 30px rgba(0,0,0,.30);
-      transition: transform .12s ease, background .12s ease;
-    }
-    .backBtn:hover{ background: rgba(255,255,255,.08); }
-    .backBtn:active{ transform: scale(.98); }
-    .backBtn .text{ letter-spacing:.18em; }
-    .backBtn .arrow{ letter-spacing:0; margin:0; }
-
-    @media (max-width: 360px){
-      .backBtn{ font-size:14px; padding: 11px 10px; }
-      .navBtn{ width:44px; height:44px; }
-      .s2btn{ width:58px; height:58px; }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .lockOverlay,.lockBox{ transition:none; }
-      .cursor{ animation:none; }
-      .heroStage.glitching .glitchLayer,
-      .heroStage.glitching img{ animation:none; }
-    }
-  </style>
+/* ===== FOOTER ===== */
+footer{
+  padding:40px 16px;
+  text-align:center;
+  opacity:.6;
+}
+</style>
 </head>
 
 <body>
 
 <header class="header">
   <a href="/" class="site-title">空想世界アリストテレス</a>
-  <button class="menu-btn" id="menuBtn">☰</button>
+  <button class="menu-btn">☰</button>
 </header>
 
-<div class="overlay" id="overlay"></div>
-<nav class="menu" id="menu" aria-hidden="true">
-  <div class="menu-top">
-    <div class="menu-title">MENU</div>
-    <button class="close-btn" id="closeBtn" aria-label="閉じる">✕</button>
-  </div>
-  <a href="/">Home</a>
-  <a href="/character/">Character</a>
-  <a href="/story/">Story</a>
-  <a href="/guide/">Guide</a>
-</nav>
-
-<!-- ================= LIST SECTION ================= -->
-<main class="container" id="sectionList">
+<!-- LIST -->
+<main class="container" id="list">
   <div class="title-ruby">character</div>
   <h1 class="page-title">空想世界 名簿記録</h1>
-
-  <div class="switch">
-    <button id="btnMain" class="active">MAIN</button>
-    <button id="btnSub">SUB</button>
-  </div>
-
   <div id="grid" class="grid"></div>
 </main>
 
-<!-- ================= PROFILE SECTION（モーダルじゃない） ================= -->
-<section class="profilePage hidden" id="sectionProfile" aria-hidden="true">
-  <!-- 上：立ち絵（枠なし） -->
+<!-- PROFILE -->
+<section class="profilePage hidden" id="profile">
   <div class="heroStage" id="heroStage">
     <div class="heroTools">
-      <button class="s2btn" id="btnS2" type="button" aria-label="S2に切り替え">S2</button>
+      <button class="s2btn" id="btnS2">S2</button>
     </div>
-    <div class="glitchLayer" aria-hidden="true"></div>
-    <img id="heroImg" src="" alt="">
-    <div class="heroFade" aria-hidden="true"></div>
+    <img id="heroImg" src="">
+    <div class="heroFade"></div>
   </div>
 
-  <!-- 下：名前＋文章 -->
   <div class="profileInfo">
-    <img id="nameImg" class="nameImg" src="" alt="">
-    <div class="accentRule" aria-hidden="true"></div>
+    <img id="nameImg" class="nameImg" src="">
+    <div class="accentRule"></div>
 
-    <div class="desc" id="descText">説明文</div>
-    <div class="meta" id="metaText">補足欄</div>
+    <div class="desc" id="descText"></div>
+    <div class="meta" id="metaText"></div>
 
     <div class="navRow">
-      <button class="navBtn" id="prevBtn" type="button" aria-label="前へ">&lt;</button>
+      <button class="navBtn" id="prevBtn">&lt;</button>
 
-      <button class="backBtn" id="backBtn" type="button" aria-label="一覧に戻る">
-        <span class="arrow left">&lt;</span>
-        <span class="text">Back to list</span>
-        <span class="arrow right">&gt;</span>
+      <button class="backBtn" id="backBtn">
+        <span class="arrow">&lt;</span>
+        <span>Back to list</span>
+        <span class="arrow">&gt;</span>
       </button>
 
-      <button class="navBtn" id="nextBtn" type="button" aria-label="次へ">&gt;</button>
+      <button class="navBtn" id="nextBtn">&gt;</button>
     </div>
   </div>
 </section>
 
-<footer>
-  <img src="/images/logo.png" class="footer-logo" alt="">
-  <div class="footer-note">
-    © 空想世界アリストテレス<br>
-    当サイトの内容・文章・画像等の無断使用を固く禁じます。
-  </div>
-</footer>
-
-<!-- ================= Password Overlay ================= -->
-<div class="lockOverlay" id="lockOverlay" aria-hidden="true"></div>
-<section class="lockBox" id="lockBox" aria-hidden="true">
-  <div class="lockCard" role="dialog" aria-modal="true" aria-label="パスワード認証">
-    <div class="lockTitle">ACCESS AUTH</div>
-    <div class="lockRow">
-      <div class="lockLabel">PASSWORD</div>
-      <div class="lockField">
-        <span id="pwText"></span><span class="cursor" aria-hidden="true"></span>
-      </div>
-    </div>
-    <div class="lockStatus" id="pwStatus">…</div>
-  </div>
-</section>
+<footer>© 空想世界アリストテレス</footer>
 
 <script>
-  /* ================== DATA ================== */
-  const grid = document.getElementById("grid");
-  const btnMain = document.getElementById("btnMain");
-  const btnSub = document.getElementById("btnSub");
+const grid=document.getElementById("grid");
+const list=document.getElementById("list");
+const profile=document.getElementById("profile");
 
-  const sectionList = document.getElementById("sectionList");
-  const sectionProfile = document.getElementById("sectionProfile");
+const heroImg=document.getElementById("heroImg");
+const nameImg=document.getElementById("nameImg");
+const descText=document.getElementById("descText");
+const metaText=document.getElementById("metaText");
+const btnS2=document.getElementById("btnS2");
 
-  const mainImages = Array.from({length:14},(_,i)=>
-    `/images/character/main${String(i+1).padStart(2,"0")}.png`
-  );
+const backBtn=document.getElementById("backBtn");
+const prevBtn=document.getElementById("prevBtn");
+const nextBtn=document.getElementById("nextBtn");
 
-  // アクセント
-  const accents = [
-    "#4fbfc2", "#c24f4f", "#e0a038", "#80a87d", "#7d92a8", "#941c34",
-    "#50e65d", "#05079c", "#6cbecc", "#e83a83", "#499151", "#e0e0e0",
-    "#ae76db", "#c9a824"
-  ];
+const accents=["#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34",
+"#50e65d","#05079c","#6cbecc","#e83a83","#499151","#e0e0e0","#ae76db","#c9a824"];
 
-  // パスワード
-  const passcodes = [
-    "1023","1124","1203","0312","0211","0224","0528","0528","0718","1228","0114","0521","0807","0122"
-  ];
+const heroS1=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`);
+const heroS2=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`);
+const nameImgs=Array.from({length:14},(_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
 
-  // 立ち絵（君が作る）
-  const heroS1 = Array.from({length:14},(_,i)=>
-    `/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`
-  );
-  const heroS2 = Array.from({length:14},(_,i)=>
-    `/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`
-  );
+let idx=0,season="s1";
 
-  // 名前画像（君が作る）
-  const nameImgs = Array.from({length:14},(_,i)=>
-    `/images/profile/name/${String(i+1).padStart(2,"0")}.png`
-  );
+function render(){
+  grid.innerHTML=heroS1.map((_,i)=>`
+    <div class="card" data-i="${i}">
+      <img src="/images/character/main${String(i+1).padStart(2,"0")}.png">
+      <div class="num">${String(i+1).padStart(2,"0")}</div>
+    </div>`).join("");
+}
+render();
 
-  // 仮テキスト
-  const descs = Array.from({length:14},(_,i)=>`説明文（${String(i+1).padStart(2,"0")}）`);
-  const metas = Array.from({length:14},(_,i)=>`補足欄（${String(i+1).padStart(2,"0")}）`);
+grid.onclick=e=>{
+  const c=e.target.closest(".card");
+  if(!c)return;
+  idx=+c.dataset.i;
+  openProfile();
+};
 
-  /* ================== LIST RENDER ================== */
-  function renderMain(){
-    grid.innerHTML = mainImages.map((src,i)=>`
-      <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${String(i+1).padStart(2,"0")}を開く">
-        <img src="${src}" alt="">
-        <div class="num">${String(i+1).padStart(2,"0")}</div>
-      </div>
-    `).join("");
-  }
-  function renderSub(){
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;opacity:.6;letter-spacing:.25em;padding:80px 0;">
-        SUBは準備中です
-      </div>`;
-  }
+function openProfile(){
+  list.classList.add("hidden");
+  profile.classList.remove("hidden");
+  load();
+  window.scrollTo(0,0);
+}
+function closeProfile(){
+  profile.classList.add("hidden");
+  list.classList.remove("hidden");
+  window.scrollTo(0,0);
+}
 
-  renderMain();
-  btnMain.onclick=()=>{
-    btnMain.classList.add("active");
-    btnSub.classList.remove("active");
-    renderMain();
-  };
-  btnSub.onclick=()=>{
-    btnSub.classList.add("active");
-    btnMain.classList.remove("active");
-    renderSub();
-  };
+function load(){
+  profile.style.setProperty("--accent",accents[idx]);
+  heroImg.src=season==="s1"?heroS1[idx]:heroS2[idx];
+  nameImg.src=nameImgs[idx];
+  descText.textContent=`説明文（${String(idx+1).padStart(2,"0")}）`;
+  metaText.textContent=`補足欄（${String(idx+1).padStart(2,"0")}）`;
+}
 
-  /* ================== HAMBURGER ================== */
-  const menuBtn=document.getElementById("menuBtn");
-  const closeBtn=document.getElementById("closeBtn");
-  const menu=document.getElementById("menu");
-  const overlay=document.getElementById("overlay");
-
-  menuBtn.onclick=()=>{
-    menu.classList.add("open");
-    overlay.classList.add("open");
-    menu.setAttribute("aria-hidden","false");
-  };
-  closeBtn.onclick=overlay.onclick=()=>{
-    menu.classList.remove("open");
-    overlay.classList.remove("open");
-    menu.setAttribute("aria-hidden","true");
-  };
-
-  /* ================== PASSWORD OVERLAY ================== */
-  const lockOverlay = document.getElementById("lockOverlay");
-  const lockBox = document.getElementById("lockBox");
-  const pwText = document.getElementById("pwText");
-  const pwStatus = document.getElementById("pwStatus");
-
-  let animRunning = false;
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  const openLock = () => {
-    lockOverlay.classList.add("open");
-    lockBox.classList.add("open");
-    lockOverlay.setAttribute("aria-hidden","false");
-    lockBox.setAttribute("aria-hidden","false");
-    document.body.style.overflow = "hidden";
-  };
-  const closeLock = () => {
-    lockOverlay.classList.remove("open");
-    lockBox.classList.remove("open");
-    lockOverlay.setAttribute("aria-hidden","true");
-    lockBox.setAttribute("aria-hidden","true");
-  };
-
-  /* ================== PROFILE UI ================== */
-  const heroStage = document.getElementById("heroStage");
-  const heroImg = document.getElementById("heroImg");
-  const btnS2 = document.getElementById("btnS2");
-  const nameImg = document.getElementById("nameImg");
-  const descText = document.getElementById("descText");
-  const metaText = document.getElementById("metaText");
-  const backBtn = document.getElementById("backBtn");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  let currentIndex = 0;
-  let currentSeason = "s1";
-
-  // 背景色からボタン文字色を自動決定（明るければ黒、暗ければ白）
-  function idealTextColor(hex){
-    const h = hex.replace("#","").trim();
-    if(h.length !== 6) return "#fff";
-    const r = parseInt(h.slice(0,2),16);
-    const g = parseInt(h.slice(2,4),16);
-    const b = parseInt(h.slice(4,6),16);
-    const y = (r*299 + g*587 + b*114) / 1000;
-    return (y >= 170) ? "#000" : "#fff";
-  }
-
-  function applyAccent(idx){
-    const a = accents[idx] || "#4fbfc2";
-    sectionProfile.style.setProperty("--accent", a);
-    btnS2.style.color = idealTextColor(a);
-  }
-
-  function setNavState(idx){
-    prevBtn.setAttribute("aria-disabled", idx === 0 ? "true" : "false");
-    nextBtn.setAttribute("aria-disabled", idx === 13 ? "true" : "false");
-    prevBtn.style.visibility = (idx === 0) ? "hidden" : "visible";
-    nextBtn.style.visibility = (idx === 13) ? "hidden" : "visible";
-  }
-
-  function showProfile(){
-    sectionList.classList.add("hidden");
-    sectionProfile.classList.remove("hidden");
-    sectionProfile.setAttribute("aria-hidden","false");
-    // 画面上にスッと揃える
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }
-
-  function showList(){
-    sectionProfile.classList.add("hidden");
-    sectionProfile.setAttribute("aria-hidden","true");
-    sectionList.classList.remove("hidden");
-    document.body.style.overflow = "";
-    // 一覧の見出しに戻す（気持ちよさ）
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }
-
-  function loadCharacter(idx, season="s1", withGlitch=false){
-    currentIndex = idx;
-    currentSeason = season;
-
-    applyAccent(idx);
-    setNavState(idx);
-
-    const no = String(idx+1).padStart(2,"0");
-    const src = (season === "s2") ? heroS2[idx] : heroS1[idx];
-
-    if(withGlitch){
-      heroStage.classList.add("glitching");
-      heroImg.src = src;
-      setTimeout(()=> heroStage.classList.remove("glitching"), 460);
-    }else{
-      heroImg.src = src;
-    }
-    heroImg.alt = `Hero ${no} ${season.toUpperCase()}`;
-
-    nameImg.src = nameImgs[idx];
-    nameImg.alt = `Name ${no}`;
-
-    descText.textContent = descs[idx] || "";
-    metaText.textContent = metas[idx] || "";
-  }
-
-  async function playPasswordAndOpen(idx){
-    if(animRunning) return;
-    animRunning = true;
-
-    pwText.textContent = "";
-    pwStatus.className = "lockStatus";
-    pwStatus.textContent = "…";
-
-    openLock();
-    await sleep(220);
-
-    const code = passcodes[idx] || "0000";
-    for(let i=0;i<code.length;i++){
-      pwText.textContent += code[i];
-      await sleep(120);
-    }
-
-    await sleep(160);
-    pwStatus.textContent = "COMPLETE";
-    pwStatus.classList.add("ok");
-
-    await sleep(300);
-    closeLock();
-
-    await sleep(140);
-    showProfile();
-    loadCharacter(idx, "s1", false);
-
-    animRunning = false;
-  }
-
-  // カードクリック
-  function onCardActivate(e){
-    const card = e.target.closest(".card");
-    if(!card) return;
-    const idx = Number(card.dataset.index);
-    playPasswordAndOpen(idx);
-  }
-  grid.addEventListener("click", onCardActivate);
-  grid.addEventListener("keydown", (e)=>{
-    if(e.key !== "Enter") return;
-    onCardActivate(e);
-  });
-
-  // Back
-  backBtn.addEventListener("click", showList);
-
-  // ESC（詳細中だけ戻る）
-  window.addEventListener("keydown", (e)=>{
-    if(e.key === "Escape" && !sectionProfile.classList.contains("hidden")){
-      showList();
-    }
-  });
-
-  // 前/次（仕様：S1固定で移動）
-  prevBtn.addEventListener("click", ()=>{
-    if(currentIndex <= 0) return;
-    loadCharacter(currentIndex-1, "s1", false);
-  });
-  nextBtn.addEventListener("click", ()=>{
-    if(currentIndex >= 13) return;
-    loadCharacter(currentIndex+1, "s1", false);
-  });
-
-  // S2切り替え（押すたびトグル）
-  btnS2.addEventListener("click", ()=>{
-    const nextSeason = (currentSeason === "s1") ? "s2" : "s1";
-    loadCharacter(currentIndex, nextSeason, true);
-  });
+btnS2.onclick=()=>{
+  season=season==="s1"?"s2":"s1";
+  load();
+};
+backBtn.onclick=closeProfile;
+prevBtn.onclick=()=>{if(idx>0){idx--;season="s1";load()}};
+nextBtn.onclick=()=>{if(idx<13){idx++;season="s1";load()}};
 </script>
 
 </body>
