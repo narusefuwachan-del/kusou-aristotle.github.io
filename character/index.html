@@ -18,20 +18,6 @@
   </style>
 
   <style>
-    /* ===== Back to list ===== */
-.backToList{
-  text-align: center;
-  font-size: 14px;
-  letter-spacing: .18em;
-  margin: 28px 0 16px;
-  white-space: nowrap; /* スマホで折れ防止 */
-  cursor: pointer;
-}
-
-.backToList .arrow{
-  letter-spacing: 0;    /* ← <>だけ詰める本体 */
-  margin: 0 .12em;      /* ← ここで近さ調整 */
-}
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; }
 
@@ -140,7 +126,7 @@
       font-size:40px;
       letter-spacing:.16em;
       margin:0;
-      font-weight:300; /* 太字にしない */
+      font-weight:300;
     }
 
     /* ===== switch ===== */
@@ -371,7 +357,6 @@
       opacity:.75;
       letter-spacing:.22em;
     }
-
     .profileClose{
       font-size: 20px;
       background:none;
@@ -403,7 +388,7 @@
       display:block;
     }
 
-    /* 右上の S2 ボタン */
+    /* 右上の S2 ボタン（円形 / アクセント色 / でかめ / 枠なし） */
     .heroTools{
       position:absolute;
       top:10px;
@@ -413,26 +398,31 @@
       z-index:2;
     }
     .s2btn{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      color:#fff;
-      font-family:inherit;
-      letter-spacing:.18em;
-      padding: 10px 12px;
+      width: 56px;
+      height: 56px;
       border-radius: 999px;
-      cursor:pointer;
-      font-size: 12px;
-      line-height:1;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      border: none;                 /* 枠なし */
+      background: var(--accent);    /* キャラ色 */
+      color: #000;                  /* JSで白/黒切替する */
+      font-family: inherit;
+      font-weight: 300;
+      letter-spacing: .14em;
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display:grid;
+      place-items:center;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 18px 50px rgba(0,0,0,.45);
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
     }
-    .s2btn:hover{
-      border-color: rgba(255,255,255,.32);
-      background: rgba(0,0,0,.48);
-    }
+    .s2btn:hover{ filter: brightness(1.05) saturate(1.05); }
     .s2btn:active{ transform: scale(.98); }
 
-    /* 切り替え演出：ノイズ/ブラーっぽい */
+    /* 切り替え演出：ノイズ/ブラー */
     .glitchLayer{
       position:absolute;
       inset:0;
@@ -479,14 +469,13 @@
       background: rgba(255,255,255,.02);
       overflow:hidden;
     }
-
     .infoHeader{
       padding: 12px 12px 10px;
       border-bottom: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.22);
     }
 
-    /* 「名前画像」は君が作る：ここはimg差し替え */
+    /* 「名前画像」は君が作る */
     .nameImg{
       width: min(320px, 78vw);
       height:auto;
@@ -497,8 +486,19 @@
 
     .accentLine{
       height: 1px;
-      background: color-mix(in srgb, var(--accent) 70%, transparent);
-      opacity: .9;
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset;
+      position: relative;
+    }
+    .accentLine::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; top:0; bottom:0;
+      background: linear-gradient(90deg,
+        color-mix(in srgb, var(--accent) 78%, transparent),
+        transparent 70%);
+      opacity:.95;
+      pointer-events:none;
     }
 
     .infoBody{
@@ -521,68 +521,96 @@
       line-height:1.8;
     }
 
+    /* ✅ スマホで途切れ防止（重要） */
     .navRow{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      padding: 10px 12px 12px;
+      gap:8px;
+      padding: 10px 10px 12px;
       border-top: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.20);
+      flex-wrap: nowrap;
+      min-width: 0;
     }
-
     .navSide{
       display:flex;
-      gap:10px;
+      gap:8px;
       align-items:center;
-      min-width: 92px;
+      min-width: 0;
     }
 
+    /* 左右の丸ボタン（枠なし） */
     .navBtn{
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      justify-content:center;
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
-      padding: 8px 10px;
+
+      width: 44px;
+      height: 44px;
       border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--accent) 55%, rgba(255,255,255,.10));
-      background: rgba(255,255,255,.04);
+
+      border: none;
+      background: rgba(255,255,255,.06);
       color: color-mix(in srgb, var(--accent) 88%, white 12%);
-      letter-spacing:.14em;
-      font-size: 12px;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      font-size: 16px;
+      letter-spacing: 0;
+
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 10px 30px rgba(0,0,0,.35);
+      transition: transform .12s ease, background .12s ease;
     }
-    .navBtn:hover{
-      background: rgba(255,255,255,.07);
-      border-color: color-mix(in srgb, var(--accent) 78%, rgba(255,255,255,.14));
-    }
+    .navBtn:hover{ background: rgba(255,255,255,.10); }
     .navBtn:active{ transform: scale(.98); }
     .navBtn[aria-disabled="true"]{
       opacity:.25;
       pointer-events:none;
     }
 
+    /* 中央の <Back to list>（大きめ＆<>詰める＆枠なし） */
     .backBtn{
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
-      letter-spacing:.18em;
-      font-size: 12px;
-      padding: 8px 10px;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.10em;             /* ← <> を近づける */
+      min-width: 0;
+
+      padding: 12px 12px;    /* 大きめ */
       border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--accent) 55%, rgba(255,255,255,.10));
-      background: rgba(255,255,255,.03);
+
+      border: none;
+      background: rgba(255,255,255,.05);
       color: color-mix(in srgb, var(--accent) 92%, white 8%);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+
+      font-size: 15px;       /* 大きめ */
       white-space: nowrap;
+
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 10px 30px rgba(0,0,0,.30);
+      transition: transform .12s ease, background .12s ease;
     }
-    .backBtn:hover{
-      background: rgba(255,255,255,.06);
-      border-color: color-mix(in srgb, var(--accent) 78%, rgba(255,255,255,.14));
-    }
+    .backBtn:hover{ background: rgba(255,255,255,.08); }
     .backBtn:active{ transform: scale(.98); }
+
+    .backBtn .text{ letter-spacing:.18em; }
+    .backBtn .arrow{ letter-spacing:0; margin:0; }
+
+    @media (max-width: 360px){
+      .backBtn{
+        font-size: 14px;
+        padding: 11px 10px;
+      }
+      .navBtn{ width: 42px; height: 42px; }
+    }
 
     @media (prefers-reduced-motion: reduce){
       .lockOverlay,.lockBox,.profileOverlay,.profileModal,.profileInner{ transition:none; }
@@ -666,29 +694,19 @@
         </div>
         <div class="glitchLayer" aria-hidden="true"></div>
         <img id="heroImg" src="" alt="">
-        <div class="backToList">
-  <span class="arrow">&lt;</span>
-  Back to list
-  <span class="arrow">&gt;</span>
-        </div>
       </div>
 
-      <!-- 下段：私の担当（説明＋線＋Back/ナビ） -->
+      <!-- 下段：説明＋線＋ナビ -->
       <div class="info">
         <div class="infoHeader">
-          <!-- 名前画像：君が作る（キャラごと差し替え） -->
           <img id="nameImg" class="nameImg" src="" alt="">
         </div>
 
         <div class="accentLine" aria-hidden="true"></div>
 
         <div class="infoBody">
-          <div class="desc" id="descText">
-            説明文（ここにテキストが入る）
-          </div>
-          <div class="meta" id="metaText">
-            ※ここは補足欄（年齢/要素/属性など）を後から増やせるよ
-          </div>
+          <div class="desc" id="descText">説明文（ここにテキストが入る）</div>
+          <div class="meta" id="metaText">※ここは補足欄（年齢/要素/属性など）を後から増やせるよ</div>
         </div>
 
         <div class="navRow">
@@ -696,7 +714,11 @@
             <button class="navBtn" id="prevBtn" type="button" aria-label="前へ">&lt;</button>
           </div>
 
-          <button class="backBtn" id="backBtn" type="button" aria-label="一覧に戻る">Back to list</button>
+          <button class="backBtn" id="backBtn" type="button" aria-label="一覧に戻る">
+            <span class="arrow left">&lt;</span>
+            <span class="text">Back to list</span>
+            <span class="arrow right">&gt;</span>
+          </button>
 
           <div class="navSide" style="justify-content:flex-end;">
             <button class="navBtn" id="nextBtn" type="button" aria-label="次へ">&gt;</button>
@@ -740,9 +762,6 @@
   ];
 
   // ====== モーダル上段（君が作る画像） ======
-  // ここだけ画像パス差し替えればOK
-  // 例）S1: /images/profile/hero/01_s1.png
-  //     S2: /images/profile/hero/01_s2.png
   const heroS1 = Array.from({length:14},(_,i)=>
     `/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`
   );
@@ -756,7 +775,6 @@
   );
 
   // ====== 説明文（仮） ======
-  // 後で好きに書き換えてOK。長文もいける
   const descs = Array.from({length:14},(_,i)=>`説明文（${String(i+1).padStart(2,"0")}）`);
   const metas = Array.from({length:14},(_,i)=>`補足欄（${String(i+1).padStart(2,"0")}）`);
 
@@ -880,9 +898,23 @@
     nextBtn.style.visibility = (idx === 13) ? "hidden" : "visible";
   }
 
+  // 背景色からボタン文字色を自動決定（明るければ黒、暗ければ白）
+  function idealTextColor(hex){
+    const h = hex.replace("#","").trim();
+    if(h.length !== 6) return "#fff";
+    const r = parseInt(h.slice(0,2),16);
+    const g = parseInt(h.slice(2,4),16);
+    const b = parseInt(h.slice(4,6),16);
+    // perceived luminance
+    const y = (r*299 + g*587 + b*114) / 1000;
+    return (y >= 170) ? "#000" : "#fff";
+  }
+
   function applyAccent(idx){
     const a = accents[idx] || "#4fbfc2";
     profileInner.style.setProperty("--accent", a);
+    // S2ボタン文字色も更新
+    btnS2.style.color = idealTextColor(a);
   }
 
   function loadCharacter(idx, season="s1", withGlitch=false){
@@ -973,10 +1005,10 @@
     }
   });
 
-  // 前/次
+  // 前/次（仕様：S1固定で移動）
   prevBtn.addEventListener("click", ()=>{
     if(currentIndex <= 0) return;
-    loadCharacter(currentIndex-1, "s1", false); // ナビ移動はS1固定（仕様）
+    loadCharacter(currentIndex-1, "s1", false);
   });
   nextBtn.addEventListener("click", ()=>{
     if(currentIndex >= 13) return;
