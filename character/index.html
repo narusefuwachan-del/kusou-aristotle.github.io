@@ -1,320 +1,1062 @@
 <!doctype html>
+
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Character | 空想世界アリストテレス</title>
-<link rel="icon" href="/favicon.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character | 空想世界アリストテレス</title>
+  <link rel="icon" href="/favicon.png">
 
-<style>
-@font-face{
-  font-family:"Kazuki Reiwa";
-  src:url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
-  font-weight:300;
-  font-display:swap;
-}
+  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
+  <style>
+    @font-face{
+      font-family: "Kazuki Reiwa";
+      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family:"Kazuki Reiwa",serif;
-  background:#0b0b0f;
-  color:#fff;
-  overflow-x:hidden;
-}
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; }
 
-/* ================= HEADER ================= */
-.header{
-  position:sticky;top:0;z-index:60;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:12px 16px;
-  background:rgba(0,0,0,.4);
-  backdrop-filter:blur(8px);
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.site-title{color:#fff;text-decoration:none;letter-spacing:.08em}
-.menu-btn{font-size:22px;background:none;border:none;color:#fff}
+    body{
+      font-family:"Kazuki Reiwa", serif;
+      background:#0b0b0f;
+      color:#fff;
+      overflow-x:hidden;
+    }
 
-/* ================= GRID ================= */
-.container{
-  max-width:1100px;
-  margin:0 auto;
-  padding:56px 16px 80px;
-  text-align:center;
-}
-.title-ruby{font-size:13px;letter-spacing:.35em;opacity:.55}
-.page-title{font-size:40px;letter-spacing:.16em;font-weight:300}
+    /* ===== header ===== */
+    .header{
+      position:sticky;
+      top:0;
+      z-index:60;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 16px;
+      background:rgba(0,0,0,.4);
+      backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .site-title{
+      font-size:18px;
+      letter-spacing:.08em;
+      color:#fff;
+      text-decoration:none;
+    }
+    .menu-btn{
+      font-size:22px;
+      background:none;
+      border:none;
+      color:#fff;
+      cursor:pointer;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-@media(min-width:700px){
-  .grid{grid-template-columns:repeat(4,1fr)}
-}
-.card{
-  position:relative;
-  aspect-ratio:3/2;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.25);
-  cursor:pointer;
-}
-.card img{width:100%;height:100%;object-fit:cover}
-.num{
-  position:absolute;
-  right:12px;bottom:8px;
-  font-size:32px;opacity:.85;
-}
+    /* ===== hamburger ===== */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:1000;
+    }
+    .overlay.open{ opacity:1; pointer-events:auto; }
 
-/* ================= PROFILE MODAL ================= */
-.profileOverlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.72);
-  opacity:0;pointer-events:none;
-  transition:.22s;
-  z-index:2100;
-}
-.profileOverlay.open{opacity:1;pointer-events:auto}
+    nav.menu{
+      position:fixed;
+      top:0;
+      right:0;
+      width:320px;
+      max-width:80vw;
+      height:100vh;
+      background:rgba(0,0,0,.88);
+      backdrop-filter:blur(10px);
+      transform:translateX(100%);
+      transition:.25s;
+      z-index:1001;
+      padding:20px 16px;
+    }
+    nav.menu.open{ transform:translateX(0); }
 
-.profileModal{
-  position:fixed;inset:0;
-  display:grid;
-  place-items:end center;
-  opacity:0;pointer-events:none;
-  transition:.22s;
-  z-index:2101;
-}
-.profileModal.open{opacity:1;pointer-events:auto}
+    .menu-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid rgba(255,255,255,.15);
+      padding-bottom:10px;
+      margin-bottom:10px;
+    }
+    .menu-title{ letter-spacing:.2em; }
+    .close-btn{
+      font-size:20px;
+      background:none;
+      border:none;
+      color:#fff;
+      cursor:pointer;
+    }
+    nav.menu a{
+      display:block;
+      padding:14px 6px;
+      color:#fff;
+      text-decoration:none;
+      letter-spacing:.14em;
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
 
-.profileInner{
-  --accent:#4fbfc2;
-  width:min(94vw,820px);
-  max-height:90vh;
-  border-radius:18px 18px 0 0;
-  background:rgba(10,10,14,.92);
-  backdrop-filter:blur(10px);
-  overflow:hidden;
-}
+    /* ===== page ===== */
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:56px 16px 80px;
+      text-align:center;
+    }
 
-/* ================= HERO ================= */
-.hero{
-  position:relative;
-}
-.hero img{
-  width:100%;
-  display:block;
-}
+    .title-ruby{
+      font-size:13px;
+      letter-spacing:.35em;
+      opacity:.55;
+      margin-bottom:6px;
+    }
+    .page-title{
+      font-size:40px;
+      letter-spacing:.16em;
+      margin:0;
+      font-weight:300;
+    }
 
-/* ↓↓↓ グラデーション：文字に被らない“下ギリギリ” ↓↓↓ */
-.heroFade{
-  position:absolute;
-  left:0;right:0;bottom:0;
-  height:20%;
-  background:linear-gradient(
-    to bottom,
-    rgba(11,11,15,0) 0%,
-    rgba(11,11,15,.35) 55%,
-    rgba(11,11,15,.75) 82%,
-    rgba(11,11,15,1) 100%
-  );
-  pointer-events:none;
-  transition:opacity .25s ease;
-}
+    /* ===== switch ===== */
+    .switch{
+      display:flex;
+      margin:44px auto 36px;
+      max-width:360px;
+      border:1px solid rgba(255,255,255,.25);
+    }
+    .switch button{
+      flex:1;
+      padding:14px 0;
+      background:none;
+      border:none;
+      color:#fff;
+      font-family:inherit;
+      letter-spacing:.22em;
+      cursor:pointer;
+    }
+    .switch button.active{
+      background:#1aa5a5;
+      color:#000;
+    }
 
-/* S2時だけ少し強く */
-.hero[data-season="s2"] .heroFade{
-  opacity:1;
-}
-.hero[data-season="s1"] .heroFade{
-  opacity:.65;
-}
+    /* ===== grid ===== */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+    @media(min-width:700px){
+      .grid{ grid-template-columns:repeat(4,1fr); }
+    }
+    .card{
+      position:relative;
+      aspect-ratio:3/2;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.25);
+      overflow:hidden;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .card:hover{
+      border-color: rgba(255,255,255,.40);
+      background: rgba(255,255,255,.06);
+    }
+    .card:active{ transform: scale(.99); }
+    .card img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .num{
+      position:absolute;
+      right:12px;
+      bottom:8px;
+      font-size:32px;
+      opacity:.85;
+      letter-spacing:.1em;
+      pointer-events:none;
+    }
 
-/* S2ボタン */
-.heroTools{
-  position:absolute;top:10px;right:10px;z-index:3;
-}
-.s2btn{
-  width:56px;height:56px;
-  border-radius:999px;
-  border:none;
-  background:var(--accent);
-  font-family:inherit;
-  letter-spacing:.14em;
-  cursor:pointer;
-}
+    /* ===== footer ===== */
+    footer{
+      padding:48px 16px 56px;
+      text-align:center;
+      background:rgba(0,0,0,.35);
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+    .footer-logo{
+      width:min(260px,70vw);
+      margin:0 auto 18px;
+      display:block;
+    }
+    .footer-note{
+      font-size:12px;
+      opacity:.6;
+      line-height:1.7;
+      letter-spacing:.06em;
+    }
 
-/* ================= NAME OVERLAY ================= */
-/* ★ ヒーロー画像に半分重ねる */
-.nameOverlay{
-  position:relative;
-  margin-top:-56px; /* ← 重なり量 */
-  padding-left:14px;
-  z-index:4;
-}
-.nameImg{
-  width:min(320px,78vw);
-  filter:drop-shadow(0 14px 36px rgba(0,0,0,.55));
-}
+    /* =========================================================
+       Password Overlay  ✅消さない
+    ========================================================= */
+    .lockOverlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.74);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+      z-index: 2000;
+    }
+    .lockOverlay.open{ opacity:1; pointer-events:auto; }
 
-/* ================= INFO ================= */
-.info{
-  margin-top:8px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.desc{
-  padding:14px;
-  color:color-mix(in srgb,var(--accent) 92%,white 8%);
-  line-height:1.85;
-}
-.meta{
-  padding:0 14px 14px;
-  font-size:12px;
-  opacity:.8;
-}
+    .lockBox{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index: 2001;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+    }
+    .lockBox.open{ opacity:1; pointer-events:auto; }
 
-/* ================= NAV ================= */
-.navRow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:10px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.navBtn{
-  width:44px;height:44px;
-  border-radius:999px;
-  border:none;
-  background:rgba(255,255,255,.06);
-  color:color-mix(in srgb,var(--accent) 88%,white 12%);
-}
-.backBtn{
-  flex:1;
-  border:none;
-  border-radius:999px;
-  padding:12px;
-  background:rgba(255,255,255,.05);
-  color:color-mix(in srgb,var(--accent) 92%,white 8%);
-  letter-spacing:.18em;
-}
-</style>
+    .lockCard{
+      width: min(92vw, 420px);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(10,10,14,.92);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 18px 16px 16px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.55);
+      text-align: left;
+    }
+    .lockTitle{
+      font-size: 13px;
+      letter-spacing: .22em;
+      opacity: .75;
+      margin: 0 0 10px;
+    }
+    .lockRow{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .lockLabel{
+      font-size: 12px;
+      letter-spacing: .18em;
+      opacity: .65;
+      min-width: 86px;
+    }
+    .lockField{
+      flex:1;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      padding: 0 12px;
+      font-size: 18px;
+      letter-spacing: .22em;
+    }
+    .cursor{
+      width: 10px;
+      height: 18px;
+      margin-left: 2px;
+      background: rgba(255,255,255,.8);
+      animation: blink 1s steps(1,end) infinite;
+      display:inline-block;
+    }
+    @keyframes blink{ 50%{ opacity:0; } }
+    .lockStatus{
+      margin-top: 12px;
+      font-size: 12px;
+      letter-spacing: .18em;
+      opacity: .7;
+    }
+    .lockStatus.ok{
+      color: #8fffe6;
+      opacity: .95;
+    }
+
+    /* =========================================================
+       Profile Modal (NEW UI)
+    ========================================================= */
+    .profileOverlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.72);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+      z-index: 2100;
+    }
+    .profileOverlay.open{ opacity:1; pointer-events:auto; }
+
+    .profileModal{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:end center;
+      z-index: 2101;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease;
+    }
+    .profileModal.open{ opacity:1; pointer-events:auto; }
+
+    .profileInner{
+      --accent: #4fbfc2; /* デフォルト：翠 */
+      width: min(94vw, 820px);
+      max-height: 90vh;
+      overflow:hidden;
+      border-radius: 18px 18px 0 0;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(10,10,14,.92);
+      backdrop-filter: blur(10px);
+      transform: translateY(18px);
+      transition: transform .22s ease;
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
+      display:flex;                /* ✅スクロール安定 */
+      flex-direction:column;       /* ✅スクロール安定 */
+      min-height: 0;               /* ✅iOS対策 */
+    }
+    .profileModal.open .profileInner{ transform: translateY(0); }
+
+    .profileTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.35);
+      flex: 0 0 auto;
+    }
+    .profileTitle{
+      letter-spacing: .18em;
+      font-size: 13px;
+      opacity: .88;
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+    }
+    .profileNo{
+      opacity:.75;
+      letter-spacing:.22em;
+    }
+    .profileClose{
+      font-size: 20px;
+      background:none;
+      border:none;
+      color:#fff;
+      cursor:pointer;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+
+    /* ✅ここが“スクロールできない”最大原因になりやすいので強化 */
+    .profileBody{
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px;
+      flex: 1 1 auto;   /* ✅中身だけスクロール */
+      min-height: 0;    /* ✅iOS対策 */
+    }
+
+    /* ========== 上段：君が作る画像枠 ========== */
+    .hero{
+      position:relative;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .hero img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    /* ✅下グラデ：文字にかからないよう“ギリギリ下だけ” */
+    .heroFade{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height: 18%; /* ←ここで“下だけ”に寄せる */
+      pointer-events:none;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,14,0) 0%,
+        rgba(10,10,14,.55) 55%,
+        rgba(10,10,14,.92) 85%,
+        rgba(10,10,14,1) 100%
+      );
+    }
+
+    /* 右上の S2 ボタン（円形 / アクセント色 / でかめ / 枠なし） */
+    .heroTools{
+      position:absolute;
+      top:10px;
+      right:10px;
+      display:flex;
+      gap:8px;
+      z-index:2;
+    }
+    .s2btn{
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      border: none;                 /* 枠なし */
+      background: var(--accent);    /* キャラ色 */
+      color: #000;                  /* JSで白/黒切替する */
+      font-family: inherit;
+      font-weight: 300;
+      letter-spacing: .14em;
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display:grid;
+      place-items:center;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 18px 50px rgba(0,0,0,.45);
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+    }
+    .s2btn:hover{ filter: brightness(1.05) saturate(1.05); }
+    .s2btn:active{ transform: scale(.98); }
+
+    /* 切り替え演出：ノイズ/ブラー */
+    .glitchLayer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:0;
+      mix-blend-mode: screen;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,.08) 0px,
+          rgba(255,255,255,.08) 1px,
+          rgba(0,0,0,0) 2px,
+          rgba(0,0,0,0) 4px
+        );
+      filter: blur(0.6px);
+      transform: translateZ(0);
+    }
+    .hero.glitching .glitchLayer{
+      animation: glitch 420ms steps(2,end) 1;
+      opacity: .9;
+    }
+    .hero.glitching img{
+      animation: blurpop 420ms ease 1;
+    }
+    @keyframes glitch{
+      0%{ transform: translate(0,0); }
+      20%{ transform: translate(-3px, 1px); }
+      40%{ transform: translate(2px, -1px); }
+      60%{ transform: translate(-2px, -1px); }
+      80%{ transform: translate(3px, 1px); }
+      100%{ transform: translate(0,0); }
+    }
+    @keyframes blurpop{
+      0%{ filter: blur(0px) saturate(1); }
+      30%{ filter: blur(2.2px) saturate(1.35); }
+      100%{ filter: blur(0px) saturate(1); }
+    }
+
+    /* ========== 下段：説明UI（テーマカラー反映） ========== */
+    .info{
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+      overflow:hidden;
+    }
+    .infoHeader{
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.22);
+    }
+
+    .nameImg{
+      width: min(320px, 78vw);
+      height:auto;
+      display:block;
+      margin: 2px 0 2px;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));
+    }
+
+    .accentLine{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset;
+      position: relative;
+    }
+    .accentLine::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; top:0; bottom:0;
+      background: linear-gradient(90deg,
+        color-mix(in srgb, var(--accent) 78%, transparent),
+        transparent 70%);
+      opacity:.95;
+      pointer-events:none;
+    }
+
+    .infoBody{
+      padding: 12px 12px 14px;
+      text-align:left;
+      line-height:1.85;
+      letter-spacing:.05em;
+      font-size: 14px;
+    }
+
+    .desc{
+      color: color-mix(in srgb, var(--accent) 92%, white 8%);
+      opacity: .95;
+    }
+
+    .meta{
+      margin-top: 10px;
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      line-height:1.8;
+    }
+
+    /* ✅ navRow：常に見えるように sticky 化（スクロールしても消えない） */
+    .navRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:6px;                 /* ✅詰める */
+      padding: 10px 10px 12px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.20);
+      flex-wrap: nowrap;
+      min-width: 0;
+      position: sticky;        /* ✅ここ重要 */
+      bottom: 0;               /* ✅ここ重要 */
+      backdrop-filter: blur(10px);
+    }
+    .navSide{
+      display:flex;
+      gap:6px;                 /* ✅詰める */
+      align-items:center;
+      min-width: 0;
+      flex: 0 0 auto;
+    }
+
+    .navBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+
+      border: none;
+      background: rgba(255,255,255,.06);
+      color: color-mix(in srgb, var(--accent) 88%, white 12%);
+      font-size: 16px;
+      letter-spacing: 0;
+
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 10px 30px rgba(0,0,0,.35);
+      transition: transform .12s ease, background .12s ease;
+    }
+    .navBtn:hover{ background: rgba(255,255,255,.10); }
+    .navBtn:active{ transform: scale(.98); }
+    .navBtn[aria-disabled="true"]{
+      opacity:.25;
+      pointer-events:none;
+    }
+
+    /* ✅ Back to list：<>見切れ防止 + さらに詰める */
+    .backBtn{
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.06em;             /* ✅さらに詰める */
+      min-width: 0;
+
+      padding: 12px 10px;    /* ✅左右少し削って見切れ防止 */
+      border-radius: 999px;
+
+      border: none;
+      background: rgba(255,255,255,.05);
+      color: color-mix(in srgb, var(--accent) 92%, white 8%);
+
+      font-size: 15px;
+      white-space: nowrap;
+      flex: 1 1 auto;        /* ✅中央が伸びて両端が見切れない */
+      max-width: 100%;
+
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 10px 30px rgba(0,0,0,.30);
+      transition: transform .12s ease, background .12s ease;
+    }
+    .backBtn:hover{ background: rgba(255,255,255,.08); }
+    .backBtn:active{ transform: scale(.98); }
+
+    .backBtn .text{ letter-spacing:.14em; } /* ✅少しだけ詰める */
+    .backBtn .arrow{ letter-spacing:0; margin:0; }
+
+    @media (max-width: 360px){
+      .backBtn{
+        font-size: 13px;
+        padding: 11px 8px;
+      }
+      .navBtn{ width: 42px; height: 42px; }
+      .navRow{ gap:4px; }
+      .navSide{ gap:4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .lockOverlay,.lockBox,.profileOverlay,.profileModal,.profileInner{ transition:none; }
+      .cursor{ animation:none; }
+      .hero.glitching .glitchLayer, .hero.glitching img{ animation:none; }
+    }
+  </style>
 </head>
 
 <body>
 
 <header class="header">
   <a href="/" class="site-title">空想世界アリストテレス</a>
-  <button class="menu-btn">☰</button>
+  <button class="menu-btn" id="menuBtn">☰</button>
 </header>
 
-<main class="container">
+<div class="overlay" id="overlay"></div>
+<nav class="menu" id="menu" aria-hidden="true">
+  <div class="menu-top">
+    <div class="menu-title">MENU</div>
+    <button class="close-btn" id="closeBtn" aria-label="閉じる">✕</button>
+  </div>
+  <a href="/">Home</a>
+  <a href="/character/">Character</a>
+  <a href="/story/">Story</a>
+  <a href="/guide/">Guide</a>
+</nav>
+
+<main class="container" id="characterTop">
   <div class="title-ruby">character</div>
   <h1 class="page-title">空想世界 名簿記録</h1>
+
+  <div class="switch">
+    <button id="btnMain" class="active">MAIN</button>
+    <button id="btnSub">SUB</button>
+  </div>
+
   <div id="grid" class="grid"></div>
 </main>
 
-<!-- PROFILE -->
-<div class="profileOverlay" id="profileOverlay"></div>
-<section class="profileModal" id="profileModal">
-  <div class="profileInner" id="profileInner">
+<footer>
+  <img src="/images/logo.png" class="footer-logo" alt="">
+  <div class="footer-note">
+    © 空想世界アリストテレス<br>
+    当サイトの内容・文章・画像等の無断使用を固く禁じます。
+  </div>
+</footer>
 
-    <div class="hero" id="hero" data-season="s1">
-      <div class="heroTools">
-        <button class="s2btn" id="btnS2">S2</button>
-      </div>
-      <img id="heroImg" src="">
-      <div class="heroFade"></div>
-    </div>
-
-    <!-- ★ 名前を重ねる -->
-    <div class="nameOverlay">
-      <img id="nameImg" class="nameImg" src="">
-    </div>
-
-    <div class="info">
-      <div class="desc" id="descText"></div>
-      <div class="meta" id="metaText"></div>
-
-      <div class="navRow">
-        <button class="navBtn" id="prevBtn">&lt;</button>
-        <button class="backBtn" id="backBtn">Back to list</button>
-        <button class="navBtn" id="nextBtn">&gt;</button>
+<!-- ================= Password Overlay ✅消さない ================= -->
+<div class="lockOverlay" id="lockOverlay" aria-hidden="true"></div>
+<section class="lockBox" id="lockBox" aria-hidden="true">
+  <div class="lockCard" role="dialog" aria-modal="true" aria-label="パスワード認証">
+    <div class="lockTitle">ACCESS AUTH</div>
+    <div class="lockRow">
+      <div class="lockLabel">PASSWORD</div>
+      <div class="lockField">
+        <span id="pwText"></span><span class="cursor" aria-hidden="true"></span>
       </div>
     </div>
+    <div class="lockStatus" id="pwStatus">…</div>
+  </div>
+</section>
 
+<!-- ================= Profile Modal ================= -->
+<div class="profileOverlay" id="profileOverlay" aria-hidden="true"></div>
+<section class="profileModal" id="profileModal" aria-hidden="true">
+  <div class="profileInner" id="profileInner" role="dialog" aria-modal="true" aria-label="プロフィール">
+    <div class="profileTop">
+      <div class="profileTitle">
+        <span id="profileTitle">PROFILE</span>
+        <span class="profileNo" id="profileNo">01</span>
+      </div>
+      <button class="profileClose" id="profileClose" aria-label="閉じる">✕</button>
+    </div>
+
+    <div class="profileBody">
+      <!-- 上段：君が作るイラスト（S1/S2切り替え） -->
+      <div class="hero" id="hero">
+        <div class="heroTools">
+          <button class="s2btn" id="btnS2" type="button" aria-label="S2に切り替え">S2</button>
+        </div>
+        <div class="glitchLayer" aria-hidden="true"></div>
+        <img id="heroImg" src="" alt="">
+        <div class="heroFade" aria-hidden="true"></div>
+      </div>
+
+      <!-- 下段：説明＋線＋ナビ -->
+      <div class="info">
+        <div class="infoHeader">
+          <img id="nameImg" class="nameImg" src="" alt="">
+        </div>
+
+        <div class="accentLine" aria-hidden="true"></div>
+
+        <div class="infoBody">
+          <div class="desc" id="descText">説明文（ここにテキストが入る）</div>
+          <div class="meta" id="metaText">※ここは補足欄（年齢/要素/属性など）を後から増やせるよ</div>
+        </div>
+
+        <div class="navRow">
+          <div class="navSide">
+            <button class="navBtn" id="prevBtn" type="button" aria-label="前へ">&lt;</button>
+          </div>
+
+          <button class="backBtn" id="backBtn" type="button" aria-label="一覧に戻る">
+            <span class="arrow left">&lt;</span>
+            <span class="text">Back to list</span>
+            <span class="arrow right">&gt;</span>
+          </button>
+
+          <div class="navSide" style="justify-content:flex-end;">
+            <button class="navBtn" id="nextBtn" type="button" aria-label="次へ">&gt;</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <script>
-const grid=document.getElementById("grid");
-const profileOverlay=document.getElementById("profileOverlay");
-const profileModal=document.getElementById("profileModal");
-const profileInner=document.getElementById("profileInner");
-const hero=document.getElementById("hero");
-const heroImg=document.getElementById("heroImg");
-const nameImg=document.getElementById("nameImg");
-const btnS2=document.getElementById("btnS2");
-const descText=document.getElementById("descText");
-const metaText=document.getElementById("metaText");
-const backBtn=document.getElementById("backBtn");
-const prevBtn=document.getElementById("prevBtn");
-const nextBtn=document.getElementById("nextBtn");
+  const grid = document.getElementById("grid");
+  const btnMain = document.getElementById("btnMain");
+  const btnSub = document.getElementById("btnSub");
 
-const accents=[
- "#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34",
- "#50e65d","#05079c","#6cbecc","#e83a83","#499151","#e0e0e0",
- "#ae76db","#c9a824"
-];
+  const mainImages = Array.from({length:14},(_,i)=>
+    `/images/character/main${String(i+1).padStart(2,"0")}.png`
+  );
 
-const heroS1=[...Array(14)].map((_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`);
-const heroS2=[...Array(14)].map((_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`);
-const nameImgs=[...Array(14)].map((_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
+  // ====== キャラ別：アクセントカラー ======
+  const accents = [
+    "#4fbfc2", // 01 翠
+    "#c24f4f", // 02 零
+    "#e0a038", // 03
+    "#80a87d", // 04
+    "#7d92a8", // 05
+    "#941c34", // 06
+    "#50e65d", // 07
+    "#05079c", // 08
+    "#6cbecc", // 09
+    "#e83a83", // 10
+    "#499151", // 11
+    "#e0e0e0", // 12
+    "#ae76db", // 13
+    "#c9a824"  // 14
+  ];
 
-let idx=0,season="s1";
+  // ====== パスワード ✅ここ残してる ======
+  const passcodes = [
+    "1023","1124","1203","0312","0211","0224","0528","0528","0718","1228","0114","0521","0807","0122"
+  ];
 
-grid.innerHTML=[...Array(14)].map((_,i)=>`
-  <div class="card" data-i="${i}">
-    <img src="/images/character/main${String(i+1).padStart(2,"0")}.png">
-    <div class="num">${String(i+1).padStart(2,"0")}</div>
-  </div>
-`).join("");
+  // ====== モーダル上段（君が作る画像） ======
+  const heroS1 = Array.from({length:14},(_,i)=>
+    `/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.png`
+  );
+  const heroS2 = Array.from({length:14},(_,i)=>
+    `/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.png`
+  );
 
-grid.onclick=e=>{
-  const c=e.target.closest(".card");
-  if(!c)return;
-  idx=+c.dataset.i;
-  openProfile();
-};
+  // ====== 名前画像（君が作る） ======
+  const nameImgs = Array.from({length:14},(_,i)=>
+    `/images/profile/name/${String(i+1).padStart(2,"0")}.png`
+  );
 
-function openProfile(){
-  profileOverlay.classList.add("open");
-  profileModal.classList.add("open");
-  load();
-}
-function closeProfile(){
-  profileOverlay.classList.remove("open");
-  profileModal.classList.remove("open");
-}
+  // ====== 説明文（仮） ======
+  const descs = Array.from({length:14},(_,i)=>`説明文（${String(i+1).padStart(2,"0")}）`);
+  const metas = Array.from({length:14},(_,i)=>`補足欄（${String(i+1).padStart(2,"0")}）`);
 
-function load(){
-  profileInner.style.setProperty("--accent",accents[idx]);
-  hero.dataset.season=season;
-  heroImg.src=(season==="s1"?heroS1:heroS2)[idx];
-  nameImg.src=nameImgs[idx];
-  descText.textContent=`説明文（${String(idx+1).padStart(2,"0")}）`;
-  metaText.textContent=`補足欄（${String(idx+1).padStart(2,"0")}）`;
-}
+  function renderMain(){
+    grid.innerHTML = mainImages.map((src,i)=>`
+      <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${String(i+1).padStart(2,"0")}を開く">
+        <img src="${src}" alt="">
+        <div class="num">${String(i+1).padStart(2,"0")}</div>
+      </div>
+    `).join("");
+  }
 
-btnS2.onclick=()=>{
-  season=season==="s1"?"s2":"s1";
-  load();
-};
+  function renderSub(){
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;opacity:.6;letter-spacing:.25em;padding:80px 0;">
+        SUBは準備中です
+      </div>`;
+  }
 
-backBtn.onclick=closeProfile;
-profileOverlay.onclick=closeProfile;
-prevBtn.onclick=()=>{if(idx>0){idx--;season="s1";load()}};
-nextBtn.onclick=()=>{if(idx<13){idx++;season="s1";load()}};
+  renderMain();
+
+  btnMain.onclick=()=>{
+    btnMain.classList.add("active");
+    btnSub.classList.remove("active");
+    renderMain();
+  };
+  btnSub.onclick=()=>{
+    btnSub.classList.add("active");
+    btnMain.classList.remove("active");
+    renderSub();
+  };
+
+  /* ===== hamburger ===== */
+  const menuBtn=document.getElementById("menuBtn");
+  const closeBtn=document.getElementById("closeBtn");
+  const menu=document.getElementById("menu");
+  const overlay=document.getElementById("overlay");
+
+  menuBtn.onclick=()=>{
+    menu.classList.add("open");
+    overlay.classList.add("open");
+    menu.setAttribute("aria-hidden","false");
+  };
+  closeBtn.onclick=overlay.onclick=()=>{
+    menu.classList.remove("open");
+    overlay.classList.remove("open");
+    menu.setAttribute("aria-hidden","true");
+  };
+
+  /* =========================================================
+     Password Animation -> Profile Modal
+  ========================================================= */
+  const lockOverlay = document.getElementById("lockOverlay");
+  const lockBox = document.getElementById("lockBox");
+  const pwText = document.getElementById("pwText");
+  const pwStatus = document.getElementById("pwStatus");
+
+  const profileOverlay = document.getElementById("profileOverlay");
+  const profileModal = document.getElementById("profileModal");
+  const profileInner = document.getElementById("profileInner");
+  const profileClose = document.getElementById("profileClose");
+  const profileTitle = document.getElementById("profileTitle");
+  const profileNo = document.getElementById("profileNo");
+
+  const hero = document.getElementById("hero");
+  const heroImg = document.getElementById("heroImg");
+  const btnS2 = document.getElementById("btnS2");
+
+  const nameImg = document.getElementById("nameImg");
+  const descText = document.getElementById("descText");
+  const metaText = document.getElementById("metaText");
+
+  const backBtn = document.getElementById("backBtn");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  // ✅スクロール対象（モーダル内）
+  const profileBody = document.querySelector(".profileBody");
+  const characterTop = document.getElementById("characterTop");
+
+  let animRunning = false;
+  let currentIndex = 0;
+  let currentSeason = "s1"; // s1 / s2
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const openLock = () => {
+    lockOverlay.classList.add("open");
+    lockBox.classList.add("open");
+    lockOverlay.setAttribute("aria-hidden","false");
+    lockBox.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLock = () => {
+    lockOverlay.classList.remove("open");
+    lockBox.classList.remove("open");
+    lockOverlay.setAttribute("aria-hidden","true");
+    lockBox.setAttribute("aria-hidden","true");
+  };
+
+  const openProfileShell = () => {
+    profileOverlay.classList.add("open");
+    profileModal.classList.add("open");
+    profileOverlay.setAttribute("aria-hidden","false");
+    profileModal.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden"; // ✅モーダル中は背景スクロール禁止
+  };
+
+  // ✅× / Back to list で「キャラページ先頭へ戻す」
+  const closeProfileToTop = () => {
+    profileModal.classList.remove("open");
+    profileOverlay.classList.remove("open");
+    profileOverlay.setAttribute("aria-hidden","true");
+    profileModal.setAttribute("aria-hidden","true");
+
+    heroImg.src = "";
+    nameImg.src = "";
+    currentSeason = "s1";
+    document.body.style.overflow = "";
+
+    // ✅キャラページ先頭へ（Character top）
+    const y = characterTop ? characterTop.offsetTop : 0;
+    window.scrollTo({ top: y, behavior: "instant" });
+  };
+
+  function setNavState(idx){
+    prevBtn.setAttribute("aria-disabled", idx === 0 ? "true" : "false");
+    nextBtn.setAttribute("aria-disabled", idx === 13 ? "true" : "false");
+    prevBtn.style.visibility = (idx === 0) ? "hidden" : "visible";
+    nextBtn.style.visibility = (idx === 13) ? "hidden" : "visible";
+  }
+
+  // 背景色からボタン文字色を自動決定（明るければ黒、暗ければ白）
+  function idealTextColor(hex){
+    const h = hex.replace("#","").trim();
+    if(h.length !== 6) return "#fff";
+    const r = parseInt(h.slice(0,2),16);
+    const g = parseInt(h.slice(2,4),16);
+    const b = parseInt(h.slice(4,6),16);
+    const y = (r*299 + g*587 + b*114) / 1000;
+    return (y >= 170) ? "#000" : "#fff";
+  }
+
+  function applyAccent(idx){
+    const a = accents[idx] || "#4fbfc2";
+    profileInner.style.setProperty("--accent", a);
+    btnS2.style.color = idealTextColor(a);
+  }
+
+  function loadCharacter(idx, season="s1", withGlitch=false){
+    currentIndex = idx;
+    currentSeason = season;
+
+    const no = String(idx+1).padStart(2,"0");
+    profileTitle.textContent = "PROFILE";
+    profileNo.textContent = no;
+
+    applyAccent(idx);
+    setNavState(idx);
+
+    const src = (season === "s2") ? heroS2[idx] : heroS1[idx];
+
+    if(withGlitch){
+      hero.classList.add("glitching");
+      heroImg.src = src;
+      setTimeout(()=> hero.classList.remove("glitching"), 460);
+    }else{
+      heroImg.src = src;
+    }
+    heroImg.alt = `Hero ${no} ${season.toUpperCase()}`;
+
+    nameImg.src = nameImgs[idx];
+    nameImg.alt = `Name ${no}`;
+
+    descText.textContent = descs[idx] || "";
+    metaText.textContent = metas[idx] || "";
+
+    // ✅キャラ切替時：モーダル内部のスクロールを先頭へ
+    if(profileBody) profileBody.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  async function playPasswordAndOpen(idx){
+    if(animRunning) return;
+    animRunning = true;
+
+    pwText.textContent = "";
+    pwStatus.className = "lockStatus";
+    pwStatus.textContent = "…";
+
+    openLock();
+    await sleep(220);
+
+    const code = passcodes[idx] || "0000";
+    for(let i=0;i<code.length;i++){
+      pwText.textContent += code[i];
+      await sleep(120);
+    }
+
+    await sleep(160);
+    pwStatus.textContent = "COMPLETE";
+    pwStatus.classList.add("ok");
+
+    await sleep(300);
+    closeLock();
+
+    await sleep(140);
+    openProfileShell();
+    loadCharacter(idx, "s1", false);
+
+    animRunning = false;
+  }
+
+  // MAINカードクリックで起動
+  function onCardActivate(e){
+    const card = e.target.closest(".card");
+    if(!card) return;
+    const idx = Number(card.dataset.index);
+    playPasswordAndOpen(idx);
+  }
+  grid.addEventListener("click", onCardActivate);
+  grid.addEventListener("keydown", (e)=>{
+    if(e.key !== "Enter") return;
+    onCardActivate(e);
+  });
+
+  // 閉じる（× / overlay / back）→ Characterトップへ
+  profileClose.addEventListener("click", closeProfileToTop);
+  profileOverlay.addEventListener("click", closeProfileToTop);
+  backBtn.addEventListener("click", closeProfileToTop);
+
+  // ESC
+  window.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape"){
+      if(profileModal.classList.contains("open")) closeProfileToTop();
+    }
+  });
+
+  // 前/次（仕様：S1固定で移動）
+  prevBtn.addEventListener("click", ()=>{
+    if(currentIndex <= 0) return;
+    loadCharacter(currentIndex-1, "s1", false);
+  });
+  nextBtn.addEventListener("click", ()=>{
+    if(currentIndex >= 13) return;
+    loadCharacter(currentIndex+1, "s1", false);
+  });
+
+  // S2切り替え（押すたびトグル）
+  btnS2.addEventListener("click", ()=>{
+    const nextSeason = (currentSeason === "s1") ? "s2" : "s1";
+    loadCharacter(currentIndex, nextSeason, true);
+  });
 </script>
 
 </body>
