@@ -870,7 +870,7 @@
     lockBox.classList.add("open");
     lockOverlay.setAttribute("aria-hidden","false");
     lockBox.setAttribute("aria-hidden","false");
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";   // ✅ パスワード中は背景スクロール止める
   };
 
   const closeLock = () => {
@@ -878,6 +878,7 @@
     lockBox.classList.remove("open");
     lockOverlay.setAttribute("aria-hidden","true");
     lockBox.setAttribute("aria-hidden","true");
+    document.body.style.overflow = "";         // ✅ 終わったら元に戻す（ここが超重要）
   };
 
   function showProfilePage(){
@@ -886,9 +887,7 @@
     listFooter.style.display = "none";
     profilePage.classList.add("open");
     profilePage.setAttribute("aria-hidden","false");
-    document.body.style.overflow = "hidden";
-
-    // 画面先頭へ
+    // ❌ ここでは overflow を触らない（スクロール殺さない）
     window.scrollTo({ top: 0, behavior: "instant" });
   }
 
@@ -923,7 +922,6 @@
 
   function applyAccent(idx){
     const a = accents[idx] || "#4fbfc2";
-    // profileInner は id="profileInner"（shell）
     profileInner.style.setProperty("--accent", a);
     profilePage.style.setProperty("--accent", a);
     btnS2.style.color = idealTextColor(a);
