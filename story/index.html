@@ -1,278 +1,627 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<link rel="icon" href="/favicon.png">
-<link rel="icon" href="/images/favicon.png" type="image/png">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Story | Kusou-Aristotle</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Story | 空想世界アリストテレス</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.png">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
 
-<style>
-*{box-sizing:border-box;}
-body{
-margin:0;
-font-family:"Shippori Mincho",serif;
-background:#0b0b0f;
-color:#fff;
-}
+  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
+  <style>
+    @font-face{
+      font-family: "Kazuki Reiwa";
+      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 
-/* ===== header ===== */
-.header{
-position:sticky;
-top:0;
-z-index:60;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px 16px;
-background:rgba(0,0,0,.35);
-backdrop-filter:blur(8px);
-border-bottom:1px solid rgba(255,255,255,.08);
-}
-.site-title{color:#fff;text-decoration:none;}
-.menu-btn{font-size:22px;background:none;border:none;color:#fff;}
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; }
+    body{
+      font-family:"Kazuki Reiwa", serif;
+      line-height:1.85;
+      color:#fff;
+      background:#0b0b0f;
+      overflow-x:hidden;
+    }
 
-/* ===== story UI ===== */
-.box{max-width:920px;margin:auto;padding:20px 16px 40px;text-align:center;}
+    /* ===== header ===== */
+    .header{
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 16px;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .site-title{
+      font-size:18px;
+      letter-spacing:.08em;
+      color:#fff;
+      text-decoration:none;
+    }
+    .menu-btn{
+      font-size:22px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      color:#fff;
+      padding:8px 10px;
+      border-radius:10px;
+    }
 
-h1{font-size:40px;margin:30px 0 10px;}
+    /* ===== overlay/menu ===== */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 1000;
+    }
+    .overlay.open{ opacity:1; pointer-events:auto; }
 
-.switch{
-display:flex;
-margin:20px auto;
-width:160px;
-border-radius:30px;
-overflow:hidden;
-background:#1aa5a5;
-}
-.switch button{
-flex:1;
-border:none;
-padding:10px;
-background:none;
-color:white;
-font-size:18px;
-cursor:pointer;
-}
-.switch .active{background:#0f6f6f;}
+    .menu{
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 340px;
+      max-width: 78vw;
+      height: 100vh;
+      background: rgba(0,0,0,.86);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 18px 16px;
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      z-index: 1001;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      touch-action: pan-y;
+    }
+    .menu.open{ transform: translateX(0); }
 
-.visual{
-width:80%;
-max-width:420px;
-margin:20px auto;
-border:1px solid rgba(255,255,255,.3);
-}
-.visual img{width:100%;}
+    .menu-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding-bottom:10px;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      margin-bottom:8px;
+      color:#fff;
+    }
+    .menu-title{ letter-spacing:.14em; }
+    .close-btn{
+      font-size:20px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius:10px;
+      color:#fff;
+    }
+    .menu a{
+      display:block;
+      padding:14px 6px;
+      letter-spacing:.12em;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      color:#fff;
+      text-decoration:none;
+    }
 
-.summary{
-width:80%;
-max-width:420px;
-margin:20px auto;
-line-height:1.9;
-opacity:.9;
-}
+    /* ===== page wrapper ===== */
+    .box{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 16px 56px;
+      text-align:center;
+    }
 
-.readBtn{
-background:#1aa5a5;
-border:none;
-padding:14px 30px;
-color:white;
-font-size:18px;
-cursor:pointer;
-margin:20px;
-}
+    .title-ruby{
+      font-size:13px;
+      letter-spacing:.35em;
+      opacity:.55;
+      margin-top:22px;
+      margin-bottom:6px;
+    }
+    h1{
+      margin:0 0 14px;
+      font-size:42px;
+      font-weight:300;
+      letter-spacing:.16em;
+      color:#fff;
+    }
 
-/* ===== chapter page ===== */
-.chapterPage{display:none;}
+    /* ===== S1/S2 switch ===== */
+    .switch{
+      margin:22px auto 18px;
+      display:flex;
+      width:220px;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.05);
+    }
+    .switch button{
+      flex:1;
+      border:none;
+      padding:12px 0;
+      font-size:16px;
+      background:none;
+      color:white;
+      cursor:pointer;
+      font-family: inherit;
+      letter-spacing:.22em;
+    }
+    .switch button.active{
+      background:#1aa5a5;
+      color:#000;
+    }
 
-.chapterRow{
-display:flex;
-justify-content:space-between;
-width:80%;
-max-width:400px;
-margin:16px auto;
-font-size:22px;
-opacity:0;
-transform:translateX(-40px);
-animation:slideFade .7s forwards;
-}
-.chapterRow:nth-child(1){animation-delay:.1s}
-.chapterRow:nth-child(2){animation-delay:.2s}
-.chapterRow:nth-child(3){animation-delay:.3s}
-.chapterRow:nth-child(4){animation-delay:.4s}
-.chapterRow:nth-child(5){animation-delay:.5s}
-.chapterRow:nth-child(6){animation-delay:.6s}
-.chapterRow:nth-child(7){animation-delay:.7s}
+    /* ===== visual ===== */
+    .visual{
+      width:min(560px, 92vw);
+      margin:18px auto 16px;
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+      border-radius:14px;
+    }
+    .visual img{
+      width:100%;
+      display:block;
+      height:auto;
+    }
 
-@keyframes slideFade{
-to{opacity:1;transform:translateX(0);}
-}
+    /* ===== summary ===== */
+    .summary{
+      width:min(560px, 92vw);
+      margin: 14px auto 18px;
+      line-height:2.0;
+      opacity:.88;
+      letter-spacing:.04em;
+      text-align:left;
+      white-space: pre-wrap;
+    }
 
-.chapterRow button{
-background:none;
-border:none;
-color:white;
-font-size:22px;
-cursor:pointer;
-}
+    /* ===== buttons ===== */
+    .readBtn, .backTopBtn{
+      background:#1aa5a5;
+      border:none;
+      padding:14px 30px;
+      color:#000;
+      font-size:16px;
+      cursor:pointer;
+      margin:18px 0 0;
+      border-radius:999px;
+      letter-spacing:.18em;
+      font-family: inherit;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .backTopBtn{
+      margin-top:22px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .backTopBtn span{
+      letter-spacing:0;
+    }
 
-/* ===== menu ===== */
-.overlay{
-position:fixed;inset:0;
-background:rgba(0,0,0,.55);
-opacity:0;
-pointer-events:none;
-transition:.25s;
-z-index:1000;
-}
-.overlay.open{opacity:1;pointer-events:auto;}
+    /* ===== chapter page ===== */
+    .chapterPage{
+      display:none;
+      padding-top:18px;
+    }
+    .seasonTitle{
+      margin-top:22px;
+      font-size:34px;
+      font-weight:300;
+      letter-spacing:.14em;
+    }
 
-.menu{
-position:fixed;
-top:0;right:0;
-width:340px;
-max-width:78vw;
-height:100vh;
-background:rgba(0,0,0,.86);
-padding:18px;
-transform:translateX(100%);
-transition:.25s;
-z-index:1001;
-}
-.menu.open{transform:translateX(0);}
-.menu a{display:block;padding:14px 6px;color:white;text-decoration:none;}
+    .chapterList{
+      width:min(620px, 92vw);
+      margin: 18px auto 0;
+      padding-bottom: 20px;
+    }
 
-.menu-top{
-display:flex;
-justify-content:space-between;
-border-bottom:1px solid rgba(255,255,255,.14);
-padding-bottom:10px;
-}
+    .chapterRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 14px;
+      margin: 12px 0;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.04);
 
-/* ===== footer ===== */
-.footer{
-padding:44px 16px 56px;
-text-align:center;
-background:rgba(0,0,0,.35);
-border-top:1px solid rgba(255,255,255,.1);
-}
-.footer-logo{width:min(64vw,260px);}
-</style>
+      opacity:0;
+      transform:translateX(-38px);
+      animation:slideFade .62s ease forwards;
+    }
+
+    /* 左からフェード＆スワイプ（ページ開いた瞬間） */
+    @keyframes slideFade{
+      to{
+        opacity:1;
+        transform:translateX(0);
+      }
+    }
+
+    .chapterLeft{
+      display:flex;
+      align-items:baseline;
+      gap:12px;
+      min-width:0;
+      text-align:left;
+    }
+    .chapterNo{
+      font-size:18px;
+      letter-spacing:.12em;
+      opacity:.78;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    .chapterName{
+      font-size:20px;
+      letter-spacing:.10em;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chapterRow button{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.16);
+      color:#fff;
+      font-size:14px;
+      cursor:pointer;
+      padding:10px 14px;
+      border-radius:999px;
+      letter-spacing:.14em;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chapterRow button:hover{
+      background: rgba(255,255,255,.10);
+    }
+
+    /* ===== footer ===== */
+    .footer{
+      position: relative;
+      z-index: 5;
+      padding: 44px 16px 56px;
+      text-align: center;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255,255,255,.10);
+      margin-top: 30px;
+    }
+    .footer-inner{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .footer-logo{
+      width: min(64vw, 260px);
+      margin: 0 auto 18px;
+      display: block;
+    }
+    .footer-title{
+      font-size: 13px;
+      letter-spacing: .08em;
+      opacity: .8;
+      margin: 12px 0;
+      color:#fff;
+    }
+    .footer-sns, .share-row{
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .sns-btn{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+    }
+    .icon-img{ width:22px; height:22px; }
+    .footer-note{
+      margin-top: 18px;
+      font-size: 12px;
+      opacity: .6;
+      color:#fff;
+      letter-spacing:.06em;
+    }
+  </style>
 </head>
 
 <body>
+  <header class="header">
+    <a href="/" class="site-title">空想世界アリストテレス</a>
+    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
+  </header>
 
-<header class="header">
-<a href="/" class="site-title">空想世界アリストテレス</a>
-<button class="menu-btn" id="menuBtn">☰</button>
-</header>
+  <main class="box">
+    <div class="title-ruby">story</div>
+    <h1>Story</h1>
 
-<div class="box">
+    <!-- ===== switch ===== -->
+    <div class="switch" id="switchBar">
+      <button id="s1Btn" class="active">S1</button>
+      <button id="s2Btn">S2</button>
+    </div>
 
-<h1>Story</h1>
+    <!-- ===== main view ===== -->
+    <div class="visual" id="visualBox">
+      <img id="storyImg" src="/images/story/s1.webp" alt="">
+    </div>
 
-<div class="switch">
-<button id="s1Btn" class="active">S1</button>
-<button id="s2Btn">S2</button>
-</div>
+    <div id="summary" class="summary"></div>
 
-<div class="visual">
-<img id="storyImg" src="/images/story/s1.webp">
-</div>
+    <button class="readBtn" id="readBtn" type="button">本編を読む</button>
 
-<div id="summary" class="summary"></div>
+    <!-- ===== chapters ===== -->
+    <section id="chapters" class="chapterPage" aria-hidden="true">
+      <div class="seasonTitle" id="seasonTitle">1 期</div>
+      <div class="chapterList" id="chapterList"></div>
 
-<button class="readBtn" onclick="openChapters()">本編を読む</button>
+      <button class="backTopBtn" id="backTopBtn" type="button">
+        <span>←</span> 戻る
+      </button>
+    </section>
+  </main>
 
-<div id="chapters" class="chapterPage">
-<h1 id="seasonTitle">1期</h1>
-<div id="chapterList"></div>
-</div>
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
 
-</div>
+  <nav id="menu" class="menu" aria-hidden="true">
+    <div class="menu-top">
+      <div class="menu-title">MENU</div>
+      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
+    </div>
+    <a href="/">Home</a>
+    <a href="/character/">Character</a>
+    <a href="/story/">Story</a>
+    <a href="/guide/">Guide</a>
+  </nav>
 
-<div id="overlay" class="overlay"></div>
+  <!-- ===== footer ===== -->
+  <footer class="footer" aria-label="フッター">
+    <div class="footer-inner">
+      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
 
-<nav id="menu" class="menu">
-<div class="menu-top">
-<div>MENU</div>
-<button id="closeBtn">✕</button>
-</div>
-<a href="/">Home</a>
-<a href="/character/">Character</a>
-<a href="/story/">Story</a>
-<a href="/guide/">Guide</a>
-</nav>
+      <div class="share-row">
+        <a class="sns-btn" href="#" aria-label="Xでシェア">
+          <img class="icon-img" src="/images/icons/x.png" alt="">
+        </a>
+        <a class="sns-btn" href="#" aria-label="LINEでシェア">
+          <img class="icon-img" src="/images/icons/line.png" alt="">
+        </a>
+      </div>
 
-<footer class="footer">
-<img class="footer-logo" src="/images/logo.png">
-<div>© 空想世界アリストテレス</div>
-</footer>
+      <div class="footer-title">OFFICIAL</div>
+      <div class="footer-sns">
+        <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener">
+          <img class="icon-img" src="/images/icons/x.png" alt="">
+        </a>
+        <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank" rel="noopener">
+          <img class="icon-img" src="/images/icons/youtube.png" alt="">
+        </a>
+        <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank" rel="noopener">
+          <img class="icon-img" src="/images/icons/nola.png" alt="">
+        </a>
+      </div>
 
-<script>
-const summaries={
-s1:`不幸体質の少女、琴吹翠は心の中の苦しさから解放されたいと思い、10月23日の誕生日の日、川に身を投げこもうとした。その時、天使と名乗る謎の青年と出会う。「もし、心の中の苦しさが消えて人生が一変して幸せになれるって聞いたら、生きる？」と聞かれる。「生きたい」と答えた翠は、天使におまじないをかけられると同時に、心の中の苦しさが消えて、身体が軽くなる。「その代わり、代償は存在するよ。」と言うと天使は去り、翠は何が代償か分からず家へ帰っていく。帰宅すると、何やら2階から物音が聞こえて…！？`,
-s2:`「5年後、またここで。」と誓った一同。そこから5年後、2029年。あきはが空想世界へ帰ってくると、神様からひとつの提案をされる。「あきはも神様にならないか」という提案に、あきはは皆との約束の為断る。それに不服の神様は、何やら一つの作戦を思いついたようで…。あきはが翠の家へ5年ぶりに訪れるとかなり廃れていた。無人の家にひとつ置かれている埃っぽい置き手紙には、「翠を助けてくれ」と書かれた文字と病院の住所が書かれていて…？`
-};
+      <div class="footer-note">© 空想世界アリストテレス</div>
+    </div>
+  </footer>
 
-const chaptersS1=["分裂","運命","逃避行","傷跡","将来","殺戮","空想世界"];
-const chaptersS2=["病状","福音","申告","崩壊","狂会","美学","アリストテレス"];
+  <script>
+    /* =========================
+       HAMBURGER (元コード維持)
+    ========================= */
+    const menu = document.getElementById("menu");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
 
-let season="s1";
+    const openMenu = () => {
+      menu.classList.add("open");
+      overlay.classList.add("open");
+      menu.setAttribute("aria-hidden", "false");
+    };
+    const closeMenu = () => {
+      menu.classList.remove("open");
+      overlay.classList.remove("open");
+      menu.setAttribute("aria-hidden", "true");
+    };
 
-const summaryEl=document.getElementById("summary");
-const img=document.getElementById("storyImg");
+    menuBtn.addEventListener("click", openMenu);
+    closeBtn.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-function update(){
-summaryEl.textContent=summaries[season];
-img.src=`/images/story/${season}.webp`;
-}
-update();
+    let sx=0, sy=0, tracking=false;
+    menu.addEventListener("touchstart", e=>{
+      const t=e.touches[0]; sx=t.clientX; sy=t.clientY; tracking=true;
+    }, {passive:true});
+    menu.addEventListener("touchmove", e=>{
+      if(!tracking) return;
+      const t=e.touches[0];
+      const dx=t.clientX-sx, dy=t.clientY-sy;
+      if(Math.abs(dx)>Math.abs(dy)){
+        e.preventDefault();
+        if(dx < -60){ closeMenu(); tracking=false; }
+      }
+    }, {passive:false});
+    menu.addEventListener("touchend", ()=>{ tracking=false; }, {passive:true});
 
-s1Btn.onclick=()=>{
-season="s1";
-s1Btn.classList.add("active");
-s2Btn.classList.remove("active");
-update();
-};
-s2Btn.onclick=()=>{
-season="s2";
-s2Btn.classList.add("active");
-s1Btn.classList.remove("active");
-update();
-};
+    /* =========================
+       STORY LOGIC
+    ========================= */
 
-function openChapters(){
-document.querySelector(".visual").style.display="none";
-summaryEl.style.display="none";
-document.querySelector(".readBtn").style.display="none";
-document.querySelector(".switch").style.display="none";
+    // あらすじ（あなたの文章そのまま）
+    const summaries = {
+      s1: `不幸体質の少女、琴吹翠は心の中の苦しさから解放されたいと思い、10月23日の誕生日の日、川に身を投げこもうとした。その時、天使と名乗る謎の青年と出会う。｢もし、心の中の苦しさが消えて人生が一変して幸せになれるって聞いたら、生きる？｣と聞かれる。｢生きたい｣と答えた翠は、天使におまじないをかけられると同時に、心の中の苦しさが消えて、身体が軽くなる。｢その代わり、代償は存在するよ。｣と言うと天使は去り、翠は何が代償か分からず家へ帰っていく。帰宅すると、何やら2階から物音が聞こえて…！？`,
+      s2: `｢5年後、またここで。｣と誓った一同。\nそこから5年後、2029年。あきはが\n空想世界へ帰ってくると、神様から\nひとつの提案をされる。｢あきはも神様にならないか｣という提案に、あきはは皆との約束の為断る。それに不服の神様は、何やら一つの作戦を思いついたようで…。あきはが翠の家へ5年ぶりに訪れるとかなり廃れていた。無人の家にひとつ置かれている埃っぽい置き手紙には、｢翠を助けてくれ｣と書かれた文字と病院の住所が書かれていて…？`
+    };
 
-const list=document.getElementById("chapterList");
-list.innerHTML="";
-const arr=(season==="s1")?chaptersS1:chaptersS2;
+    // 章（表示用）
+    const chapters = {
+      s1: [
+        { no: "壱", title: "分裂" },
+        { no: "弐", title: "運命" },
+        { no: "参", title: "逃避行" },
+        { no: "肆", title: "傷跡" },
+        { no: "伍", title: "将来" },
+        { no: "陸", title: "殺戮" },
+        { no: "漆", title: "空想世界" }
+      ],
+      s2: [
+        { no: "Gen", title: "病状" },
+        { no: "Exo", title: "福音" },
+        { no: "Lev", title: "申告" },
+        { no: "Num", title: "崩壊" },
+        { no: "Deu", title: "狂会" },
+        { no: "Jos", title: "美学" },
+        { no: "Jdg", title: "アリストテレス" }
+      ]
+    };
 
-arr.forEach((c,i)=>{
-const row=document.createElement("div");
-row.className="chapterRow";
-row.innerHTML=`<span>${i+1} ${c}</span><button>読む</button>`;
-list.appendChild(row);
-});
+    let season = "s1";
 
-document.getElementById("chapters").style.display="block";
-document.getElementById("seasonTitle").textContent=(season==="s1")?"1期":"2期";
-}
+    const s1Btn = document.getElementById("s1Btn");
+    const s2Btn = document.getElementById("s2Btn");
+    const summaryEl = document.getElementById("summary");
+    const img = document.getElementById("storyImg");
 
-/* ===== menu ===== */
-const menu=document.getElementById("menu");
-const overlay=document.getElementById("overlay");
-menuBtn.onclick=()=>{menu.classList.add("open");overlay.classList.add("open");};
-closeBtn.onclick=overlay.onclick=()=>{menu.classList.remove("open");overlay.classList.remove("open");};
-</script>
+    const visualBox = document.getElementById("visualBox");
+    const switchBar = document.getElementById("switchBar");
+    const readBtn = document.getElementById("readBtn");
 
+    const chaptersSec = document.getElementById("chapters");
+    const chapterList = document.getElementById("chapterList");
+    const seasonTitle = document.getElementById("seasonTitle");
+    const backTopBtn = document.getElementById("backTopBtn");
+
+    function updateMain(){
+      summaryEl.textContent = summaries[season];
+      img.src = `/images/story/${season}.webp`;
+      img.alt = `Story ${season.toUpperCase()}`;
+    }
+
+    function setSeason(next){
+      season = next;
+      if(season === "s1"){
+        s1Btn.classList.add("active");
+        s2Btn.classList.remove("active");
+      }else{
+        s2Btn.classList.add("active");
+        s1Btn.classList.remove("active");
+      }
+
+      // 章ページを開いてる最中なら章一覧も同期して更新
+      if(chaptersSec.style.display === "block"){
+        renderChapters();
+      }else{
+        updateMain();
+      }
+    }
+
+    s1Btn.addEventListener("click", ()=> setSeason("s1"));
+    s2Btn.addEventListener("click", ()=> setSeason("s2"));
+
+    function openChapters(){
+      // 上のパーツを消す
+      visualBox.style.display = "none";
+      summaryEl.style.display = "none";
+      readBtn.style.display = "none";
+      switchBar.style.display = "none";
+
+      // 章セクションを表示
+      chaptersSec.style.display = "block";
+      chaptersSec.setAttribute("aria-hidden","false");
+
+      renderChapters();
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function renderChapters(){
+      // タイトル
+      seasonTitle.textContent = (season === "s1") ? "1 期" : "2 期";
+
+      // 一旦空
+      chapterList.innerHTML = "";
+
+      const arr = chapters[season];
+
+      // 章を描画（アニメーションは CSS で自動）
+      arr.forEach((ch, i) => {
+        const row = document.createElement("div");
+        row.className = "chapterRow";
+        row.style.animationDelay = `${0.08 + i * 0.08}s`;
+
+        // NOTE: 今は「読む」ボタン押しても遷移は未実装（必要なら /story/s1/001.html とかに繋ぐ）
+        row.innerHTML = `
+          <div class="chapterLeft">
+            <div class="chapterNo">${ch.no}</div>
+            <div class="chapterName">${ch.title}</div>
+          </div>
+          <button type="button" data-idx="${i}">読む</button>
+        `;
+        chapterList.appendChild(row);
+      });
+    }
+
+    function backToTop(){
+      // 章ページを閉じて元の画面へ
+      chaptersSec.style.display = "none";
+      chaptersSec.setAttribute("aria-hidden","true");
+
+      visualBox.style.display = "";
+      summaryEl.style.display = "";
+      readBtn.style.display = "";
+      switchBar.style.display = "";
+
+      updateMain();
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    readBtn.addEventListener("click", openChapters);
+    backTopBtn.addEventListener("click", backToTop);
+
+    // 初期表示
+    updateMain();
+
+    // 「読む」クリック（今はダミー：後でリンクにしたいならここ触る）
+    chapterList.addEventListener("click", (e)=>{
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const idx = Number(btn.dataset.idx);
+
+      // 例: ここでページに飛ばすなら ↓ みたいにする
+      // const ep = String(idx+1).padStart(3,"0");
+      // location.href = `/story/${season}/${ep}.html`;
+
+      alert(`${season.toUpperCase()} / ${chapters[season][idx].no} ${chapters[season][idx].title}（遷移はこれから実装OK）`);
+    });
+  </script>
 </body>
 </html>
