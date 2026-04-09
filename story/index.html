@@ -477,10 +477,15 @@
        STORY LOGIC
     ========================= */
 
-    // あらすじ（あなたの文章そのまま）
     const summaries = {
-      s1: `不幸体質の少女、琴吹翠は心の中の苦しさから解放されたいと思い、10月23日の誕生日の日、川に身を投げこもうとした。その時、天使と名乗る謎の青年と出会う。｢もし、心の中の苦しさが消えて人生が一変して幸せになれるって聞いたら、生きる？｣と聞かれる。｢生きたい｣と答えた翠は、天使におまじないをかけられると同時に、心の中の苦しさが消えて、身体が軽くなる。｢その代わり、代償は存在するよ。｣と言うと天使は去り、翠は何が代償か分からず家へ帰っていく。帰宅すると、何やら2階から物音が聞こえて…！？`,
-      s2: `｢5年後、またここで。｣と誓った一同。\nそこから5年後、2029年。あきはが\n空想世界へ帰ってくると、神様から\nひとつの提案をされる。｢あきはも神様にならないか｣という提案に、あきはは皆との約束の為断る。それに不服の神様は、何やら一つの作戦を思いついたようで…。あきはが翠の家へ5年ぶりに訪れるとかなり廃れていた。無人の家にひとつ置かれている埃っぽい置き手紙には、｢翠を助けてくれ｣と書かれた文字と病院の住所が書かれていて…？`
+      s1: `不幸体質の少女・琴吹翠は、限界を迎えて命を絶とうとしていた。
+その時現れた“天使”に「苦しみを消して生きるか」と問われ、翠はそれを選ぶ。
+代わりに差し出した“何か”も知らぬまま——
+帰宅した翠を待っていたのは、2階から聞こえる“もう一人の気配”だった。`,
+
+      s2: `再び空想世界へ戻ったあきはに、神は“神になる選択”を迫る。
+それを拒んだ彼女を待っていたのは、変わり果てた翠の家と、
+「翠を助けてくれ」と記された一通の手紙だった。`
     };
 
     // 章（表示用）
@@ -537,7 +542,6 @@
         s1Btn.classList.remove("active");
       }
 
-      // 章ページを開いてる最中なら章一覧も同期して更新
       if(chaptersSec.style.display === "block"){
         renderChapters();
       }else{
@@ -549,13 +553,11 @@
     s2Btn.addEventListener("click", ()=> setSeason("s2"));
 
     function openChapters(){
-      // 上のパーツを消す
       visualBox.style.display = "none";
       summaryEl.style.display = "none";
       readBtn.style.display = "none";
       switchBar.style.display = "none";
 
-      // 章セクションを表示
       chaptersSec.style.display = "block";
       chaptersSec.setAttribute("aria-hidden","false");
 
@@ -564,21 +566,16 @@
     }
 
     function renderChapters(){
-      // タイトル
       seasonTitle.textContent = (season === "s1") ? "1 期" : "2 期";
-
-      // 一旦空
       chapterList.innerHTML = "";
 
       const arr = chapters[season];
 
-      // 章を描画（アニメーションは CSS で自動）
       arr.forEach((ch, i) => {
         const row = document.createElement("div");
         row.className = "chapterRow";
         row.style.animationDelay = `${0.08 + i * 0.08}s`;
 
-        // NOTE: （必要なら /story/s1/001.html とかに繋ぐ）
         row.innerHTML = `
           <div class="chapterLeft">
             <div class="chapterNo">${ch.no}</div>
@@ -591,7 +588,6 @@
     }
 
     function backToTop(){
-      // 章ページを閉じて元の画面へ
       chaptersSec.style.display = "none";
       chaptersSec.setAttribute("aria-hidden","true");
 
@@ -607,18 +603,12 @@
     readBtn.addEventListener("click", openChapters);
     backTopBtn.addEventListener("click", backToTop);
 
-    // 初期表示
     updateMain();
 
-    // 「読む」クリック（今はダミー：後でリンクにしたいならここ触る）
     chapterList.addEventListener("click", (e)=>{
       const btn = e.target.closest("button");
       if(!btn) return;
       const idx = Number(btn.dataset.idx);
-
-      // 例: ここでページに飛ばすなら ↓ みたいにする
-      // const ep = String(idx+1).padStart(3,"0");
-      // location.href = `/story/${season}/${ep}.html`;
 
       alert(`${season.toUpperCase()} / ${chapters[season][idx].no} ${chapters[season][idx].title}（準備中です）`);
     });
