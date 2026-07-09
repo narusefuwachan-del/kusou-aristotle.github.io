@@ -1,516 +1,635 @@
 <!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>空想世界アリストテレス神殿案内板</title>
 
-<html lang="ja">  
-<head>  
-  <meta charset="utf-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1" />  
-  <title>空想世界アリストテレス神殿案内板</title>    <link rel="icon" href="/favicon.png">  
-  <link rel="icon" href="/images/favicon.png" type="image/png">    <!-- Google Fonts -->    <link rel="preconnect" href="https://fonts.googleapis.com">  
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">    <style>  
-    *{ box-sizing:border-box; }  
-    html,body{ margin:0; padding:0; width:100%; height:100%; }  
-    body{  
-      font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;  
-      line-height:1.8;  
-      color:#fff;  
-      background:#000;  
-      overflow-x:hidden;  
-    }  
-  
-    /* ===== splash（前と同じ：transition） ===== */  
-    .splash{  
-      position: fixed;  
-      inset: 0;  
-      background: #f5f7fb;  
-      display: grid;  
-      place-items: center;  
-      z-index: 9999;  
-  
-      opacity: 1;  
-      transition: opacity 700ms ease;  
-      will-change: opacity;  
-    }  
-    .splash.hide{ opacity: 0; }  
-  
-    .splash-inner{  
-      opacity: 0;  
-      transform: scale(1.08);  
-      transition: opacity 700ms ease, transform 700ms ease;  
-      will-change: opacity, transform;  
-    }  
-    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }  
-    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }  
-  
-    .splash-inner img{  
-      width: min(90vw, 520px);  
-      height:auto;  
-      display:block;  
-    }  
-  
-    /* ===== hero（メインビジュアル：前と同じ） ===== */  
-    .hero{  
-      position: relative;  
-      z-index: 2;  
-      height: 100vh;  
-      overflow: hidden;  
-      background: #0b0b0f;  
-      isolation: isolate;  
-    }  
-  
-    .hero-bg{  
-      position:absolute;  
-      inset:0;  
-      background: url("/images/home/sora.png") center / cover no-repeat;  
-      transform: scale(1.02);  
-      z-index: 1;  
-    }  
-  
-    .hero-torii{  
-      position:absolute;  
-      inset:0;  
-      width:100%;  
-      height:100%;  
-      object-fit: cover;  
-      z-index: 2;  
-  
-      transform: scale(0.86);  
-      opacity: 0;  
-      filter: blur(1px);  
-  
-      transition:  
-        transform 900ms cubic-bezier(.2,.9,.2,1),  
-        opacity   900ms cubic-bezier(.2,.9,.2,1),  
-        filter    900ms cubic-bezier(.2,.9,.2,1);  
-      transition-delay: 120ms;  
-      will-change: transform, opacity, filter;  
-    }  
-  
-    .hero-chara{  
-      position:absolute;  
-      inset:0;  
-      width:100%;  
-      height:100%;  
-      object-fit: cover;  
-      z-index: 3;  
-  
-      transform: translateY(60px);  
-      opacity: 0;  
-  
-      transition:  
-        transform 900ms cubic-bezier(.2,.9,.2,1),  
-        opacity   900ms cubic-bezier(.2,.9,.2,1);  
-      transition-delay: 520ms;  
-      will-change: transform, opacity;  
-    }  
-  
-    .hero.play .hero-torii{  
-      transform: scale(1);  
-      opacity: 1;  
-      filter: blur(0);  
-    }  
-    .hero.play .hero-chara{  
-      transform: translateY(0);  
-      opacity: 1;  
-    }  
-  
-    @media (prefers-reduced-motion: reduce){  
-      .hero-torii, .hero-chara{  
-        transition: none;  
-        opacity: 1;  
-        transform: none;  
-        filter: none;  
-      }  
-    }  
-  
-    /* ===== ここからスクロール演出（黒背景セクション） ===== */  
-    .section-black{  
-      min-height: 100vh;  
-      background:#000;  
-      display:grid;  
-      place-items:center;  
-      padding: 56px 16px;  
-    }  
-  
-    .section-black img{  
-      width: min(980px, 92vw);  
-      height: auto;  
-      display:block;  
-    }  
-  
-    /* welcomeは少し小さめにしたい場合だけ */  
-    .welcome-img{  
-      width: min(720px, 90vw);  
-    }  
-  
-    /* ===== header（右上にハンバーガー：前と同じ） ===== */  
-    .header{  
-      position: fixed;  
-      top: 0; left: 0; right: 0;  
-      z-index: 60;  
-      display:flex;  
-      justify-content: flex-end;  
-      align-items:center;  
-      padding:12px 16px;  
-      background: transparent;  
-      border: none;  
-    }  
-    .menu-btn{  
-      font-size:22px;  
-      background:none;  
-      border:none;  
-      cursor:pointer;  
-      color:#fff;  
-      padding:8px 10px;  
-      border-radius:10px;  
-      text-shadow: 0 2px 18px rgba(0,0,0,.35);  
-    }  
-    .menu-btn:active{ transform: scale(.98); }  
-  
-    /* ===== overlay/menu（前と同じ） ===== */  
-    .overlay{  
-      position: fixed;  
-      inset: 0;  
-      background: rgba(0,0,0,.55);  
-      opacity: 0;  
-      pointer-events: none;  
-      transition: opacity .25s ease;  
-      z-index: 1000;  
-    }  
-    .overlay.open{ opacity: 1; pointer-events: auto; }  
-  
-    .menu{  
-      position: fixed;  
-      top: 0;  
-      right: 0;  
-      width: 340px;  
-      max-width: 78vw;  
-      height: 100vh;  
-      background: rgba(0,0,0,.86);  
-      backdrop-filter: blur(10px);  
-      -webkit-backdrop-filter: blur(10px);  
-      padding: 18px 16px;  
-      transform: translateX(100%);  
-      transition: transform .25s ease;  
-      z-index: 1001;  
-      overflow-y:auto;  
-      -webkit-overflow-scrolling:touch;  
-      touch-action: pan-y;  
-    }  
-    .menu.open{ transform: translateX(0); }  
-  
-    .menu-top{  
-      display:flex;  
-      justify-content:space-between;  
-      align-items:center;  
-      padding-bottom:10px;  
-      border-bottom: 1px solid rgba(255,255,255,.14);  
-      margin-bottom:8px;  
-    }  
-    .menu-title{ font-weight: 700; letter-spacing: .06em; color:#fff; }  
-    .close-btn{  
-      font-size:20px;  
-      background:none;  
-      border:none;  
-      cursor:pointer;  
-      padding:8px 10px;  
-      border-radius:10px;  
-      color:#fff;  
-    }  
-    .menu a{  
-      display:block;  
-      padding:14px 6px;  
-      font-weight:700;  
-      letter-spacing:.03em;  
-      border-bottom: 1px solid rgba(255,255,255,.10);  
-      color:#fff;  
-      text-decoration:none;  
-    }  
-  
-    /* ===== BGMボタン（前と同じ） ===== */  
-    .bgm-btn{  
-      position: fixed;  
-      right: 14px;  
-      bottom: 14px;  
-      z-index: 1200;  
-      display: inline-flex;  
-      align-items: center;  
-      gap: 8px;  
-  
-      padding: 10px 12px;  
-      border: 1px solid rgba(255,255,255,.20);  
-      border-radius: 999px;  
-      background: rgba(20,20,20,.72);  
-      color: #fff;  
-      backdrop-filter: blur(6px);  
-      -webkit-backdrop-filter: blur(6px);  
-  
-      font-weight: 700;  
-      font-size: 14px;  
-      cursor: pointer;  
-    }  
-    .bgm-btn:active{ transform: scale(.98); }  
-    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }  
-    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }  
-    .bgm-btn small{ font-weight:700; opacity:.92; }  
-  
-    /* ===== footer（前と同じ構造に戻す） ===== */  
-    .footer{  
-      position: relative;  
-      z-index: 5;  
-      padding: 44px 16px 56px;  
-      text-align: center;  
-      background: rgba(0,0,0,.35);  
-      backdrop-filter: blur(8px);  
-      -webkit-backdrop-filter: blur(8px);  
-      border-top: 1px solid rgba(255,255,255,.10);  
-    }  
-    .footer-inner{  
-      max-width: 960px;  
-      margin: 0 auto;  
-    }  
-    .footer-logo{  
-      width: min(64vw, 260px);  
-      height: auto;  
-      display: block;  
-      margin: 0 auto 18px;  
-      opacity: .92;  
-      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));  
-    }  
-    .footer-title{  
-      margin: 0 0 10px;  
-      font-weight: 800;  
-      letter-spacing: .08em;  
-      font-size: 13px;  
-      color: rgba(255,255,255,.78);  
-    }  
-  
-    .footer-sns{  
-      display: flex;  
-      justify-content: center;  
-      gap: 16px;  
-      flex-wrap: wrap;  
-      margin: 12px 0 6px;  
-    }  
-  
-    .share{  
-      margin: 10px 0 18px;  
-      display: grid;  
-      gap: 10px;  
-      justify-items: center;  
-    }  
-    .share-row{  
-      display: flex;  
-      gap: 16px;  
-      flex-wrap: wrap;  
-      justify-content: center;  
-    }  
-  
-    .sns-btn{  
-      width: 44px;  
-      height: 44px;  
-      border-radius: 999px;  
-      display: grid;  
-      place-items: center;  
-      border: 1px solid rgba(255,255,255,.16);  
-      background: rgba(255,255,255,.06);  
-      color: #fff;  
-      text-decoration: none;  
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;  
-    }  
-    .sns-btn:active{ transform: scale(.98); }  
-    .sns-btn:hover{  
-      background: rgba(255,255,255,.10);  
-      border-color: rgba(255,255,255,.28);  
-    }  
-  
-    .icon-img{  
-      width: 22px;  
-      height: 22px;  
-      object-fit: contain;  
-      display: block;  
-      opacity: .92;  
-    }  
-  
-    .footer-note{  
-      margin-top: 18px;  
-      font-size: 12px;  
-      color: rgba(255,255,255,.60);  
-      letter-spacing: .03em;  
-    }  
-  </style>  </head>  <body>  
-  <!-- hero -->  
-  <section class="hero" id="hero" aria-label="メインビジュアル">  
-    <div class="hero-bg"></div>  
-    <img src="/images/home/torii.png" class="hero-torii" alt="">  
-    <img src="/images/home/tatie.png" class="hero-chara" alt="">  
-  </section>    <!-- splash -->    <div id="splash" class="splash" aria-label="読み込み中">  
-    <div class="splash-inner">  
-      <img src="/images/logo.png" alt="空想世界アリストテレス">  
-    </div>  
-  </div>    <!-- header -->    <header class="header">  
-    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>  
-  </header>    <!-- overlay/menu -->    <div id="overlay" class="overlay" aria-hidden="true"></div>    <nav id="menu" class="menu" aria-hidden="true">  
-    <div class="menu-top">  
-      <div class="menu-title">MENU</div>  
-      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>  
-    </div>  <a href="/">Home</a>  
-<a href="/character/">Character</a>  
-<a href="/story/">Story</a>  
-<a href="/guide/">Guide</a>
+  <link rel="icon" href="/favicon.png">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
 
-  </nav>    <!-- ★スクロールで出す黒背景ゾーン（2枚） -->    <section class="section-black" aria-label="ようこそ">  
-    <img src="/images/home/welcome.png" class="welcome-img" alt="ようこそ、空想世界アリストテレスへ">  
-  </section>    <section class="section-black" aria-label="ノイズ文字">  
-    <img src="/images/home/noise-text.png" alt="">  
-  </section>    <!-- BGM -->    <audio id="bgm" preload="auto" loop>  
-    <source src="/audio/bgm.mp3" type="audio/mpeg">  
-  </audio>    <button class="bgm-btn" id="bgmBtn" type="button" aria-label="BGMの切り替え">  
-    <span class="bgm-dot" aria-hidden="true"></span>  
-    <small id="bgmLabel">BGM OFF</small>  
-  </button>    <!-- footer（前と同じ：シェア＋公式SNS） -->    <footer class="footer" aria-label="フッター">  
-    <div class="footer-inner">  <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- SHARE -->  
-  <div class="share" aria-label="シェア">  
-    <div class="footer-title">SHARE</div>  
-    <div class="share-row">  
-      <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">  
-        <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">  
-      </a>  
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; width:100%; height:100%; }
+    body{
+      font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
+      line-height:1.8;
+      color:#fff;
+      background:#000;
+      overflow-x:hidden;
+    }
 
-      <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">  
-        <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">  
-      </a>  
-    </div>  
-  </div>  
+    .splash{
+      position: fixed;
+      inset: 0;
+      background: #f5f7fb;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 700ms ease;
+    }
+    .splash.hide{ opacity: 0; }
+    .splash-inner{
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
+    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+    .splash-inner img{
+      width: min(90vw, 520px);
+      height:auto;
+      display:block;
+    }
 
-  <!-- OFFICIAL -->  
-  <div class="footer-title">OFFICIAL</div>  
-  <div class="footer-sns" aria-label="公式SNS">  
-    <a class="sns-btn" href="https://x.com/passion_fruit_k" target="_blank" rel="noopener" aria-label="X">  
-      <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">  
-    </a>  
+    .hero{
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      overflow: hidden;
+      background: #0b0b0f;
+      isolation: isolate;
+      transition: transform .45s ease, filter .45s ease;
+    }
+    .hero.map-opening{
+      transform: scale(1.06);
+      filter: contrast(1.25) saturate(1.2);
+    }
+    .hero.map-opening::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:10;
+      pointer-events:none;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,.12) 0px,
+          rgba(255,255,255,.12) 1px,
+          transparent 2px,
+          transparent 5px
+        );
+      mix-blend-mode:screen;
+      animation: glitchFlash .42s steps(2,end) 1;
+    }
+    @keyframes glitchFlash{
+      0%{ opacity:0; transform:translate(0,0); }
+      20%{ opacity:.9; transform:translate(-3px,1px); }
+      45%{ opacity:.65; transform:translate(3px,-1px); }
+      70%{ opacity:.85; transform:translate(-2px,-2px); }
+      100%{ opacity:0; transform:translate(0,0); }
+    }
 
-    <a class="sns-btn" href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo" target="_blank" rel="noopener" aria-label="YouTube">  
-      <img class="icon-img" src="/images/icons/youtube.png" alt="" aria-hidden="true">  
-    </a>  
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background: url("/images/home/sora.png") center / cover no-repeat;
+      transform: scale(1.02);
+      z-index: 1;
+    }
+    .hero-torii{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      z-index: 2;
+      transform: scale(0.86);
+      opacity: 0;
+      filter: blur(1px);
+      transition:
+        transform 900ms cubic-bezier(.2,.9,.2,1),
+        opacity 900ms cubic-bezier(.2,.9,.2,1),
+        filter 900ms cubic-bezier(.2,.9,.2,1);
+      transition-delay: 120ms;
+    }
+    .hero-chara{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      z-index: 3;
+      transform: translateY(60px);
+      opacity: 0;
+      transition:
+        transform 900ms cubic-bezier(.2,.9,.2,1),
+        opacity 900ms cubic-bezier(.2,.9,.2,1);
+      transition-delay: 520ms;
+    }
+    .hero.play .hero-torii{
+      transform: scale(1);
+      opacity: 1;
+      filter: blur(0);
+    }
+    .hero.play .hero-chara{
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-    <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank" rel="noopener" aria-label="Nola">  
-      <img class="icon-img" src="/images/icons/nola.png" alt="" aria-hidden="true">  
-    </a>  
-  </div>  
-<div class="footer-note">
-  © 空想世界アリストテレス<br>
-  当サイトに掲載されている文章・画像等の無断転載、無断使用を固く禁じます。
-</div>
+    .section-black{
+      min-height: 100vh;
+      background:#000;
+      display:grid;
+      place-items:center;
+      padding: 56px 16px;
+    }
+    .section-black img{
+      width: min(980px, 92vw);
+      height: auto;
+      display:block;
+    }
+    .welcome-img{
+      width: min(720px, 90vw);
+    }
 
-  </footer>    <script>  
-    // ===== SHARE（X / LINE） =====  
-    (() => {  
-      const url = encodeURIComponent(location.href);  
-      const title = encodeURIComponent(document.title);  
-  
-      const shareX = document.getElementById("shareX");  
-      const shareLINE = document.getElementById("shareLINE");  
-  
-      if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;  
-      if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;  
-    })();  
-  
-    // ===== menu =====  
-    const menu = document.getElementById("menu");  
-    const overlay = document.getElementById("overlay");  
-    const menuBtn = document.getElementById("menuBtn");  
-    const closeBtn = document.getElementById("closeBtn");  
-  
-    const openMenu = () => {  
-      menu.classList.add("open");  
-      overlay.classList.add("open");  
-      menu.setAttribute("aria-hidden","false");  
-    };  
-    const closeMenu = () => {  
-      menu.classList.remove("open");  
-      overlay.classList.remove("open");  
-      menu.setAttribute("aria-hidden","true");  
-    };  
-  
-    menuBtn.addEventListener("click", openMenu);  
-    closeBtn.addEventListener("click", closeMenu);  
-    overlay.addEventListener("click", closeMenu);  
-    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));  
-  
-    // ===== BGM ON/OFF（保存つき） =====  
-    const bgm = document.getElementById("bgm");  
-    const bgmBtn = document.getElementById("bgmBtn");  
-    const bgmLabel = document.getElementById("bgmLabel");  
-    const DEFAULT_VOLUME = 0.35;  
-  
-    bgm.volume = DEFAULT_VOLUME;  
-    const saved = localStorage.getItem("bgm_on") === "1";  
-  
-    function setBgmUI(isOn){  
-      bgmBtn.classList.toggle("on", isOn);  
-      bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";  
-    }  
-    setBgmUI(saved);  
-  
-    bgmBtn.addEventListener("click", async () => {  
-      try{  
-        if (bgm.paused){  
-          bgm.volume = DEFAULT_VOLUME;  
-          await bgm.play();  
-          localStorage.setItem("bgm_on", "1");  
-          setBgmUI(true);  
-        }else{  
-          bgm.pause();  
-          localStorage.setItem("bgm_on", "0");  
-          setBgmUI(false);  
-        }  
-      }catch(e){  
-        alert("BGMを再生できませんでした。もう一度タップしてみて！");  
-      }  
-    });  
-  
-    // ===== splash → hero（reflowで“確実にtransition発火”） =====  
-    function startHeroAnimation(){  
-      const hero = document.getElementById("hero");  
-      if (!hero) return;  
-  
-      hero.classList.remove("play");  
-      void hero.offsetWidth; // reflow  
-      requestAnimationFrame(() => hero.classList.add("play"));  
-    }  
-  
-    function startSplashSequence(){  
-      const splash = document.getElementById("splash");  
-  
-      // splash表示  
-      if (splash) requestAnimationFrame(() => splash.classList.add("show"));  
-  
-      // 1.2秒後：hero開始＋splash退場  
-      setTimeout(() => {  
-        startHeroAnimation();  
-  
-        if (splash){  
-          splash.classList.add("hide");  
-          splash.classList.remove("show");  
-          setTimeout(() => splash.remove(), 750);  
-        }  
-      }, 1200);  
-  
-      // 何があっても3秒で消す  
-      setTimeout(() => {  
-        const s = document.getElementById("splash");  
-        if (s) s.remove();  
-      }, 3000);  
-    }  
-  
-    window.addEventListener("load", startSplashSequence);  
-  
-    // 戻る/進む（bfcache）対策  
-    window.addEventListener("pageshow", (e) => {  
-      if (e.persisted) startSplashSequence();  
-    });  
-  </script>  </body>  
-</html>  
+    .header{
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 60;
+      display:flex;
+      justify-content: flex-end;
+      align-items:center;
+      padding:12px 16px;
+      background: transparent;
+      border: none;
+    }
+    .menu-btn{
+      font-size:22px;
+      background:none;
+      border:none;
+      cursor:pointer;
+      color:#fff;
+      padding:8px 10px;
+      border-radius:10px;
+      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+    }
+    .menu-btn:active{ transform: scale(.98); }
+
+    /* ===== 神殿案内図 ===== */
+    .mapOverlay{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      background:rgba(0,0,0,.72);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .35s ease;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .mapOverlay.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .mapPanel{
+      position:relative;
+      width:min(92vw, 720px);
+      aspect-ratio:1/1;
+      opacity:0;
+      transform:scale(.96);
+      transition:opacity .42s ease, transform .42s ease;
+    }
+    .mapOverlay.open .mapPanel{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .mapTitle{
+      position:absolute;
+      top:5%;
+      left:0;
+      right:0;
+      text-align:center;
+      z-index:20;
+      font-size:clamp(18px, 4vw, 30px);
+      letter-spacing:.18em;
+      text-shadow:0 0 16px rgba(255,255,255,.35);
+      pointer-events:none;
+    }
+    .mapNote{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:5%;
+      text-align:center;
+      z-index:20;
+      font-size:clamp(11px, 2.6vw, 14px);
+      letter-spacing:.08em;
+      opacity:.76;
+      pointer-events:none;
+    }
+
+    .mapClose{
+      position:fixed;
+      top:14px;
+      right:16px;
+      z-index:1010;
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.45);
+      color:#fff;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    .mapLayer{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      pointer-events:none;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+    .mapLayer.shinden{ z-index:1; }
+    .mapLayer.sandou{ z-index:2; }
+    .mapLayer.meibo{ z-index:3; }
+    .mapLayer.shiryou{ z-index:3; }
+    .mapLayer.torii{ z-index:4; }
+
+    .mapLink{
+      position:absolute;
+      z-index:30;
+      display:block;
+      border-radius:999px;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .mapLink::after{
+      content:"";
+      position:absolute;
+      inset:12%;
+      border-radius:999px;
+      opacity:0;
+      box-shadow:0 0 22px rgba(255,255,255,.8);
+      transition:opacity .18s ease, transform .18s ease;
+      transform:scale(.92);
+    }
+    .mapLink:hover::after,
+    .mapLink:active::after{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .mapLink.current::before{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      background:#d51d2a;
+      box-shadow:0 0 18px rgba(255,0,0,.9);
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      z-index:2;
+    }
+
+    .mapLink.home{
+      left:41%;
+      top:68%;
+      width:18%;
+      height:18%;
+    }
+    .mapLink.character{
+      left:15%;
+      top:42%;
+      width:22%;
+      height:22%;
+    }
+    .mapLink.story{
+      left:39%;
+      top:18%;
+      width:22%;
+      height:22%;
+    }
+    .mapLink.guide{
+      right:15%;
+      top:42%;
+      width:22%;
+      height:22%;
+    }
+
+    .bgm-btn{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.20);
+      border-radius: 999px;
+      background: rgba(20,20,20,.72);
+      color: #fff;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .bgm-btn:active{ transform: scale(.98); }
+    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
+    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
+    .bgm-btn small{ font-weight:700; opacity:.92; }
+
+    .footer{
+      position: relative;
+      z-index: 5;
+      padding: 44px 16px 56px;
+      text-align: center;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+    .footer-inner{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .footer-logo{
+      width: min(64vw, 260px);
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      opacity: .92;
+      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
+    }
+    .footer-title{
+      margin: 0 0 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+    }
+    .footer-sns{
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 12px 0 6px;
+    }
+    .share{
+      margin: 10px 0 18px;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+    .share-row{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .sns-btn{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      text-decoration: none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .sns-btn:active{ transform: scale(.98); }
+    .sns-btn:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.28);
+    }
+    .icon-img{
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      display: block;
+      opacity: .92;
+    }
+    .footer-note{
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,.60);
+      letter-spacing: .03em;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero" id="hero" aria-label="メインビジュアル">
+    <div class="hero-bg"></div>
+    <img src="/images/home/torii.png" class="hero-torii" alt="">
+    <img src="/images/home/tatie.png" class="hero-chara" alt="">
+  </section>
+
+  <div id="splash" class="splash" aria-label="読み込み中">
+    <div class="splash-inner">
+      <img src="/images/logo.png" alt="空想世界アリストテレス">
+    </div>
+  </div>
+
+  <header class="header">
+    <button class="menu-btn" id="menuBtn" aria-label="神殿案内図を開く">☰</button>
+  </header>
+
+  <!-- 神殿案内図 -->
+  <div id="mapOverlay" class="mapOverlay" aria-hidden="true">
+    <button class="mapClose" id="mapClose" type="button" aria-label="神殿案内図を閉じる">✕</button>
+
+    <div class="mapPanel" role="dialog" aria-modal="true" aria-label="神殿案内図">
+      <div class="mapTitle">神殿案内図</div>
+
+      <img class="mapLayer shinden" src="/images/chizu/shinden.png" alt="">
+      <img class="mapLayer sandou" src="/images/chizu/sandou.png" alt="">
+      <img class="mapLayer meibo" src="/images/chizu/meibo.png" alt="">
+      <img class="mapLayer shiryou" src="/images/chizu/shiryou.png" alt="">
+      <img class="mapLayer torii" src="/images/chizu/torii.png" alt="">
+
+      <a class="mapLink home current" href="/" aria-label="神殿入口 Home"></a>
+      <a class="mapLink character" href="/character/" aria-label="名簿録 Character"></a>
+      <a class="mapLink story" href="/story/" aria-label="聖堂 Story"></a>
+      <a class="mapLink guide" href="/guide/" aria-label="資料庫 Guide"></a>
+
+      <div class="mapNote">※アイコンを選択するとページへ移動します</div>
+    </div>
+  </div>
+
+  <section class="section-black" aria-label="ようこそ">
+    <img src="/images/home/welcome.png" class="welcome-img" alt="ようこそ、空想世界アリストテレスへ">
+  </section>
+
+  <section class="section-black" aria-label="ノイズ文字">
+    <img src="/images/home/noise-text.png" alt="">
+  </section>
+
+  <audio id="bgm" preload="auto" loop>
+    <source src="/audio/bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="bgm-btn" id="bgmBtn" type="button" aria-label="BGMの切り替え">
+    <span class="bgm-dot" aria-hidden="true"></span>
+    <small id="bgmLabel">BGM OFF</small>
+  </button>
+
+  <footer class="footer" aria-label="フッター">
+    <div class="footer-inner">
+      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
+
+      <div class="share" aria-label="シェア">
+        <div class="footer-title">SHARE</div>
+        <div class="share-row">
+          <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
+            <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+          </a>
+          <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
+            <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-title">OFFICIAL</div>
+      <div class="footer-sns" aria-label="公式SNS">
+        <a class="sns-btn" href="https://x.com/passion_fruit_k" target="_blank" rel="noopener" aria-label="X">
+          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+        </a>
+        <a class="sns-btn" href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo" target="_blank" rel="noopener" aria-label="YouTube">
+          <img class="icon-img" src="/images/icons/youtube.png" alt="" aria-hidden="true">
+        </a>
+        <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank" rel="noopener" aria-label="Nola">
+          <img class="icon-img" src="/images/icons/nola.png" alt="" aria-hidden="true">
+        </a>
+      </div>
+
+      <div class="footer-note">
+        © 空想世界アリストテレス<br>
+        当サイトに掲載されている文章・画像等の無断転載、無断使用を固く禁じます。
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const url = encodeURIComponent(location.href);
+      const title = encodeURIComponent(document.title);
+
+      const shareX = document.getElementById("shareX");
+      const shareLINE = document.getElementById("shareLINE");
+
+      if (shareX) shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
+      if (shareLINE) shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+    })();
+
+    const hero = document.getElementById("hero");
+    const mapOverlay = document.getElementById("mapOverlay");
+    const menuBtn = document.getElementById("menuBtn");
+    const mapClose = document.getElementById("mapClose");
+
+    const openMap = () => {
+      if(hero){
+        hero.classList.add("map-opening");
+        setTimeout(() => hero.classList.remove("map-opening"), 520);
+      }
+
+      setTimeout(() => {
+        mapOverlay.classList.add("open");
+        mapOverlay.setAttribute("aria-hidden","false");
+        document.body.style.overflow = "hidden";
+      }, 240);
+    };
+
+    const closeMap = () => {
+      mapOverlay.classList.remove("open");
+      mapOverlay.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    };
+
+    menuBtn.addEventListener("click", openMap);
+    mapClose.addEventListener("click", closeMap);
+
+    mapOverlay.addEventListener("click", (e)=>{
+      if(e.target === mapOverlay) closeMap();
+    });
+
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape" && mapOverlay.classList.contains("open")){
+        closeMap();
+      }
+    });
+
+    const bgm = document.getElementById("bgm");
+    const bgmBtn = document.getElementById("bgmBtn");
+    const bgmLabel = document.getElementById("bgmLabel");
+    const DEFAULT_VOLUME = 0.35;
+
+    bgm.volume = DEFAULT_VOLUME;
+    const saved = localStorage.getItem("bgm_on") === "1";
+
+    function setBgmUI(isOn){
+      bgmBtn.classList.toggle("on", isOn);
+      bgmLabel.textContent = isOn ? "BGM ON" : "BGM OFF";
+    }
+    setBgmUI(saved);
+
+    bgmBtn.addEventListener("click", async () => {
+      try{
+        if (bgm.paused){
+          bgm.volume = DEFAULT_VOLUME;
+          await bgm.play();
+          localStorage.setItem("bgm_on", "1");
+          setBgmUI(true);
+        }else{
+          bgm.pause();
+          localStorage.setItem("bgm_on", "0");
+          setBgmUI(false);
+        }
+      }catch(e){
+        alert("BGMを再生できませんでした。もう一度タップしてみて！");
+      }
+    });
+
+    function startHeroAnimation(){
+      if (!hero) return;
+      hero.classList.remove("play");
+      void hero.offsetWidth;
+      requestAnimationFrame(() => hero.classList.add("play"));
+    }
+
+    function startSplashSequence(){
+      const splash = document.getElementById("splash");
+
+      if (splash) requestAnimationFrame(() => splash.classList.add("show"));
+
+      setTimeout(() => {
+        startHeroAnimation();
+
+        if (splash){
+          splash.classList.add("hide");
+          splash.classList.remove("show");
+          setTimeout(() => splash.remove(), 750);
+        }
+      }, 1200);
+
+      setTimeout(() => {
+        const s = document.getElementById("splash");
+        if (s) s.remove();
+      }, 3000);
+    }
+
+    window.addEventListener("load", startSplashSequence);
+
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted) startSplashSequence();
+    });
+  </script>
+</body>
+</html>
