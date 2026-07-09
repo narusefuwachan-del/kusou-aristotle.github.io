@@ -14,7 +14,7 @@
 
   <style>
     *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; width:100%; height:100%; }
+    html,body{ margin:0; padding:0; width:100%; min-height:100%; }
     body{
       font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;
       line-height:1.8;
@@ -24,41 +24,40 @@
     }
 
     .splash{
-      position: fixed;
-      inset: 0;
-      background: #f5f7fb;
-      display: grid;
-      place-items: center;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 700ms ease;
+      position:fixed;
+      inset:0;
+      background:#f5f7fb;
+      display:grid;
+      place-items:center;
+      z-index:9999;
+      opacity:1;
+      transition:opacity 700ms ease;
     }
-    .splash.hide{ opacity: 0; }
+    .splash.hide{ opacity:0; }
     .splash-inner{
-      opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 700ms ease, transform 700ms ease;
+      opacity:0;
+      transform:scale(1.08);
+      transition:opacity 700ms ease, transform 700ms ease;
     }
-    .splash.show .splash-inner{ opacity: 1; transform: scale(1); }
-    .splash.hide .splash-inner{ opacity: 0; transform: scale(0.82); }
+    .splash.show .splash-inner{ opacity:1; transform:scale(1); }
+    .splash.hide .splash-inner{ opacity:0; transform:scale(.82); }
     .splash-inner img{
-      width: min(90vw, 520px);
-      height:auto;
+      width:min(90vw,520px);
       display:block;
     }
 
     .hero{
-      position: relative;
-      z-index: 2;
-      height: 100vh;
-      overflow: hidden;
-      background: #0b0b0f;
-      isolation: isolate;
-      transition: transform .45s ease, filter .45s ease;
+      position:relative;
+      z-index:2;
+      height:100vh;
+      overflow:hidden;
+      background:#0b0b0f;
+      isolation:isolate;
+      transition:transform .45s ease, filter .45s ease;
     }
     .hero.map-opening{
-      transform: scale(1.06);
-      filter: contrast(1.25) saturate(1.2);
+      transform:scale(1.06);
+      filter:contrast(1.25) saturate(1.2);
     }
     .hero.map-opening::after{
       content:"";
@@ -75,7 +74,7 @@
           transparent 5px
         );
       mix-blend-mode:screen;
-      animation: glitchFlash .42s steps(2,end) 1;
+      animation:glitchFlash .42s steps(2,end) 1;
     }
     @keyframes glitchFlash{
       0%{ opacity:0; transform:translate(0,0); }
@@ -88,76 +87,76 @@
     .hero-bg{
       position:absolute;
       inset:0;
-      background: url("/images/home/sora.png") center / cover no-repeat;
-      transform: scale(1.02);
-      z-index: 1;
+      background:url("/images/home/sora.png") center / cover no-repeat;
+      transform:scale(1.02);
+      z-index:1;
     }
     .hero-torii{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
-      object-fit: cover;
-      z-index: 2;
-      transform: scale(0.86);
-      opacity: 0;
-      filter: blur(1px);
+      object-fit:cover;
+      z-index:2;
+      transform:scale(.86);
+      opacity:0;
+      filter:blur(1px);
       transition:
         transform 900ms cubic-bezier(.2,.9,.2,1),
         opacity 900ms cubic-bezier(.2,.9,.2,1),
         filter 900ms cubic-bezier(.2,.9,.2,1);
-      transition-delay: 120ms;
+      transition-delay:120ms;
     }
     .hero-chara{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
-      object-fit: cover;
-      z-index: 3;
-      transform: translateY(60px);
-      opacity: 0;
+      object-fit:cover;
+      z-index:3;
+      transform:translateY(60px);
+      opacity:0;
       transition:
         transform 900ms cubic-bezier(.2,.9,.2,1),
         opacity 900ms cubic-bezier(.2,.9,.2,1);
-      transition-delay: 520ms;
+      transition-delay:520ms;
     }
     .hero.play .hero-torii{
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(0);
+      transform:scale(1);
+      opacity:1;
+      filter:blur(0);
     }
     .hero.play .hero-chara{
-      transform: translateY(0);
-      opacity: 1;
+      transform:translateY(0);
+      opacity:1;
     }
 
     .section-black{
-      min-height: 100vh;
+      min-height:100vh;
       background:#000;
       display:grid;
       place-items:center;
-      padding: 56px 16px;
+      padding:56px 16px;
     }
     .section-black img{
-      width: min(980px, 92vw);
-      height: auto;
+      width:min(980px,92vw);
+      height:auto;
       display:block;
     }
-    .welcome-img{
-      width: min(720px, 90vw);
-    }
+    .welcome-img{ width:min(720px,90vw); }
 
     .header{
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 60;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:60;
       display:flex;
-      justify-content: flex-end;
+      justify-content:flex-end;
       align-items:center;
       padding:12px 16px;
-      background: transparent;
-      border: none;
+      background:transparent;
+      border:none;
     }
     .menu-btn{
       font-size:22px;
@@ -167,16 +166,16 @@
       color:#fff;
       padding:8px 10px;
       border-radius:10px;
-      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      text-shadow:0 2px 18px rgba(0,0,0,.35);
     }
-    .menu-btn:active{ transform: scale(.98); }
+    .menu-btn:active{ transform:scale(.98); }
 
     /* ===== 神殿案内図 ===== */
     .mapOverlay{
       position:fixed;
       inset:0;
       z-index:1000;
-      background:rgba(0,0,0,.72);
+      background:rgba(0,0,0,.76);
       opacity:0;
       pointer-events:none;
       transition:opacity .35s ease;
@@ -191,40 +190,80 @@
 
     .mapPanel{
       position:relative;
-      width:min(92vw, 720px);
+      width:min(92vw,720px);
       aspect-ratio:1/1;
       opacity:0;
       transform:scale(.96);
       transition:opacity .42s ease, transform .42s ease;
+      filter:drop-shadow(0 24px 80px rgba(0,0,0,.75));
     }
     .mapOverlay.open .mapPanel{
       opacity:1;
       transform:scale(1);
     }
 
-    .mapTitle{
+    .mapBase{
       position:absolute;
-      top:5%;
-      left:0;
-      right:0;
-      text-align:center;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      z-index:1;
+      pointer-events:none;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    .mapSandou{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:34%;
+      height:auto;
+      transform:translate(-50%,-50%);
+      z-index:2;
+      pointer-events:none;
+      user-select:none;
+      -webkit-user-drag:none;
+      filter:drop-shadow(0 0 18px rgba(255,255,255,.18));
+      opacity:.96;
+    }
+
+    .mapTitleFrame{
+      position:absolute;
+      left:50%;
+      top:5.2%;
+      transform:translateX(-50%);
       z-index:20;
-      font-size:clamp(18px, 4vw, 30px);
-      letter-spacing:.18em;
-      text-shadow:0 0 16px rgba(255,255,255,.35);
+      min-width:42%;
+      padding:7px 18px 8px;
+      border:1px solid rgba(255,255,255,.42);
+      background:rgba(0,0,0,.35);
+      box-shadow:
+        0 0 18px rgba(255,255,255,.12),
+        inset 0 0 18px rgba(255,255,255,.06);
+      text-align:center;
       pointer-events:none;
     }
+    .mapTitle{
+      font-size:clamp(16px,3.8vw,28px);
+      letter-spacing:.18em;
+      text-shadow:0 0 16px rgba(255,255,255,.35);
+      white-space:nowrap;
+    }
+
     .mapNote{
       position:absolute;
       left:0;
       right:0;
-      bottom:5%;
-      text-align:center;
+      bottom:5.5%;
       z-index:20;
-      font-size:clamp(11px, 2.6vw, 14px);
+      text-align:center;
+      font-size:clamp(10px,2.5vw,14px);
       letter-spacing:.08em;
-      opacity:.76;
+      opacity:.78;
       pointer-events:none;
+      text-shadow:0 0 12px rgba(0,0,0,.9);
     }
 
     .mapClose{
@@ -242,21 +281,56 @@
       cursor:pointer;
     }
 
-    .mapLayer{
+    .placeLabel{
       position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit:contain;
+      z-index:22;
+      min-width:96px;
+      padding:6px 12px 7px;
+      border:1px solid rgba(255,255,255,.38);
+      background:rgba(0,0,0,.42);
+      box-shadow:
+        0 0 14px rgba(255,255,255,.10),
+        inset 0 0 12px rgba(255,255,255,.05);
+      text-align:center;
       pointer-events:none;
-      user-select:none;
-      -webkit-user-drag:none;
+      backdrop-filter:blur(4px);
+      -webkit-backdrop-filter:blur(4px);
     }
-    .mapLayer.shinden{ z-index:1; }
-    .mapLayer.sandou{ z-index:2; }
-    .mapLayer.meibo{ z-index:3; }
-    .mapLayer.shiryou{ z-index:3; }
-    .mapLayer.torii{ z-index:4; }
+    .placeLabel .en{
+      display:block;
+      font-size:clamp(9px,2.1vw,12px);
+      letter-spacing:.18em;
+      opacity:.68;
+      line-height:1.15;
+    }
+    .placeLabel .jp{
+      display:block;
+      margin-top:2px;
+      font-size:clamp(13px,3vw,17px);
+      letter-spacing:.16em;
+      line-height:1.2;
+    }
+
+    .label-story{
+      left:50%;
+      top:26%;
+      transform:translate(-50%,-50%);
+    }
+    .label-character{
+      left:23%;
+      top:54%;
+      transform:translate(-50%,-50%);
+    }
+    .label-guide{
+      left:77%;
+      top:54%;
+      transform:translate(-50%,-50%);
+    }
+    .label-home{
+      left:50%;
+      top:77%;
+      transform:translate(-50%,-50%);
+    }
 
     .mapLink{
       position:absolute;
@@ -268,12 +342,12 @@
     .mapLink::after{
       content:"";
       position:absolute;
-      inset:12%;
+      inset:10%;
       border-radius:999px;
       opacity:0;
-      box-shadow:0 0 22px rgba(255,255,255,.8);
+      box-shadow:0 0 30px rgba(255,255,255,.9);
       transition:opacity .18s ease, transform .18s ease;
-      transform:scale(.92);
+      transform:scale(.9);
     }
     .mapLink:hover::after,
     .mapLink:active::after{
@@ -288,139 +362,183 @@
       height:18px;
       border-radius:999px;
       background:#d51d2a;
-      box-shadow:0 0 18px rgba(255,0,0,.9);
+      box-shadow:0 0 18px rgba(255,0,0,.95);
       left:50%;
       top:50%;
-      transform:translate(-50%, -50%);
-      z-index:2;
+      transform:translate(-50%,-50%);
+      z-index:3;
     }
 
     .mapLink.home{
-      left:41%;
-      top:68%;
-      width:18%;
-      height:18%;
+      left:39%;
+      top:63%;
+      width:22%;
+      height:22%;
     }
     .mapLink.character{
-      left:15%;
-      top:42%;
-      width:22%;
-      height:22%;
+      left:13%;
+      top:37%;
+      width:24%;
+      height:24%;
     }
     .mapLink.story{
-      left:39%;
-      top:18%;
-      width:22%;
-      height:22%;
+      left:38%;
+      top:13%;
+      width:24%;
+      height:24%;
     }
     .mapLink.guide{
-      right:15%;
-      top:42%;
-      width:22%;
-      height:22%;
+      right:13%;
+      top:37%;
+      width:24%;
+      height:24%;
+    }
+
+    .mapLink.loading::after{
+      opacity:1;
+      transform:scale(1.12);
+      box-shadow:0 0 42px rgba(255,255,255,.95);
     }
 
     .bgm-btn{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 900;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,.20);
-      border-radius: 999px;
-      background: rgba(20,20,20,.72);
-      color: #fff;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:900;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.20);
+      border-radius:999px;
+      background:rgba(20,20,20,.72);
+      color:#fff;
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
     }
-    .bgm-btn:active{ transform: scale(.98); }
-    .bgm-dot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.35); }
-    .bgm-btn.on .bgm-dot{ background: rgba(120,255,180,.95); }
+    .bgm-btn:active{ transform:scale(.98); }
+    .bgm-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.35);
+    }
+    .bgm-btn.on .bgm-dot{ background:rgba(120,255,180,.95); }
     .bgm-btn small{ font-weight:700; opacity:.92; }
 
     .footer{
-      position: relative;
-      z-index: 5;
-      padding: 44px 16px 56px;
-      text-align: center;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-top: 1px solid rgba(255,255,255,.10);
+      position:relative;
+      z-index:5;
+      padding:44px 16px 56px;
+      text-align:center;
+      background:rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      border-top:1px solid rgba(255,255,255,.10);
     }
     .footer-inner{
-      max-width: 960px;
-      margin: 0 auto;
+      max-width:960px;
+      margin:0 auto;
     }
     .footer-logo{
-      width: min(64vw, 260px);
-      height: auto;
-      display: block;
-      margin: 0 auto 18px;
-      opacity: .92;
-      filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
+      width:min(64vw,260px);
+      height:auto;
+      display:block;
+      margin:0 auto 18px;
+      opacity:.92;
+      filter:drop-shadow(0 8px 28px rgba(0,0,0,.45));
     }
     .footer-title{
-      margin: 0 0 10px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      font-size: 13px;
-      color: rgba(255,255,255,.78);
+      margin:0 0 10px;
+      font-weight:800;
+      letter-spacing:.08em;
+      font-size:13px;
+      color:rgba(255,255,255,.78);
     }
     .footer-sns{
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin: 12px 0 6px;
+      display:flex;
+      justify-content:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin:12px 0 6px;
     }
     .share{
-      margin: 10px 0 18px;
-      display: grid;
-      gap: 10px;
-      justify-items: center;
+      margin:10px 0 18px;
+      display:grid;
+      gap:10px;
+      justify-items:center;
     }
     .share-row{
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      justify-content:center;
     }
     .sns-btn{
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color: #fff;
-      text-decoration: none;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      text-decoration:none;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease;
     }
-    .sns-btn:active{ transform: scale(.98); }
+    .sns-btn:active{ transform:scale(.98); }
     .sns-btn:hover{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.28);
+      background:rgba(255,255,255,.10);
+      border-color:rgba(255,255,255,.28);
     }
     .icon-img{
-      width: 22px;
-      height: 22px;
-      object-fit: contain;
-      display: block;
-      opacity: .92;
+      width:22px;
+      height:22px;
+      object-fit:contain;
+      display:block;
+      opacity:.92;
     }
     .footer-note{
-      margin-top: 18px;
-      font-size: 12px;
-      color: rgba(255,255,255,.60);
-      letter-spacing: .03em;
+      margin-top:18px;
+      font-size:12px;
+      color:rgba(255,255,255,.60);
+      letter-spacing:.03em;
+    }
+
+    @media(max-width:520px){
+      .mapPanel{
+        width:min(96vw,620px);
+      }
+      .mapTitleFrame{
+        top:4.8%;
+        min-width:50%;
+        padding:5px 12px 6px;
+      }
+      .placeLabel{
+        min-width:78px;
+        padding:5px 8px 6px;
+      }
+      .label-story{ top:26.5%; }
+      .label-character{ left:22%; top:55%; }
+      .label-guide{ left:78%; top:55%; }
+      .label-home{ top:77%; }
+      .mapNote{ bottom:4.8%; }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .splash,
+      .splash-inner,
+      .hero,
+      .mapOverlay,
+      .mapPanel,
+      .mapLink::after{
+        transition:none;
+        animation:none;
+      }
+      .hero.map-opening::after{ animation:none; opacity:0; }
     }
   </style>
 </head>
@@ -442,18 +560,36 @@
     <button class="menu-btn" id="menuBtn" aria-label="神殿案内図を開く">☰</button>
   </header>
 
-  <!-- 神殿案内図 -->
   <div id="mapOverlay" class="mapOverlay" aria-hidden="true">
     <button class="mapClose" id="mapClose" type="button" aria-label="神殿案内図を閉じる">✕</button>
 
     <div class="mapPanel" role="dialog" aria-modal="true" aria-label="神殿案内図">
-      <div class="mapTitle">神殿案内図</div>
+      <img class="mapBase" src="/images/chizu/chizu.webp" alt="">
+      <img class="mapSandou" src="/images/chizu/sandou.webp" alt="">
 
-      <img class="mapLayer shinden" src="/images/chizu/shinden.webp" alt="">
-      <img class="mapLayer sandou" src="/images/chizu/sandou.webp" alt="">
-      <img class="mapLayer meibo" src="/images/chizu/meibo.webp" alt="">
-      <img class="mapLayer shiryou" src="/images/chizu/shiryou.webp" alt="">
-      <img class="mapLayer torii" src="/images/chizu/torii.webp" alt="">
+      <div class="mapTitleFrame">
+        <div class="mapTitle">神殿案内図</div>
+      </div>
+
+      <div class="placeLabel label-story">
+        <span class="en">Story</span>
+        <span class="jp">聖堂</span>
+      </div>
+
+      <div class="placeLabel label-character">
+        <span class="en">Character</span>
+        <span class="jp">名簿録</span>
+      </div>
+
+      <div class="placeLabel label-guide">
+        <span class="en">Guide</span>
+        <span class="jp">資料庫</span>
+      </div>
+
+      <div class="placeLabel label-home">
+        <span class="en">Home</span>
+        <span class="jp">神殿入口</span>
+      </div>
 
       <a class="mapLink home current" href="/" aria-label="神殿入口 Home"></a>
       <a class="mapLink character" href="/character/" aria-label="名簿録 Character"></a>
@@ -564,6 +700,15 @@
       if(e.key === "Escape" && mapOverlay.classList.contains("open")){
         closeMap();
       }
+    });
+
+    document.querySelectorAll(".mapLink").forEach(link=>{
+      link.addEventListener("click", e=>{
+        e.preventDefault();
+        const href = link.getAttribute("href");
+        link.classList.add("loading");
+        setTimeout(()=>{ location.href = href; }, 220);
+      });
     });
 
     const bgm = document.getElementById("bgm");
