@@ -491,12 +491,22 @@ body.glitching::after{
 @keyframes heroIn{
   from{
     opacity:0;
-    transform:translateX(calc(var(--shift) - 42px)) scale(var(--zoom));
+    transform:
+      translate(
+        calc(var(--shift) - 42px),
+        var(--down)
+      )
+      scale(var(--zoom));
     filter:blur(4px);
   }
   to{
     opacity:1;
-    transform:translateX(var(--shift)) scale(var(--zoom));
+    transform:
+      translate(
+        var(--shift),
+        var(--down)
+      )
+      scale(var(--zoom));
     filter:blur(0);
   }
 }
@@ -504,13 +514,24 @@ body.glitching::after{
 @keyframes heroOut{
   from{
     opacity:1;
-    transform:translateX(var(--shift)) scale(var(--zoom));
+    transform:
+      translate(
+        var(--shift),
+        var(--down)
+      )
+      scale(var(--zoom));
   }
   to{
     opacity:0;
-    transform:translateX(calc(var(--shift) + 44px)) scale(var(--zoom));
+    transform:
+      translate(
+        calc(var(--shift) + 44px),
+        var(--down)
+      )
+      scale(var(--zoom));
     filter:blur(4px);
   }
+}
 }
 .seasonBtns{
   display:flex;
@@ -757,16 +778,16 @@ footer{
   position:relative;
 }
 
-.profileHero img.s1Zoom{
-  width:100%;
-  left:0;
+.profileHeroImg.s1Zoom{
+  --zoom:1;
+  --shift:0%;
+  --down:0%;
 }
 
-.profileHero img.s2Zoom{
-  width:130% !important;
-  max-width:none !important;
-  height:100%;
-  left:-16%;
+.profileHero Img.s2Zoom{
+  --zoom:1.5;
+  --shift:-20%;
+  --down:35%;
 }
 </style>
 </head>
