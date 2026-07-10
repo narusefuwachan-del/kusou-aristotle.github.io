@@ -1136,6 +1136,13 @@ if(idx === 11){
   refreshInfoAnimation();
 
   const src=season==="s2"?heroS2[idx]:heroS1[idx];
+  heroImg.classList.remove("s1Zoom","s2Zoom");
+
+if(season==="s2"){
+  heroImg.classList.add("s2Zoom");
+}else{
+  heroImg.classList.add("s1Zoom");
+}
   if(animate) switchHero(src);
   else{
     heroImg.src=src;
