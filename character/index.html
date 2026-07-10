@@ -1,649 +1,606 @@
 <!doctype html>
-
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Character | 空想世界アリストテレス</title>
-  <link rel="icon" href="/favicon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Character | 空想世界アリストテレス</title>
+<link rel="icon" href="/favicon.png">
 
-  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
-  <style>
-    @font-face{
-      font-family: "Kazuki Reiwa";
-      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
-  </style>
+<style>
+@font-face{
+  font-family:"Kazuki Reiwa";
+  src:url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+  font-weight:300;
+  font-style:normal;
+  font-display:swap;
+}
 
-  <style>
-    *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Kazuki Reiwa",serif;
+  background:#0b0b0f;
+  color:#fff;
+  overflow-x:hidden;
+  animation:pageFade .45s ease both;
+}
+@keyframes pageFade{
+  from{opacity:0;filter:blur(4px)}
+  to{opacity:1;filter:blur(0)}
+}
 
-    body{
-      font-family:"Kazuki Reiwa", serif;
-      background:#0b0b0f;
-      color:#fff;
-      overflow-x:hidden;
-    }
+.header{
+  position:sticky;
+  top:0;
+  z-index:60;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.site-title{
+  font-size:18px;
+  letter-spacing:.08em;
+  color:#fff;
+  text-decoration:none;
+}
+.menu-btn{
+  font-size:22px;
+  background:none;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+}
 
-    /* ===== header ===== */
-    .header{
-      position:sticky;
-      top:0;
-      z-index:60;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:12px 16px;
-      background:rgba(0,0,0,.4);
-      backdrop-filter:blur(8px);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .site-title{
-      font-size:18px;
-      letter-spacing:.08em;
-      color:#fff;
-      text-decoration:none;
-    }
-    .menu-btn{
-      font-size:22px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
-    }
+/* ===== 神殿案内図 ===== */
+.mapOverlay{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.76);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+  display:grid;
+  place-items:center;
+  padding:18px;
+}
+.mapOverlay.open{opacity:1;pointer-events:auto}
+.mapPanel{
+  position:relative;
+  width:min(96vw,720px);
+  aspect-ratio:1/1;
+  opacity:0;
+  transform:scale(.96);
+  transition:opacity .42s ease,transform .42s ease;
+  filter:drop-shadow(0 24px 80px rgba(0,0,0,.75));
+}
+.mapOverlay.open .mapPanel{opacity:1;transform:scale(1)}
+.mapBase,.mapSandou{
+  position:absolute;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.mapBase{
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  z-index:1;
+}
+.mapSandou{
+  left:50%;
+  top:50%;
+  width:30%;
+  height:auto;
+  transform:translate(-50%,-50%);
+  z-index:4;
+  filter:drop-shadow(0 0 16px rgba(255,255,255,.22));
+}
+.mapCross{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:54%;
+  height:54%;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  pointer-events:none;
+}
+.mapCross::before,.mapCross::after{
+  content:"";
+  position:absolute;
+  background:rgba(255,255,255,.78);
+  box-shadow:0 0 16px rgba(255,255,255,.55);
+  border-radius:999px;
+}
+.mapCross::before{left:50%;top:0;width:2px;height:100%;transform:translateX(-50%)}
+.mapCross::after{left:0;top:50%;width:100%;height:2px;transform:translateY(-50%)}
+.mapCrossCenter{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:3;
+  width:28px;
+  height:28px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:0 0 16px rgba(255,255,255,.45);
+  pointer-events:none;
+}
+.mapTitleFrame{
+  position:absolute;
+  left:50%;
+  top:4%;
+  transform:translateX(-50%);
+  z-index:20;
+  min-width:48%;
+  padding:6px 16px 7px;
+  border:1px solid rgba(255,255,255,.42);
+  background:rgba(0,0,0,.34);
+  text-align:center;
+  pointer-events:none;
+}
+.mapTitle{
+  font-size:clamp(16px,3.8vw,28px);
+  letter-spacing:.18em;
+  white-space:nowrap;
+}
+.mapNote{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:5.5%;
+  z-index:20;
+  text-align:center;
+  font-size:clamp(10px,2.5vw,14px);
+  letter-spacing:.08em;
+  opacity:.78;
+  pointer-events:none;
+}
+.mapClose{
+  position:fixed;
+  top:14px;
+  right:16px;
+  z-index:1010;
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(0,0,0,.45);
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+}
+.placeLabel{
+  position:absolute;
+  z-index:22;
+  min-width:90px;
+  padding:6px 10px 7px;
+  border:1px solid rgba(255,255,255,.38);
+  background:rgba(0,0,0,.42);
+  text-align:center;
+  pointer-events:none;
+}
+.placeLabel .en{
+  display:block;
+  font-size:11px;
+  letter-spacing:.18em;
+  opacity:.68;
+  line-height:1.15;
+}
+.placeLabel .jp{
+  display:block;
+  margin-top:2px;
+  font-size:15px;
+  letter-spacing:.16em;
+  line-height:1.2;
+}
+.label-story{left:50%;top:31%;transform:translate(-50%,-50%)}
+.label-character{left:22%;top:64%;transform:translate(-50%,-50%)}
+.label-guide{left:78%;top:64%;transform:translate(-50%,-50%)}
+.label-home{left:50%;top:84%;transform:translate(-50%,-50%)}
+.mapLink{
+  position:absolute;
+  z-index:30;
+  display:block;
+  border-radius:999px;
+  -webkit-tap-highlight-color:transparent;
+}
+.mapLink::after{
+  content:"";
+  position:absolute;
+  inset:10%;
+  border-radius:999px;
+  opacity:0;
+  box-shadow:0 0 30px rgba(255,255,255,.9);
+  transition:.18s ease;
+  transform:scale(.9);
+}
+.mapLink:hover::after,.mapLink:active::after{opacity:1;transform:scale(1)}
+.mapLink.current::before{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  background:#d51d2a;
+  box-shadow:0 0 18px rgba(255,0,0,.95);
+  left:50%;
+  top:72%;
+  transform:translate(-50%,-50%);
+  z-index:3;
+}
+.mapLink.home{left:39%;top:63%;width:22%;height:22%}
+.mapLink.character{left:7%;top:37%;width:24%;height:28%}
+.mapLink.story{left:38%;top:13%;width:24%;height:24%}
+.mapLink.guide{right:7%;top:37%;width:24%;height:26%}
 
-    /* ===== hamburger ===== */
-    .overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      opacity:0;
-      pointer-events:none;
-      transition:.25s;
-      z-index:1000;
-    }
-    .overlay.open{ opacity:1; pointer-events:auto; }
+/* ===== glitch ===== */
+body.glitching::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:999;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(255,0,80,.22),transparent 32%,rgba(0,255,255,.18)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.20) 0px,rgba(255,255,255,.20) 1px,transparent 2px,transparent 6px);
+  mix-blend-mode:screen;
+  animation:realGlitch .38s steps(2,end) 1;
+}
+body.glitching::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  pointer-events:none;
+  background:rgba(0,0,0,.28);
+  animation:glitchDark .38s steps(2,end) 1;
+}
+@keyframes realGlitch{
+  0%{opacity:0;transform:translate(0,0)}
+  18%{opacity:.95;transform:translate(-6px,2px)}
+  34%{opacity:.45;transform:translate(7px,-2px)}
+  52%{opacity:.85;transform:translate(-3px,-4px)}
+  72%{opacity:.55;transform:translate(4px,3px)}
+  100%{opacity:0;transform:translate(0,0)}
+}
+@keyframes glitchDark{0%{opacity:0}30%{opacity:.7}60%{opacity:.3}100%{opacity:0}}
 
-    nav.menu{
-      position:fixed;
-      top:0;
-      right:0;
-      width:320px;
-      max-width:80vw;
-      height:100vh;
-      background:rgba(0,0,0,.88);
-      backdrop-filter:blur(10px);
-      transform:translateX(100%);
-      transition:.25s;
-      z-index:1001;
-      padding:20px 16px;
-    }
-    nav.menu.open{ transform:translateX(0); }
+/* ===== page ===== */
+.container{
+  max-width:1180px;
+  margin:0 auto;
+  padding:56px 16px 80px;
+  text-align:center;
+}
+.title-ruby{
+  font-size:13px;
+  letter-spacing:.35em;
+  opacity:.55;
+  margin-bottom:6px;
+}
+.page-title{
+  font-size:40px;
+  letter-spacing:.16em;
+  margin:0;
+  font-weight:300;
+}
+.switch{
+  display:flex;
+  margin:34px auto 28px;
+  max-width:360px;
+  border:1px solid rgba(255,255,255,.25);
+}
+.switch button{
+  flex:1;
+  padding:14px 0;
+  background:none;
+  border:none;
+  color:#fff;
+  font-family:inherit;
+  letter-spacing:.22em;
+  cursor:pointer;
+}
+.switch button.active{
+  background:#1aa5a5;
+  color:#000;
+}
 
-    .menu-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border-bottom:1px solid rgba(255,255,255,.15);
-      padding-bottom:10px;
-      margin-bottom:10px;
-    }
-    .menu-title{ letter-spacing:.2em; }
-    .close-btn{
-      font-size:20px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
-    }
-    nav.menu a{
-      display:block;
-      padding:14px 6px;
-      color:#fff;
-      text-decoration:none;
-      letter-spacing:.14em;
-      border-bottom:1px solid rgba(255,255,255,.1);
-    }
+.characterSelect{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:10px;
+  max-width:900px;
+  margin:0 auto 34px;
+  animation:fadeUp .35s ease both;
+}
+.selectBtn{
+  position:relative;
+  aspect-ratio:1/1;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.04);
+  padding:0;
+  cursor:pointer;
+  overflow:hidden;
+  border-radius:10px;
+  transition:.18s ease;
+}
+.selectBtn img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.selectBtn.active{
+  border-color:var(--accent);
+  box-shadow:0 0 24px color-mix(in srgb,var(--accent) 70%,transparent);
+  transform:translateY(-2px);
+}
+.selectBtn:active{transform:scale(.98)}
+.subPreparing{
+  opacity:.6;
+  letter-spacing:.25em;
+  padding:80px 0;
+  animation:fadeUp .35s ease both;
+}
 
-    /* ===== page (LIST) ===== */
-    .container{
-      max-width:1100px;
-      margin:0 auto;
-      padding:56px 16px 80px;
-      text-align:center;
-    }
+/* ===== profile layout ===== */
+.profileArea{
+  --accent:#4fbfc2;
+  display:none;
+  max-width:1080px;
+  margin:0 auto;
+  animation:fadeUp .45s ease both;
+}
+.profileArea.open{display:block}
+.profileCard{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(10,10,14,.88);
+  border-radius:18px;
+  box-shadow:0 24px 90px rgba(0,0,0,.55);
+  overflow:hidden;
+  padding:18px;
+}
+.profileMain{
+  display:grid;
+  grid-template-columns:1fr 1.05fr;
+  gap:20px;
+  align-items:center;
+}
+.profileInfo{
+  text-align:left;
+  min-width:0;
+}
+.profileNo{
+  color:var(--accent);
+  opacity:.85;
+  letter-spacing:.24em;
+  font-size:14px;
+}
+.nameImg{
+  width:min(420px,90%);
+  height:auto;
+  display:block;
+  margin:10px 0 18px;
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,.45));
+}
+.profileMeta{
+  border-left:1px solid color-mix(in srgb,var(--accent) 70%,transparent);
+  padding-left:14px;
+  color:rgba(255,255,255,.82);
+  white-space:pre-line;
+  line-height:1.9;
+  letter-spacing:.06em;
+}
+.profileHero{
+  position:relative;
+  min-height:420px;
+  overflow:hidden;
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+}
+.profileHero img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.profileHeroImg{
+  opacity:0;
+  transform:translateX(-32px);
+}
+.profileHeroImg.enter{
+  animation:heroIn .42s ease both;
+}
+.profileHeroImg.exit{
+  animation:heroOut .3s ease both;
+}
+@keyframes heroIn{
+  from{opacity:0;transform:translateX(-36px);filter:blur(4px)}
+  to{opacity:1;transform:translateX(0);filter:blur(0)}
+}
+@keyframes heroOut{
+  from{opacity:1;transform:translateX(0)}
+  to{opacity:0;transform:translateX(38px);filter:blur(4px)}
+}
+.profileText{
+  margin-top:18px;
+  text-align:left;
+  border-top:1px solid color-mix(in srgb,var(--accent) 55%,transparent);
+  padding-top:16px;
+  color:color-mix(in srgb,var(--accent) 80%,white 20%);
+  white-space:pre-line;
+  line-height:1.95;
+  letter-spacing:.05em;
+  animation:fadeUp .3s ease both;
+}
+.seasonBtns{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  margin-top:18px;
+}
+.seasonBtn{
+  min-width:92px;
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--accent) 70%,white 10%);
+  background:rgba(255,255,255,.04);
+  color:var(--accent);
+  font-family:inherit;
+  letter-spacing:.18em;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.seasonBtn.active{
+  background:var(--accent);
+  color:#000;
+  box-shadow:0 0 24px color-mix(in srgb,var(--accent) 70%,transparent);
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
-    .title-ruby{
-      font-size:13px;
-      letter-spacing:.35em;
-      opacity:.55;
-      margin-bottom:6px;
-    }
-    .page-title{
-      font-size:40px;
-      letter-spacing:.16em;
-      margin:0;
-      font-weight:300;
-    }
+footer{
+  padding:48px 16px 56px;
+  text-align:center;
+  background:rgba(0,0,0,.35);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.footer-logo{
+  width:min(260px,70vw);
+  margin:0 auto 18px;
+  display:block;
+}
+.footer-note{
+  font-size:12px;
+  opacity:.6;
+  line-height:1.7;
+  letter-spacing:.06em;
+}
 
-    /* ===== switch ===== */
-    .switch{
-      display:flex;
-      margin:44px auto 36px;
-      max-width:360px;
-      border:1px solid rgba(255,255,255,.25);
-    }
-    .switch button{
-      flex:1;
-      padding:14px 0;
-      background:none;
-      border:none;
-      color:#fff;
-      font-family:inherit;
-      letter-spacing:.22em;
-      cursor:pointer;
-    }
-    .switch button.active{
-      background:#1aa5a5;
-      color:#000;
-    }
+/* password */
+.lockOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.74);
+  opacity:0;
+  pointer-events:none;
+  transition:.22s ease;
+  z-index:2000;
+}
+.lockOverlay.open{opacity:1;pointer-events:auto}
+.lockBox{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+  z-index:2001;
+  opacity:0;
+  pointer-events:none;
+  transition:.22s ease;
+}
+.lockBox.open{opacity:1;pointer-events:auto}
+.lockCard{
+  width:min(92vw,420px);
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(10,10,14,.92);
+  backdrop-filter:blur(10px);
+  border-radius:16px;
+  padding:18px 16px 16px;
+  box-shadow:0 20px 70px rgba(0,0,0,.55);
+  text-align:left;
+}
+.lockTitle{
+  font-size:13px;
+  letter-spacing:.22em;
+  opacity:.75;
+  margin:0 0 10px;
+}
+.lockRow{display:flex;align-items:center;gap:12px}
+.lockLabel{
+  font-size:12px;
+  letter-spacing:.18em;
+  opacity:.65;
+  min-width:86px;
+}
+.lockField{
+  flex:1;
+  height:44px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+  font-size:18px;
+  letter-spacing:.22em;
+}
+.cursor{
+  width:10px;
+  height:18px;
+  margin-left:2px;
+  background:rgba(255,255,255,.8);
+  animation:blink 1s steps(1,end) infinite;
+  display:inline-block;
+}
+@keyframes blink{50%{opacity:0}}
+.lockStatus{
+  margin-top:12px;
+  font-size:12px;
+  letter-spacing:.18em;
+  opacity:.7;
+}
+.lockStatus.ok{color:#8fffe6;opacity:.95}
 
-    /* ===== grid ===== */
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-    }
-    @media(min-width:700px){
-      .grid{ grid-template-columns:repeat(4,1fr); }
-    }
-    .card{
-      position:relative;
-      aspect-ratio:3/2;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.25);
-      overflow:hidden;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .card:hover{
-      border-color: rgba(255,255,255,.40);
-      background: rgba(255,255,255,.06);
-    }
-    .card:active{ transform: scale(.99); }
-    .card img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .num{
-      position:absolute;
-      right:12px;
-      bottom:8px;
-      font-size:32px;
-      opacity:.85;
-      letter-spacing:.1em;
-      pointer-events:none;
-    }
-
-    /* ===== footer ===== */
-    footer{
-      padding:48px 16px 56px;
-      text-align:center;
-      background:rgba(0,0,0,.35);
-      border-top:1px solid rgba(255,255,255,.1);
-    }
-    .footer-logo{
-      width:min(260px,70vw);
-      margin:0 auto 18px;
-      display:block;
-    }
-    .footer-note{
-      font-size:12px;
-      opacity:.6;
-      line-height:1.7;
-      letter-spacing:.06em;
-    }
-
-    /* =========================================================
-       Password Overlay  ✅消さない
-    ========================================================= */
-    .lockOverlay{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.74);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-      z-index: 2000;
-    }
-    .lockOverlay.open{ opacity:1; pointer-events:auto; }
-
-    .lockBox{
-      position:fixed;
-      inset:0;
-      display:grid;
-      place-items:center;
-      z-index: 2001;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-    }
-    .lockBox.open{ opacity:1; pointer-events:auto; }
-
-    .lockCard{
-      width: min(92vw, 420px);
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(10,10,14,.92);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 18px 16px 16px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.55);
-      text-align: left;
-    }
-    .lockTitle{
-      font-size: 13px;
-      letter-spacing: .22em;
-      opacity: .75;
-      margin: 0 0 10px;
-    }
-    .lockRow{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-    }
-    .lockLabel{
-      font-size: 12px;
-      letter-spacing: .18em;
-      opacity: .65;
-      min-width: 86px;
-    }
-    .lockField{
-      flex:1;
-      height: 44px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      padding: 0 12px;
-      font-size: 18px;
-      letter-spacing: .22em;
-    }
-    .cursor{
-      width: 10px;
-      height: 18px;
-      margin-left: 2px;
-      background: rgba(255,255,255,.8);
-      animation: blink 1s steps(1,end) infinite;
-      display:inline-block;
-    }
-    @keyframes blink{ 50%{ opacity:0; } }
-    .lockStatus{
-      margin-top: 12px;
-      font-size: 12px;
-      letter-spacing: .18em;
-      opacity: .7;
-    }
-    .lockStatus.ok{
-      color: #8fffe6;
-      opacity: .95;
-    }
-
-    /* =========================================================
-       Profile Page (FULLSCREEN) ✅モーダルじゃない
-    ========================================================= */
-    .profilePage{
-      --accent:#4fbfc2;
-      display:none; /* 初期は隠す */
-      min-height: calc(100vh - 56px);
-      padding: 14px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .profilePage.open{ display:block; }
-
-    .profileShell{
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(10,10,14,.92);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 24px 90px rgba(0,0,0,.55);
-      overflow:hidden;
-
-      display:flex;
-      flex-direction:column;
-      min-height: calc(100vh - 56px - 28px);
-    }
-
-    .profileTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.35);
-      flex: 0 0 auto;
-    }
-    .profileTitle{
-      letter-spacing: .18em;
-      font-size: 13px;
-      opacity: .88;
-      display:flex;
-      align-items:baseline;
-      gap:10px;
-    }
-    .profileNo{
-      opacity:.75;
-      letter-spacing:.22em;
-    }
-    .profileClose{
-      font-size: 20px;
-      background:none;
-      border:none;
-      color:#fff;
-      cursor:pointer;
-      padding: 6px 10px;
-      border-radius: 10px;
-    }
-
-    .profileBody{
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 14px;
-      flex: 1 1 auto;
-      min-height: 0;
-    }
-
-    /* ========== 上段：君が作る画像枠 ========== */
-    .hero{
-      position:relative;
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-    }
-    .hero img{
-      width:100%;
-      height:auto;
-      display:block;
-    }
-
-    .heroFade{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height: 18%;
-      pointer-events:none;
-      background: linear-gradient(
-        to bottom,
-        rgba(10,10,14,0) 0%,
-        rgba(10,10,14,.55) 55%,
-        rgba(10,10,14,.92) 85%,
-        rgba(10,10,14,1) 100%
-      );
-    }
-
-    .heroTools{
-      position:absolute;
-      top:10px;
-      right:10px;
-      display:flex;
-      gap:8px;
-      z-index:2;
-    }
-    .s2btn{
-      width: 56px;
-      height: 56px;
-      border-radius: 999px;
-      border: none;
-      background: var(--accent);
-      color: #000;
-      font-family: inherit;
-      font-weight: 300;
-      letter-spacing: .14em;
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      display:grid;
-      place-items:center;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.08) inset,
-        0 18px 50px rgba(0,0,0,.45);
-      transition: transform .12s ease, filter .12s ease;
-      user-select:none;
-    }
-    .s2btn:hover{ filter: brightness(1.05) saturate(1.05); }
-    .s2btn:active{ transform: scale(.98); }
-
-    .glitchLayer{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:0;
-      mix-blend-mode: screen;
-      background:
-        repeating-linear-gradient(
-          0deg,
-          rgba(255,255,255,.08) 0px,
-          rgba(255,255,255,.08) 1px,
-          rgba(0,0,0,0) 2px,
-          rgba(0,0,0,0) 4px
-        );
-      filter: blur(0.6px);
-      transform: translateZ(0);
-    }
-    .hero.glitching .glitchLayer{
-      animation: glitch 420ms steps(2,end) 1;
-      opacity: .9;
-    }
-    .hero.glitching img{
-      animation: blurpop 420ms ease 1;
-    }
-    @keyframes glitch{
-      0%{ transform: translate(0,0); }
-      20%{ transform: translate(-3px, 1px); }
-      40%{ transform: translate(2px, -1px); }
-      60%{ transform: translate(-2px, -1px); }
-      80%{ transform: translate(3px, 1px); }
-      100%{ transform: translate(0,0); }
-    }
-    @keyframes blurpop{
-      0%{ filter: blur(0px) saturate(1); }
-      30%{ filter: blur(2.2px) saturate(1.35); }
-      100%{ filter: blur(0px) saturate(1); }
-    }
-
-    /* ========== 下段：説明UI（テーマカラー反映） ========== */
-    .info{
-      margin-top: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
-      overflow:hidden;
-    }
-    .infoHeader{
-      padding: 12px 12px 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.22);
-    }
-
-    .nameImg{
-      width: min(320px, 78vw);
-      height:auto;
-      display:block;
-      margin: 2px 0 2px;
-      filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));
-    }
-
-    .accentLine{
-      height: 1px;
-      background: rgba(255,255,255,.08);
-      box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset;
-      position: relative;
-    }
-    .accentLine::after{
-      content:"";
-      position:absolute;
-      left:0; right:0; top:0; bottom:0;
-      background: linear-gradient(90deg,
-        color-mix(in srgb, var(--accent) 78%, transparent),
-        transparent 70%);
-      opacity:.95;
-      pointer-events:none;
-    }
-
-    .infoBody{
-      padding: 12px 12px 14px;
-      text-align:left;
-      line-height:1.85;
-      letter-spacing:.05em;
-      font-size: 14px;
-    }
-
-    .desc{
-      color: color-mix(in srgb, var(--accent) 92%, white 8%);
-      opacity: .95;
-    }
-
-    .meta{
-      margin-top: 10px;
-      color: rgba(255,255,255,.78);
-      font-size: 12px;
-      line-height:1.8;
-    }
-
-    .navRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:6px;
-      padding: 10px 10px 12px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.20);
-      flex-wrap: nowrap;
-      min-width: 0;
-      position: sticky;
-      bottom: 0;
-      backdrop-filter: blur(10px);
-    }
-    .navSide{
-      display:flex;
-      gap:6px;
-      align-items:center;
-      min-width: 0;
-      flex: 0 0 auto;
-    }
-
-    .navBtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-
-      border: none;
-      background: rgba(255,255,255,.06);
-      color: color-mix(in srgb, var(--accent) 88%, white 12%);
-      font-size: 16px;
-
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.08) inset,
-        0 10px 30px rgba(0,0,0,.35);
-      transition: transform .12s ease, background .12s ease;
-    }
-    .navBtn:hover{ background: rgba(255,255,255,.10); }
-    .navBtn:active{ transform: scale(.98); }
-    .navBtn[aria-disabled="true"]{
-      opacity:.25;
-      pointer-events:none;
-    }
-
-    .backBtn{
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:.06em;
-      min-width: 0;
-
-      padding: 12px 10px;
-      border-radius: 999px;
-
-      border: none;
-      background: rgba(255,255,255,.05);
-      color: color-mix(in srgb, var(--accent) 92%, white 8%);
-
-      font-size: 15px;
-      white-space: nowrap;
-      flex: 1 1 auto;
-      max-width: 100%;
-
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.08) inset,
-        0 10px 30px rgba(0,0,0,.30);
-      transition: transform .12s ease, background .12s ease;
-    }
-    .backBtn:hover{ background: rgba(255,255,255,.08); }
-    .backBtn:active{ transform: scale(.98); }
-
-    .backBtn .text{ letter-spacing:.14em; }
-    .backBtn .arrow{ letter-spacing:0; margin:0; }
-
-    @media (max-width: 360px){
-      .backBtn{
-        font-size: 13px;
-        padding: 11px 8px;
-      }
-      .navBtn{ width: 42px; height: 42px; }
-      .navRow{ gap:4px; }
-      .navSide{ gap:4px; }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .lockOverlay,.lockBox{ transition:none; }
-      .cursor{ animation:none; }
-      .hero.glitching .glitchLayer, .hero.glitching img{ animation:none; }
-    }
-  </style>
+@media(max-width:760px){
+  .characterSelect{grid-template-columns:repeat(7,1fr);gap:6px}
+  .profileMain{grid-template-columns:1fr}
+  .profileHero{min-height:320px}
+  .page-title{font-size:32px}
+}
+</style>
 </head>
 
 <body>
 
 <header class="header">
   <a href="/" class="site-title">空想世界アリストテレス</a>
-  <button class="menu-btn" id="menuBtn">☰</button>
+  <button class="menu-btn" id="menuBtn" aria-label="神殿案内図を開く">☰</button>
 </header>
 
-<div class="overlay" id="overlay"></div>
-<nav class="menu" id="menu" aria-hidden="true">
-  <div class="menu-top">
-    <div class="menu-title">MENU</div>
-    <button class="close-btn" id="closeBtn" aria-label="閉じる">✕</button>
-  </div>
-  <a href="/">Home</a>
-  <a href="/character/">Character</a>
-  <a href="/story/">Story</a>
-  <a href="/guide/">Guide</a>
-</nav>
+<div id="mapOverlay" class="mapOverlay" aria-hidden="true">
+  <button class="mapClose" id="mapClose" type="button">✕</button>
+  <div class="mapPanel">
+    <img class="mapBase" src="/images/chizu/chizu.webp" alt="">
+    <div class="mapCross"></div>
+    <div class="mapCrossCenter"></div>
+    <img class="mapSandou" src="/images/chizu/sandou.webp" alt="">
 
-<!-- ============== LIST PAGE ============== -->
-<main class="container" id="listPage">
+    <div class="mapTitleFrame"><div class="mapTitle">神殿案内図</div></div>
+
+    <div class="placeLabel label-story"><span class="en">Story</span><span class="jp">聖堂</span></div>
+    <div class="placeLabel label-character"><span class="en">Character</span><span class="jp">名簿録</span></div>
+    <div class="placeLabel label-guide"><span class="en">Guide</span><span class="jp">資料庫</span></div>
+    <div class="placeLabel label-home"><span class="en">Home</span><span class="jp">神殿入口</span></div>
+
+    <a class="mapLink home" href="/"></a>
+    <a class="mapLink character current" href="/character/"></a>
+    <a class="mapLink story" href="/story/"></a>
+    <a class="mapLink guide" href="/guide/"></a>
+
+    <div class="mapNote">※アイコンを選択するとページへ移動します</div>
+  </div>
+</div>
+
+<main class="container">
   <div class="title-ruby">character</div>
   <h1 class="page-title">空想世界 名簿記録</h1>
 
@@ -652,10 +609,33 @@
     <button id="btnSub">SUB</button>
   </div>
 
-  <div id="grid" class="grid"></div>
+  <div id="characterSelect" class="characterSelect"></div>
+
+  <section id="profileArea" class="profileArea" aria-hidden="true">
+    <div class="profileCard" id="profileCard">
+      <div class="profileMain">
+        <div class="profileInfo">
+          <div class="profileNo" id="profileNo">NO.01</div>
+          <img id="nameImg" class="nameImg" src="" alt="">
+          <div id="metaText" class="profileMeta"></div>
+        </div>
+
+        <div class="profileHero" id="profileHero">
+          <img id="heroImg" class="profileHeroImg" src="" alt="">
+        </div>
+      </div>
+
+      <div id="descText" class="profileText"></div>
+
+      <div class="seasonBtns">
+        <button id="btnS1" class="seasonBtn active" type="button">S1</button>
+        <button id="btnS2" class="seasonBtn" type="button">S2</button>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer id="listFooter">
+<footer>
   <img src="/images/logo.png" class="footer-logo" alt="">
   <div class="footer-note">
     © 空想世界アリストテレス<br>
@@ -663,628 +643,400 @@
   </div>
 </footer>
 
-<!-- ============== PROFILE PAGE (FULLSCREEN) ============== -->
-<section class="profilePage" id="profilePage" aria-hidden="true">
-  <div class="profileShell" id="profileInner" role="region" aria-label="プロフィール">
-    <div class="profileTop">
-      <div class="profileTitle">
-        <span id="profileTitle">PROFILE</span>
-        <span class="profileNo" id="profileNo">01</span>
-      </div>
-      <button class="profileClose" id="profileClose" aria-label="一覧に戻る">✕</button>
-    </div>
-
-    <div class="profileBody">
-      <!-- 上段：君が作るイラスト（S1/S2切り替え） -->
-      <div class="hero" id="hero">
-        <div class="heroTools">
-          <button class="s2btn" id="btnS2" type="button" aria-label="S2に切り替え">S2</button>
-        </div>
-        <div class="glitchLayer" aria-hidden="true"></div>
-        <img id="heroImg" src="" alt="">
-        <div class="heroFade" aria-hidden="true"></div>
-      </div>
-
-      <!-- 下段：説明＋線＋ナビ -->
-      <div class="info">
-        <div class="infoHeader">
-          <img id="nameImg" class="nameImg" src="" alt="">
-        </div>
-
-        <div class="accentLine" aria-hidden="true"></div>
-
-        <div class="infoBody">
-          <div class="desc" id="descText">説明文（ここにテキストが入る）</div>
-          <div class="meta" id="metaText">※ここは補足欄（年齢/要素/属性など）を後から増やせるよ</div>
-        </div>
-
-        <div class="navRow">
-          <div class="navSide">
-            <button class="navBtn" id="prevBtn" type="button" aria-label="前へ">&lt;</button>
-          </div>
-
-          <button class="backBtn" id="backBtn" type="button" aria-label="一覧に戻る">
-            <span class="arrow left">&lt;</span>
-            <span class="text">Back to list</span>
-            <span class="arrow right">&gt;</span>
-          </button>
-
-          <div class="navSide" style="justify-content:flex-end;">
-            <button class="navBtn" id="nextBtn" type="button" aria-label="次へ">&gt;</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= Password Overlay ✅消さない ================= -->
-<div class="lockOverlay" id="lockOverlay" aria-hidden="true"></div>
-<section class="lockBox" id="lockBox" aria-hidden="true">
-  <div class="lockCard" role="dialog" aria-modal="true" aria-label="パスワード認証">
+<div class="lockOverlay" id="lockOverlay"></div>
+<section class="lockBox" id="lockBox">
+  <div class="lockCard">
     <div class="lockTitle">ACCESS AUTH</div>
     <div class="lockRow">
       <div class="lockLabel">PASSWORD</div>
-      <div class="lockField">
-        <span id="pwText"></span><span class="cursor" aria-hidden="true"></span>
-      </div>
+      <div class="lockField"><span id="pwText"></span><span class="cursor"></span></div>
     </div>
     <div class="lockStatus" id="pwStatus">…</div>
   </div>
 </section>
 
 <script>
-  const grid = document.getElementById("grid");
-  const btnMain = document.getElementById("btnMain");
-  const btnSub = document.getElementById("btnSub");
+const characterSelect=document.getElementById("characterSelect");
+const profileArea=document.getElementById("profileArea");
+const profileCard=document.getElementById("profileCard");
+const profileNo=document.getElementById("profileNo");
+const heroImg=document.getElementById("heroImg");
+const nameImg=document.getElementById("nameImg");
+const descText=document.getElementById("descText");
+const metaText=document.getElementById("metaText");
+const btnMain=document.getElementById("btnMain");
+const btnSub=document.getElementById("btnSub");
+const btnS1=document.getElementById("btnS1");
+const btnS2=document.getElementById("btnS2");
 
-  const mainImages = Array.from({length:14},(_,i)=>
-    `/images/character/main${String(i+1).padStart(2,"0")}.webp`
-  );
+const lockOverlay=document.getElementById("lockOverlay");
+const lockBox=document.getElementById("lockBox");
+const pwText=document.getElementById("pwText");
+const pwStatus=document.getElementById("pwStatus");
 
-  // ====== キャラ別：アクセントカラー ======
-  const accents = [
-    "#4fbfc2", // 01 翠
-    "#c24f4f", // 02 零
-    "#e0a038", // 03
-    "#80a87d", // 04
-    "#7d92a8", // 05
-    "#941c34", // 06
-    "#50e65d", // 07
-    "#05079c", // 08
-    "#6cbecc", // 09
-    "#e83a83", // 10
-    "#499151", // 11
-    "#e0e0e0", // 12
-    "#ae76db", // 13
-    "#c9a824"  // 14
-  ];
+const selectImages=Array.from({length:14},(_,i)=>`/images/character/select/select${String(i+1).padStart(2,"0")}.webp`);
+const heroS1=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.webp`);
+const heroS2=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.webp`);
+const nameImgs=Array.from({length:14},(_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
 
-  // ====== パスワード ✅残す ======
-  const passcodes = [
-    "1023","1124","1203","0312","0211","0224","0528","0528","0718","1228","0114","0521","0807","0122"
-  ];
+const accents=[
+ "#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34","#50e65d",
+ "#05079c","#6cbecc","#e83a83","#499151","#e0e0e0","#ae76db","#c9a824"
+];
+const passcodes=["1023","1124","1203","0312","0211","0224","0528","0528","0718","1228","0114","0521","0807","0122"];
 
-  // ====== 上段画像（S1/S2） ======
-  const heroS1 = Array.from({length:14},(_,i)=>
-    `/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.webp`
-  );
-  const heroS2 = Array.from({length:14},(_,i)=>
-    `/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.webp`
-  );
-
-  // ====== 名前画像 ======
-  const nameImgs = Array.from({length:14},(_,i)=>
-    `/images/profile/name/${String(i+1).padStart(2,"0")}.png`
-  );
-
-  // ====== プロフィール（S1/S2対応） ======
-  const profiles = [
-    {
-      // 01 翠
-      s1: {
-        desc: `本作の主人公。
+const profiles = [
+  {
+    s1: {
+      desc: `本作の主人公。
 以前まで度重なる不幸に
 見舞われ闇を抱えていたがアンジェラにおまじないをかけられ、本来の明るさを取り戻すように。
 取り戻してからは克服したのか、メンタルが図太くなりいい意味でも悪い意味でもちょっとしたことでは折れなくなった。
 アンジェラに助けられてから「自分も私みたいな人を救いたい」と思い、悩んでいる人々の想いを解決したいと日々行動している。`,
-        meta: `年齢：17歳 / 性別：女 / 種族：人間
+      meta: `年齢：17歳 / 性別：女 / 種族：人間
 身長：156cm / 誕生日：10月23日`
-      },
-      s2: {
-        desc: `20歳の成人式後、交通事故に逢い入院中。
-        現在まで目を覚まさず、植物人間状態である。`,
-        meta: `年齢：22歳 / 性別：女 / 種族：人間
-身長：158cm / 職業：映像クリエイター / 誕生日：10月23日`
-      }
     },
-    {
-      // 02 零
-      s1: {
-        desc: `翠が抱えていた負の感情だけを受け継いで生まれたクローン体。
+    s2: {
+      desc: `20歳の誕生日に起きた交通事故により、現在も病院で眠り続けている少女。以前と変わらず誰かを救いたいという優しさを持ったまま、彼女の時間だけがあの日で止まっている。仲間たちは今もなお、彼女が再び目を覚ます日を信じ続けている。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：人間
+身長：158cm / 職業：映像クリエイター / 誕生日：10月23日`
+    }
+  },
+  {
+    s1: {
+      desc: `翠が抱えていた負の感情だけを受け継いで生まれたクローン体。
 希死念慮を持っており、自分を生まれさせた翠を恨んでいるが、
 翠に「絶対に生きてる方が楽しいって思わせてあげる！」と言われ、渋々それに付き合っている。`,
-        meta: `年齢：17歳 / 性別：女 / 種族：人間
+      meta: `年齢：17歳 / 性別：女 / 種族：人間
 身長：156cm / 誕生日：11月24日`
-      },
-      s2: {
-        desc: `好きなお菓子作りをそのまま仕事にしたいと思い
-        21歳にパティシエに就職した。しかしモチベーションが
-        無くなっており、最近は元気も無い様子。人と会話をする
-        機会が減っている。`,
-        meta: `年齢：22歳 / 性別：女 / 種族：人間
-身長：163cm / 職業：パティシエ / 誕生日：11月24日`
-      }
     },
-    {
-      // 03 季依恋
-      s1: {
-        desc: `水ヶ丘高校に通う女子高校生。
+    s2: {
+      desc: `念願だった洋菓子店でパティシエとして働き始め、穏やかな日々を送っていた。 しかし、翠の事故をきっかけに彼女の日常は少しずつ変わり始める。 大切な人を失いたくないという想いは以前よりも強くなり、その優しさは時に自分自身を苦しめることにもなる。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：人間
+身長：163cm / 職業：パティシエ / 誕生日：11月24日`
+    }
+  },
+  {
+    s1: {
+      desc: `水ヶ丘高校に通う女子高校生。
 天使である事によって周りから迫害を受け続けて来たが、同じクラスの羽璃に助けられる。
 そこから羽璃とは親友のような関係性になるが、季依恋は羽璃に親友とは別の想いを抱えている。`,
-        meta: `年齢：17歳 / 性別：女 / 種族：天使
+      meta: `年齢：17歳 / 性別：女 / 種族：天使
 身長：153cm / 誕生日：12月3日`
-      },
-      s2: {
-        desc: `短大卒業後カメラマンに就職。怜冬と同棲していて幸せに暮らしているみたいだが、
-        最近は怜冬に避けられていて原因が分からず苦労している様子だ。`,
-        meta: `年齢：22歳 / 性別：女 / 種族：天使
-身長：155cm / 職業：カメラマン / 誕生日：12月3日`
-      }
     },
-    {
-      // 04 羽璃
-      s1: {
-        desc: `水ヶ丘高校に通う心優しい女子高校生。
+    s2: {
+      desc: `短大卒業後はカメラマンとして活動し、怜冬との同棲生活も始まった。 ようやく手に入れた穏やかな幸せの中で、これからも二人で歩んでいけると信じていた。 だが、その平穏は思いもよらない出来事によって静かに揺らぎ始める。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：天使
+身長：155cm / 職業：カメラマン / 誕生日：12月3日`
+    }
+  },
+  {
+    s1: {
+      desc: `水ヶ丘高校に通う心優しい女子高校生。
 神の子であるが故に周りからおだてられており、「もっとちゃんと自分を見て欲しい」と思っている。
 陸上部のマネージャーをしており、陸上部の1つ上の先輩である夕霧に片思い中。`,
-        meta: `年齢：17歳 / 性別：女 / 種族：神の子
+      meta: `年齢：17歳 / 性別：女 / 種族：神の子
 身長：149cm / 誕生日：3月12日`
-      },
-      s2: {
-        desc: `神の子としての使命を務める為巫女になったが、元々の夢だった
-        ネイリストとしても就職をした。天神無双も無くなり、平穏に暮らしていたが
-        突如、神社にとあるお客さんが来てから事態が一変してしまう。`,
-        meta: `年齢：22歳 / 性別：女 / 種族：神の子
-身長：150cm / 職業：ネイリスト兼巫女 / 誕生日：3月12日`
-      }
     },
-    {
-      // 05 夕霧
-      s1: {
-        desc: `水ヶ丘高校に通う男子高校生。
+    s2: {
+      desc: `神社で巫女としての役目を果たしながら、幼い頃から憧れていたネイリストとしても働いている。 神の子としてではなく、一人の女性として自分らしく生きられるようになった。 しかし、その平穏な日々にも、新たな存在が影を落としていく。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：神の子
+身長：150cm / 職業：ネイリスト兼巫女 / 誕生日：3月12日`
+    }
+  },
+  {
+    s1: {
+      desc: `水ヶ丘高校に通う男子高校生。
 常にうるさくふざけている為、歩く救急車サイレンと呼ばれている。
 陸上部に入っており、練習中は見違えたように真剣になる。
 おちゃらけてはいるが、やる時はやる男。`,
-        meta: `年齢：18歳 / 性別：男 / 種族：人間
+      meta: `年齢：18歳 / 性別：男 / 種族：人間
 身長：171cm / 誕生日：2月11日`
-      },
-      s2: {
-        desc: `中学高校大学と続けていた陸上の夢をそのまま追いかけて、
-        陸上選手に。現在はアメリカの大学で陸上をしている。羽璃とは
-        交際を続けているが、遠距離恋愛中。`,
-        meta: `年齢：23歳 / 性別：男 / 種族：人間
-身長：178cm / 職業：陸上選手 / 誕生日：2月11日`
-      }
     },
-    {
-      // 06 零音
-      s1: {
-        desc: `季依恋の姉。
+    s2: {
+      desc: `陸上選手として海外で活動し、夢だった舞台へと辿り着いた青年。 離れて暮らしながらも羽璃との関係は続いており、多忙な毎日を送りながら競技に打ち込んでいる。 それでも、大切な人を守れない距離にもどかしさを感じることがある。`,
+      meta: `年齢：23歳 / 性別：男 / 種族：人間
+身長：178cm / 職業：陸上選手 / 誕生日：2月11日`
+    }
+  },
+  {
+    s1: {
+      desc: `季依恋の姉。
 家庭的な事情で高校に通えておらず、せめてでも季依恋に高校へ行かせてあげたいと思っている為、
 日々バイトをして季依恋の学費と生活費を稼いでいる。
 親に捨てられてからは季依恋に対して過保護な面も見られるが、誰よりも季依恋を大事に思っている。`,
-        meta: `年齢：18歳 / 性別：女 / 種族：天使
+      meta: `年齢：18歳 / 性別：女 / 種族：天使
 身長：164cm / 誕生日：2月24日`
-      },
-      s2: {
-        desc: `子供が好きな為保育士に就職。
-        親の縛りが無くなり、自分の好きな髪型･服装になれて一人の女性として
-        楽しく生活している。現在はアンジェラといい感じになっているものの
-        中々アピールできていないようだ。`,
-        meta: `年齢：23歳 / 性別：女 / 種族：天使
-身長：167cm / 職業：保育士 / 誕生日：2月24日`
-      }
     },
-    {
-      // 07 結莉
-      s1: {
-        desc: `聖愛女学院高等学校に通う女子高校生。
+    s2: {
+      desc: `保育士として子どもたちに囲まれながら、自分らしい毎日を過ごしている。 親の束縛から解放され、ようやく一人の女性として人生を歩み始めた。 周囲との関係も少しずつ変わる中で、自分自身の恋心とも向き合うことになる。`,
+      meta: `年齢：23歳 / 性別：女 / 種族：天使
+身長：167cm / 職業：保育士 / 誕生日：2月24日`
+    }
+  },
+  {
+    s1: {
+      desc: `聖愛女学院高等学校に通う女子高校生。
 親の為に成績上位を取り、常に優等生として生活している。
 親からの期待に応える日々も、いつしか限界を迎える。
 そんな時に、幼馴染である優芽とバッタリ出会い…？`,
-        meta: `年齢：16歳 / 性別：女 / 種族：人間
+      meta: `年齢：16歳 / 性別：女 / 種族：人間
 身長：157cm / 誕生日：5月28日`
-      },
-      s2: {
-        desc: `大学の演劇サークルに入って楽しく演劇をしていた所、
-        テレビ業界の人に才能があると目を付けられ女優として
-        スカウトされた。その後は色々なドラマに女優として出演し活躍中。`,
-        meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：159cm / 職業：女優 / 誕生日：5月28日`
-      }
     },
-    {
-      // 08 優芽
-      s1: {
-        desc: `聖愛女学院高等学校に通う無口な女子高校生。
+    s2: {
+      desc: `大学進学後に演劇の才能を見出され、女優として華々しい活躍を続けている。 幼い頃から積み重ねてきた努力が実を結び、多くの人々から支持される存在となった。 それでも、心の奥底には今も消えない想いを抱えている。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間
+身長：159cm / 職業：女優 / 誕生日：5月28日`
+    }
+  },
+  {
+    s1: {
+      desc: `聖愛女学院高等学校に通う無口な女子高校生。
 ボーイッシュなスタイルを好み、服装をメンズに合わせることが多い。
 その為周りから非常にモテている。
 兄との関係が悪く、5年ぶりに兄が帰省してきた日にとある事件が起こる。`,
-        meta: `年齢：16歳 / 性別：女 / 種族：人間
+      meta: `年齢：16歳 / 性別：女 / 種族：人間
 身長：162cm / 誕生日：5月28日`
-      },
-      s2: {
-        desc: `ファッションコーデを組むのが好きだった為、
-        スタイリストに。主に男装関連のコーディネートを組むことが多い。
-        かなりコーディネートに評判が良く、有名人のコーディネートも
-        頼まれることが多い為、白花や結莉のコーディネートをする事もあるそう。`,
-        meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：168cm / 職業：スタイリスト / 誕生日：5月28日`
-      }
     },
-    {
-      // 09 怜冬
-      s1: {
-        desc: `世花財閥のお嬢様。
+    s2: {
+      desc: `スタイリストとして活動し、その独自のセンスは多くの芸能人から高く評価されている。 人を輝かせる仕事に誇りを持ち、仲間たちの活動も陰から支えている。 昔より笑顔は増えたが、大切な人のことになると不器用な一面は今も変わらない。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間
+身長：168cm / 職業：スタイリスト / 誕生日：5月28日`
+    }
+  },
+  {
+    s1: {
+      desc: `世花財閥のお嬢様。
 そして今作一番のクズである。
 違法BARで接客をしており、色んな女性と関係を持っている。
 浮気を悪い事だと思っておらず、倫理観が著しく欠けている史上最悪の女。`,
-        meta: `年齢：21歳 / 性別：女 / 種族：人間
+      meta: `年齢：21歳 / 性別：女 / 種族：人間
 身長：173cm / 誕生日：7月18日`
-      },
-      s2: {
-        desc: `1期終了後、色々なことが起こったこともあり
-        季依恋に対して｢ちゃんと大切にしたい｣という気持ちが強くなって
-        季依恋が21歳になった時に告白し交際と同棲を始めた。その為
-        仕事も普通のBARにて働いている。前と比べて成長し、まともに
-        なってはいるが相変わらず雪那に対しての対応は変わらない。`,
-        meta: `年齢：26歳 / 性別：女 / 種族：人間
-身長：173cm / 職業：バーテンダー / 誕生日：7月18日`
-      }
     },
-    {
-      // 10 白花
-      s1: {
-        desc: `聖愛女学院高等学校に通うアイドル的大人気女子高校生。
+    s2: {
+      desc: `かつての奔放な生き方を改め、現在は正規のBARで働いている。 季依恋との交際をきっかけに少しずつ人として成長し、自分なりに誰かを大切にすることを覚え始めた。 それでも昔からの悪い癖は完全には抜け切っていない。`,
+      meta: `年齢：26歳 / 性別：女 / 種族：人間
+身長：173cm / 職業：バーテンダー / 誕生日：7月18日`
+    }
+  },
+  {
+    s1: {
+      desc: `聖愛女学院高等学校に通うアイドル的大人気女子高校生。
 演劇部に所属しており、演技が大好きでこの先もずっと演劇で生きていきたいと思っている。
 明るく交友関係も良好で、幸せな高校生活を送っている。
 …はずだったのだが、中学最後の全国大会で最悪な出来事が起こってしまう。`,
-        meta: `年齢：16歳 / 性別：女 / 種族：人間
+      meta: `年齢：16歳 / 性別：女 / 種族：人間
 身長：151cm / 誕生日：12月28日`
-      },
-      s2: {
-        desc: `高3の時に演劇全国大会で優勝し、スカウトされて大学に行かず
-        女優デビューへ。当初から才能を見込まれて人気が高かった為、アイドルの道を
-        誘われる。元々アイドルに興味があったのと女優としての活動もそのまま
-        続けられるという事で断る理由が無く、二つ返事で了承しアイドルデビュー。
-        しかし、その判断が間違っていたのかもしれない。`,
-        meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：154cm / 職業：アイドル / 誕生日：12月28日`
-      }
     },
-    {
-      // 11 雪那
-      s1: {
-        desc: `怜冬と同じ違法BARで働く大学生。
+    s2: {
+      desc: `女優として活動する傍ら、アイドルとしても高い人気を誇る存在となった。 幼い頃から憧れていた夢を次々と叶え、誰もが羨む華やかな人生を歩んでいる。 しかし、その笑顔の裏側では誰にも見せられない葛藤を抱え続けている。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間
+身長：154cm / 職業：アイドル / 誕生日：12月28日`
+    }
+  },
+  {
+    s1: {
+      desc: `怜冬と同じ違法BARで働く大学生。
 諸事情から白花と同棲している。
 将来的に警察になりたいと強く思っており、仕事と両立しながら資格の勉強もこなしている。
 怜冬とは高校時代の同級生だが、とある事件をきっかけに現在も非常に仲が悪い。`,
-        meta: `年齢：21歳 / 性別：女 / 種族：人間
+      meta: `年齢：21歳 / 性別：女 / 種族：人間
 身長：172cm / 誕生日：1月14日`
-      },
-      s2: {
-        desc: `何度か挫折を経験したものの念願の警察に。
-        と言っても、下っ端ではあるが警察として充実した生活を送れている。
-        白花とも20歳の時に交際を開始したが白花の仕事柄、二人で一緒に
-        いるのは危険だと判断し現在は別々で一人暮らしをしている。`,
-        meta: `年齢：26歳 / 性別：女 / 種族：人間
-身長：173cm / 職業：警察官 / 誕生日：1月14日`
-      }
     },
-    {
-      // 12 アンジェラ
-      s1: {
-        desc: `天空世界にいたあきはの遣いの天使。
+    s2: {
+      desc: `幾度もの挫折を乗り越え、念願だった警察官となった。 忙しい日々を送りながらも、昔から変わらず困っている人を助けたいという信念を貫いている。 大切な人との未来を守るため、今日も職務に励んでいる。`,
+      meta: `年齢：26歳 / 性別：女 / 種族：人間
+身長：173cm / 職業：警察官 / 誕生日：1月14日`
+    }
+  },
+  {
+    s1: {
+      desc: `天空世界にいたあきはの遣いの天使。
 とある復讐を果たすために地上へ降りてきた。
 それと同時に、自殺をしようとしていた翠を助けた張本人でもある。
 しかし、アンジェラには違う目的があるようで…。`,
-        meta: `年齢：??歳 / 性別：男 / 種族：天使
+      meta: `年齢：??歳 / 性別：男 / 種族：天使
 身長：168cm / 誕生日：5月21日`
-      },
-      s2: {
-        desc: `特にやりたい事も無かったが、翠に｢裁判官とかいいんじゃない？｣と言われて
-       興味本位で就職に。思ったよりも仕事にやりがいを感じて充実した生活を暮らしている。
-       しかし、そんな楽しい生活もいつしか終わりを迎えて、神からの突然の宣告がやってくる。`,
-        meta: `年齢：??歳 / 性別：男 / 種族：人間
-身長：168cm / 職業：裁判官 / 誕生日：5月21日`
-      }
     },
-    {
-      // 13 ねむる
-      s1: {
-        desc: `あきはによって創られたお助けロボット。
+    s2: {
+      desc: `裁判官として人々を裁く立場となり、人間としての人生を歩み続けている。 かつて抱いていた復讐心は薄れ、自分なりの正義を見つけようとしていた。 しかし、その平穏は再び神によって大きく揺さぶられることになる。`,
+      meta: `年齢：??歳 / 性別：男 / 種族：人間
+身長：168cm / 職業：裁判官 / 誕生日：5月21日`
+    }
+  },
+  {
+    s1: {
+      desc: `あきはによって創られたお助けロボット。
 ロボットとは思えない程人間に近い容姿や動きをする。
 自我を持ち、自分自身で自由に行動できるが、最新は少し体の調子が悪いようで…。`,
-        meta: `年齢：?? / 性別：無 / 種族：ロボット
+      meta: `年齢：?? / 性別：無 / 種族：ロボット
 身長：154cm / 誕生日：?月?日`
-      },
-      s2: {
-        desc: `特にこれと言ってやりたい事もしたい事も無いので、
-        アルバイトを転々として生活していた。しかし、翠が入院してからは
-        翠の介護に専念し、翠の病室で常に様子を見ているようだ。`,
-        meta: `年齢：28歳 / 性別：女性 / 種族：ロボット
-身長：154cm / 職業：フリーター / 誕生日：8月7日`
-      }
     },
-    {
-      // 14 あきは
-      s1: {
-        desc: `この世界を創った創造主。
-…らしい。自称神。
-翠が親に捨てられ路頭に迷っていた時に保護し、共に生活している。
-ポンコツ気味で明るく騒がしいが、誰かが危険な行動をしようとすると凄い剣幕で阻止する。`,
-        meta: `年齢：?? / 性別：女 / 種族：神
+    s2: {
+      desc: `決まった仕事には就かず、その時々で様々な仕事を転々としながら生活している。 翠の事故以来は病室へ通い続け、翠の介護に専念している。。 `,
+      meta: `年齢：28歳 / 性別：女性 / 種族：人間
+身長：154cm / 職業：フリーター / 誕生日：8月7日`
+    }
+  },
+  {
+    s1: {
+      desc: `この世界を創った創造主。…らしい。自称神。翠が親に捨てられ路頭に迷っていた時に保護し、共に生活している。ポンコツ気味で明るく騒がしいが、誰かが危険な行動をしようとすると凄い剣幕で阻止する。`,
+      meta: `年齢：?? / 性別：女 / 種族：神
 身長：152cm / 誕生日：?月?日`
-      },
-      s2: {
-        desc: `現実世界で過去の自分達の事もあってか、
-        同じような子達を生まないように。と高校教師になる。
-        空想世界に戻ってからは、様々な苦難が訪れながらも
-        なんとか頑張っている様子。成長しているんだね。`,
-        meta: `年齢：28歳 / 性別：女 / 種族：人間
+    },
+    s2: {
+      desc: `現実世界では高校教師として働き、かつての自分たちのような子どもを救いたいと願っている。 騒がしく自由奔放な性格は変わらないが、以前よりも人を導く立場としての責任感を身につけた。 それでも、彼女の物語はまだ終わってはいない。`,
+      meta: `年齢：28歳 / 性別：女 / 種族：人間
 身長：157cm / 職業：高校教師 / 誕生日：1月22日`
-      }
     }
-  ];
-
-  function renderMain(){
-    grid.innerHTML = mainImages.map((src,i)=>`
-      <div class="card" data-index="${i}" role="button" tabindex="0" aria-label="${String(i+1).padStart(2,"0")}を開く">
-        <img src="${src}" alt="">
-        <div class="num">${String(i+1).padStart(2,"0")}</div>
-      </div>
-    `).join("");
   }
+];
 
-  function renderSub(){
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;opacity:.6;letter-spacing:.25em;padding:80px 0;">
-        SUBは準備中です
-      </div>`;
-  }
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let currentIndex=0;
+let currentSeason="s1";
+let animRunning=false;
 
+function renderMain(){
+  characterSelect.innerHTML=selectImages.map((src,i)=>`
+    <button class="selectBtn" data-index="${i}" type="button" aria-label="${String(i+1).padStart(2,"0")}を開く">
+      <img src="${src}" alt="">
+    </button>
+  `).join("");
+}
+function renderSub(){
+  characterSelect.innerHTML=`<div class="subPreparing" style="grid-column:1/-1;">SUBは準備中です</div>`;
+  profileArea.classList.remove("open");
+}
+renderMain();
+
+btnMain.onclick=()=>{
+  btnMain.classList.add("active");
+  btnSub.classList.remove("active");
   renderMain();
+};
+btnSub.onclick=()=>{
+  btnSub.classList.add("active");
+  btnMain.classList.remove("active");
+  renderSub();
+};
 
-  btnMain.onclick=()=>{
-    btnMain.classList.add("active");
-    btnSub.classList.remove("active");
-    renderMain();
-  };
-  btnSub.onclick=()=>{
-    btnSub.classList.add("active");
-    btnMain.classList.remove("active");
-    renderSub();
-  };
-
-  /* ===== hamburger ===== */
-  const menuBtn=document.getElementById("menuBtn");
-  const closeBtn=document.getElementById("closeBtn");
-  const menu=document.getElementById("menu");
-  const overlay=document.getElementById("overlay");
-
-  menuBtn.onclick=()=>{
-    menu.classList.add("open");
-    overlay.classList.add("open");
-    menu.setAttribute("aria-hidden","false");
-  };
-  closeBtn.onclick=overlay.onclick=()=>{
-    menu.classList.remove("open");
-    overlay.classList.remove("open");
-    menu.setAttribute("aria-hidden","true");
-  };
-
-  /* =========================================================
-     Password -> Open Profile Page (FULLSCREEN)
-  ========================================================= */
-  const lockOverlay = document.getElementById("lockOverlay");
-  const lockBox = document.getElementById("lockBox");
-  const pwText = document.getElementById("pwText");
-  const pwStatus = document.getElementById("pwStatus");
-
-  const listPage = document.getElementById("listPage");
-  const listFooter = document.getElementById("listFooter");
-
-  const profilePage = document.getElementById("profilePage");
-  const profileInner = document.getElementById("profileInner");
-  const profileClose = document.getElementById("profileClose");
-  const profileTitle = document.getElementById("profileTitle");
-  const profileNo = document.getElementById("profileNo");
-
-  const hero = document.getElementById("hero");
-  const heroImg = document.getElementById("heroImg");
-  const btnS2 = document.getElementById("btnS2");
-
-  const nameImg = document.getElementById("nameImg");
-  const descText = document.getElementById("descText");
-  const metaText = document.getElementById("metaText");
-
-  const backBtn = document.getElementById("backBtn");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  const profileBody = document.querySelector("#profilePage .profileBody");
-
-  let animRunning = false;
-  let currentIndex = 0;
-  let currentSeason = "s1"; // s1 / s2
-
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  const openLock = () => {
-    lockOverlay.classList.add("open");
-    lockBox.classList.add("open");
-    lockOverlay.setAttribute("aria-hidden","false");
-    lockBox.setAttribute("aria-hidden","false");
-    document.body.style.overflow = "hidden";   // パスワード中は背景スクロール止める
-  };
-
-  const closeLock = () => {
-    lockOverlay.classList.remove("open");
-    lockBox.classList.remove("open");
-    lockOverlay.setAttribute("aria-hidden","true");
-    lockBox.setAttribute("aria-hidden","true");
-    document.body.style.overflow = "";         // 終わったら元に戻す
-  };
-
-  function showProfilePage(){
-    // 一覧を隠してプロフィールを出す
-    listPage.style.display = "none";
-    listFooter.style.display = "none";
-    profilePage.classList.add("open");
-    profilePage.setAttribute("aria-hidden","false");
-    window.scrollTo({ top: 0, behavior: "instant" });
+function openLock(){
+  lockOverlay.classList.add("open");
+  lockBox.classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeLock(){
+  lockOverlay.classList.remove("open");
+  lockBox.classList.remove("open");
+  document.body.style.overflow="";
+}
+function applyAccent(idx){
+  const a=accents[idx]||"#4fbfc2";
+  profileArea.style.setProperty("--accent",a);
+  document.querySelectorAll(".selectBtn").forEach(btn=>btn.classList.remove("active"));
+  const active=document.querySelector(`.selectBtn[data-index="${idx}"]`);
+  if(active){
+    active.style.setProperty("--accent",a);
+    active.classList.add("active");
   }
+}
+function setSeasonButtons(){
+  btnS1.classList.toggle("active",currentSeason==="s1");
+  btnS2.classList.toggle("active",currentSeason==="s2");
+}
+async function switchHero(src){
+  heroImg.classList.remove("enter");
+  heroImg.classList.add("exit");
+  await sleep(260);
+  heroImg.src=src;
+  heroImg.classList.remove("exit");
+  void heroImg.offsetWidth;
+  heroImg.classList.add("enter");
+}
+function loadCharacter(idx,season="s1",animate=true){
+  currentIndex=idx;
+  currentSeason=season;
+  const data=(profiles[idx]&&profiles[idx][season])?profiles[idx][season]:profiles[0][season];
+  const no=String(idx+1).padStart(2,"0");
 
-  function showListPage(){
-    profilePage.classList.remove("open");
-    profilePage.setAttribute("aria-hidden","true");
-    listPage.style.display = "";
-    listFooter.style.display = "";
-    document.body.style.overflow = "";
+  applyAccent(idx);
+  setSeasonButtons();
+  profileArea.classList.add("open");
+  profileArea.setAttribute("aria-hidden","false");
 
-    const y = listPage ? listPage.offsetTop : 0;
-    window.scrollTo({ top: y, behavior: "instant" });
+  profileNo.textContent=`NO.${no}`;
+  nameImg.src=nameImgs[idx];
+  metaText.textContent=data.meta;
+  descText.textContent=data.desc;
+
+  const src=season==="s2"?heroS2[idx]:heroS1[idx];
+  if(animate){switchHero(src);}
+  else{
+    heroImg.src=src;
+    heroImg.classList.add("enter");
   }
-
-  function setNavState(idx){
-    prevBtn.setAttribute("aria-disabled", idx === 0 ? "true" : "false");
-    nextBtn.setAttribute("aria-disabled", idx === 13 ? "true" : "false");
-    prevBtn.style.visibility = (idx === 0) ? "hidden" : "visible";
-    nextBtn.style.visibility = (idx === 13) ? "hidden" : "visible";
+}
+async function playPassword(idx){
+  if(animRunning)return;
+  animRunning=true;
+  pwText.textContent="";
+  pwStatus.textContent="…";
+  pwStatus.className="lockStatus";
+  openLock();
+  await sleep(180);
+  const code=passcodes[idx]||"0000";
+  for(const c of code){
+    pwText.textContent+=c;
+    await sleep(95);
   }
+  await sleep(120);
+  pwStatus.textContent="COMPLETE";
+  pwStatus.classList.add("ok");
+  await sleep(260);
+  closeLock();
+  await sleep(120);
+  loadCharacter(idx,"s1",true);
+  animRunning=false;
+}
+characterSelect.addEventListener("click",e=>{
+  const btn=e.target.closest(".selectBtn");
+  if(!btn)return;
+  playPassword(Number(btn.dataset.index));
+});
+btnS1.onclick=()=>loadCharacter(currentIndex,"s1",true);
+btnS2.onclick=()=>loadCharacter(currentIndex,"s2",true);
 
-  function idealTextColor(hex){
-    const h = hex.replace("#","").trim();
-    if(h.length !== 6) return "#fff";
-    const r = parseInt(h.slice(0,2),16);
-    const g = parseInt(h.slice(2,4),16);
-    const b = parseInt(h.slice(4,6),16);
-    const y = (r*299 + g*587 + b*114) / 1000;
-    return (y >= 170) ? "#000" : "#fff";
-  }
+/* ===== map menu ===== */
+const menuBtn=document.getElementById("menuBtn");
+const mapOverlay=document.getElementById("mapOverlay");
+const mapClose=document.getElementById("mapClose");
 
-  function applyAccent(idx){
-    const a = accents[idx] || "#4fbfc2";
-    profileInner.style.setProperty("--accent", a);
-    profilePage.style.setProperty("--accent", a);
-    btnS2.style.color = idealTextColor(a);
-  }
+function openMap(){
+  document.body.classList.add("glitching");
+  setTimeout(()=>{
+    document.body.classList.remove("glitching");
+    mapOverlay.classList.add("open");
+    mapOverlay.setAttribute("aria-hidden","false");
+    document.body.style.overflow="hidden";
+  },420);
+}
+function closeMap(){
+  mapOverlay.classList.remove("open");
+  mapOverlay.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+}
+menuBtn.onclick=openMap;
+mapClose.onclick=closeMap;
+mapOverlay.addEventListener("click",e=>{if(e.target===mapOverlay)closeMap()});
+window.addEventListener("keydown",e=>{if(e.key==="Escape")closeMap()});
 
-  function loadCharacter(idx, season="s1", withGlitch=false){
-    currentIndex = idx;
-    currentSeason = season;
-
-    const no = String(idx+1).padStart(2,"0");
-    profileTitle.textContent = "PROFILE";
-    profileNo.textContent = no;
-
-    applyAccent(idx);
-    setNavState(idx);
-
-    const src = (season === "s2") ? heroS2[idx] : heroS1[idx];
-
-    if(withGlitch){
-      hero.classList.add("glitching");
-      heroImg.src = src;
-      setTimeout(()=> hero.classList.remove("glitching"), 460);
-    }else{
-      heroImg.src = src;
-    }
-    heroImg.alt = `Hero ${no} ${season.toUpperCase()}`;
-
-    nameImg.src = nameImgs[idx];
-    nameImg.alt = `Name ${no}`;
-
-    const p = profiles[idx] || profiles[0];
-    const data = p[season] || p.s1;
-
-    descText.textContent = data.desc || "";
-    metaText.textContent = data.meta || "";
-
-    if(profileBody) profileBody.scrollTo({ top: 0, behavior: "instant" });
-  }
-
-  async function playPasswordAndOpen(idx){
-    if(animRunning) return;
-    animRunning = true;
-
-    pwText.textContent = "";
-    pwStatus.className = "lockStatus";
-    pwStatus.textContent = "…";
-
-    openLock();
-    await sleep(220);
-
-    const code = passcodes[idx] || "0000";
-    for(let i=0;i<code.length;i++){
-      pwText.textContent += code[i];
-      await sleep(120);
-    }
-
-    await sleep(160);
-    pwStatus.textContent = "COMPLETE";
-    pwStatus.classList.add("ok");
-
-    await sleep(300);
-    closeLock();
-
-    await sleep(140);
-    showProfilePage();
-    loadCharacter(idx, "s1", false);
-
-    animRunning = false;
-  }
-
-  // MAINカードクリックで起動
-  function onCardActivate(e){
-    const card = e.target.closest(".card");
-    if(!card) return;
-    const idx = Number(card.dataset.index);
-    playPasswordAndOpen(idx);
-  }
-  grid.addEventListener("click", onCardActivate);
-  grid.addEventListener("keydown", (e)=>{
-    if(e.key !== "Enter") return;
-    onCardActivate(e);
+document.querySelectorAll(".mapLink").forEach(link=>{
+  link.addEventListener("click",e=>{
+    e.preventDefault();
+    location.href=link.href;
   });
-
-  // 閉じる（× / Back）
-  profileClose.addEventListener("click", showListPage);
-  backBtn.addEventListener("click", showListPage);
-
-  // ESC
-  window.addEventListener("keydown", (e)=>{
-    if(e.key === "Escape"){
-      if(profilePage.classList.contains("open")) showListPage();
-    }
-  });
-
-  // 前/次（S1固定で移動）
-  prevBtn.addEventListener("click", ()=>{
-    if(currentIndex <= 0) return;
-    loadCharacter(currentIndex-1, "s1", false);
-  });
-  nextBtn.addEventListener("click", ()=>{
-    if(currentIndex >= 13) return;
-    loadCharacter(currentIndex+1, "s1", false);
-  });
-
-  // S2切り替え（押すたびトグル）
-  btnS2.addEventListener("click", ()=>{
-    const nextSeason = (currentSeason === "s1") ? "s2" : "s1";
-    loadCharacter(currentIndex, nextSeason, true);
-  });
+});
 </script>
 
 </body>
