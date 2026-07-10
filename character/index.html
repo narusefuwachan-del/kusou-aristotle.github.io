@@ -39,6 +39,7 @@ body{
   padding:12px 16px;
   background:rgba(0,0,0,.4);
   backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 .site-title{
@@ -48,11 +49,12 @@ body{
   text-decoration:none;
 }
 .menu-btn{
-  font-size:22px;
+  font-size:28px;
   background:none;
   border:none;
   color:#fff;
   cursor:pointer;
+  padding:4px 8px;
 }
 
 /* ===== 神殿案内図 ===== */
@@ -276,7 +278,7 @@ body.glitching::after{
 .container{
   max-width:1180px;
   margin:0 auto;
-  padding:56px 16px 80px;
+  padding:48px 16px 80px;
   text-align:center;
 }
 .title-ruby{
@@ -293,7 +295,7 @@ body.glitching::after{
 }
 .switch{
   display:flex;
-  margin:34px auto 28px;
+  margin:32px auto 24px;
   max-width:360px;
   border:1px solid rgba(255,255,255,.25);
 }
@@ -316,19 +318,19 @@ body.glitching::after{
   display:grid;
   grid-template-columns:repeat(7,1fr);
   gap:10px;
-  max-width:900px;
-  margin:0 auto 34px;
+  max-width:1040px;
+  margin:0 auto 36px;
   animation:fadeUp .35s ease both;
 }
 .selectBtn{
   position:relative;
   aspect-ratio:1/1;
-  border:1px solid rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.04);
   padding:0;
   cursor:pointer;
   overflow:hidden;
-  border-radius:10px;
+  border-radius:12px;
   transition:.18s ease;
 }
 .selectBtn img{
@@ -339,7 +341,7 @@ body.glitching::after{
 }
 .selectBtn.active{
   border-color:var(--accent);
-  box-shadow:0 0 24px color-mix(in srgb,var(--accent) 70%,transparent);
+  box-shadow:0 0 28px color-mix(in srgb,var(--accent) 72%,transparent);
   transform:translateY(-2px);
 }
 .selectBtn:active{transform:scale(.98)}
@@ -360,50 +362,94 @@ body.glitching::after{
 }
 .profileArea.open{display:block}
 .profileCard{
+  position:relative;
   border:1px solid rgba(255,255,255,.14);
   background:rgba(10,10,14,.88);
   border-radius:18px;
   box-shadow:0 24px 90px rgba(0,0,0,.55);
   overflow:hidden;
-  padding:18px;
+  padding:22px;
 }
-.profileMain{
+.profileCard::before{
+  content:"";
+  position:absolute;
+  inset:14px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  pointer-events:none;
+}
+.profileLayout{
+  position:relative;
+  z-index:1;
   display:grid;
-  grid-template-columns:1fr 1.05fr;
-  gap:20px;
-  align-items:center;
+  grid-template-columns:0.92fr 1.08fr;
+  gap:18px;
+  align-items:start;
 }
 .profileInfo{
   text-align:left;
   min-width:0;
+  padding:8px 0 0 4px;
 }
 .profileNo{
   color:var(--accent);
   opacity:.85;
   letter-spacing:.24em;
   font-size:14px;
+  margin-bottom:8px;
 }
-.nameImg{
-  width:min(420px,90%);
-  height:auto;
-  display:block;
-  margin:10px 0 18px;
-  filter:drop-shadow(0 10px 30px rgba(0,0,0,.45));
+.charRuby{
+  color:color-mix(in srgb,var(--accent) 84%,white 16%);
+  font-size:clamp(16px,3.2vw,30px);
+  letter-spacing:.16em;
+  line-height:1.15;
+  margin-left:3px;
+}
+.charName{
+  color:var(--accent);
+  font-size:clamp(54px,9vw,112px);
+  letter-spacing:.08em;
+  line-height:.98;
+  margin:0 0 22px;
+  text-shadow:0 0 28px color-mix(in srgb,var(--accent) 25%,transparent);
+}
+.charAge{
+  color:#fff;
+  font-size:clamp(42px,7vw,72px);
+  line-height:1;
+  margin:0 0 20px;
+  text-align:center;
 }
 .profileMeta{
-  border-left:1px solid color-mix(in srgb,var(--accent) 70%,transparent);
-  padding-left:14px;
-  color:rgba(255,255,255,.82);
-  white-space:pre-line;
-  line-height:1.9;
+  color:rgba(255,255,255,.9);
+  font-size:clamp(24px,4.8vw,46px);
+  line-height:1.42;
+  letter-spacing:.08em;
+  margin-bottom:22px;
+}
+.metaRow{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:.55em;
+  align-items:start;
+}
+.metaLabel{
+  color:color-mix(in srgb,var(--accent) 82%,white 18%);
+}
+.profileText{
+  color:color-mix(in srgb,var(--accent) 78%,white 22%);
+  font-size:clamp(21px,4.3vw,38px);
+  line-height:1.55;
   letter-spacing:.06em;
+  text-align:center;
+  margin:20px 0 0;
+  animation:fadeUp .32s ease both;
 }
 .profileHero{
   position:relative;
-  min-height:420px;
+  min-height:640px;
   overflow:hidden;
   border-radius:16px;
-  background:rgba(255,255,255,.03);
 }
 .profileHero img{
   width:100%;
@@ -422,46 +468,38 @@ body.glitching::after{
   animation:heroOut .3s ease both;
 }
 @keyframes heroIn{
-  from{opacity:0;transform:translateX(-36px);filter:blur(4px)}
+  from{opacity:0;transform:translateX(-42px);filter:blur(4px)}
   to{opacity:1;transform:translateX(0);filter:blur(0)}
 }
 @keyframes heroOut{
   from{opacity:1;transform:translateX(0)}
-  to{opacity:0;transform:translateX(38px);filter:blur(4px)}
-}
-.profileText{
-  margin-top:18px;
-  text-align:left;
-  border-top:1px solid color-mix(in srgb,var(--accent) 55%,transparent);
-  padding-top:16px;
-  color:color-mix(in srgb,var(--accent) 80%,white 20%);
-  white-space:pre-line;
-  line-height:1.95;
-  letter-spacing:.05em;
-  animation:fadeUp .3s ease both;
+  to{opacity:0;transform:translateX(44px);filter:blur(4px)}
 }
 .seasonBtns{
   display:flex;
-  justify-content:center;
-  gap:14px;
-  margin-top:18px;
+  justify-content:flex-start;
+  gap:16px;
+  margin-top:24px;
 }
 .seasonBtn{
-  min-width:92px;
-  padding:12px 20px;
+  min-width:132px;
+  min-height:66px;
+  padding:12px 22px;
   border-radius:999px;
   border:1px solid color-mix(in srgb,var(--accent) 70%,white 10%);
   background:rgba(255,255,255,.04);
   color:var(--accent);
   font-family:inherit;
-  letter-spacing:.18em;
+  font-size:clamp(28px,5vw,48px);
+  line-height:1;
+  letter-spacing:.06em;
   cursor:pointer;
   transition:.18s ease;
 }
 .seasonBtn.active{
   background:var(--accent);
   color:#000;
-  box-shadow:0 0 24px color-mix(in srgb,var(--accent) 70%,transparent);
+  box-shadow:0 0 26px color-mix(in srgb,var(--accent) 75%,transparent);
 }
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(14px)}
@@ -513,6 +551,7 @@ footer{
   border:1px solid rgba(255,255,255,.16);
   background:rgba(10,10,14,.92);
   backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   border-radius:16px;
   padding:18px 16px 16px;
   box-shadow:0 20px 70px rgba(0,0,0,.55);
@@ -561,10 +600,93 @@ footer{
 .lockStatus.ok{color:#8fffe6;opacity:.95}
 
 @media(max-width:760px){
-  .characterSelect{grid-template-columns:repeat(7,1fr);gap:6px}
-  .profileMain{grid-template-columns:1fr}
-  .profileHero{min-height:320px}
-  .page-title{font-size:32px}
+  .container{
+    padding:42px 12px 72px;
+  }
+  .page-title{
+    font-size:30px;
+  }
+  .characterSelect{
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+    max-width:100%;
+    margin-bottom:26px;
+  }
+  .selectBtn{
+    border-radius:7px;
+  }
+  .profileCard{
+    padding:14px;
+  }
+  .profileCard::before{
+    inset:8px;
+  }
+  .profileLayout{
+    grid-template-columns:0.95fr 1.05fr;
+    gap:6px;
+    align-items:start;
+  }
+  .profileInfo{
+    padding-left:0;
+  }
+  .profileNo{
+    font-size:11px;
+    margin-bottom:4px;
+  }
+  .charRuby{
+    font-size:16px;
+  }
+  .charName{
+    font-size:54px;
+    margin-bottom:14px;
+  }
+  .charAge{
+    font-size:42px;
+    margin-bottom:14px;
+  }
+  .profileMeta{
+    font-size:25px;
+    line-height:1.42;
+    margin-bottom:14px;
+  }
+  .profileText{
+    grid-column:1/3;
+    font-size:26px;
+    line-height:1.55;
+    margin-top:10px;
+  }
+  .profileHero{
+    min-height:520px;
+  }
+  .seasonBtns{
+    grid-column:1/3;
+    justify-content:flex-start;
+    gap:12px;
+    margin-top:18px;
+  }
+  .seasonBtn{
+    min-width:92px;
+    min-height:58px;
+    font-size:36px;
+  }
+}
+
+@media(max-width:420px){
+  .site-title{
+    font-size:16px;
+  }
+  .profileHero{
+    min-height:450px;
+  }
+  .charName{
+    font-size:48px;
+  }
+  .profileMeta{
+    font-size:22px;
+  }
+  .profileText{
+    font-size:23px;
+  }
 }
 </style>
 </head>
@@ -613,23 +735,24 @@ footer{
 
   <section id="profileArea" class="profileArea" aria-hidden="true">
     <div class="profileCard" id="profileCard">
-      <div class="profileMain">
+      <div class="profileLayout">
         <div class="profileInfo">
           <div class="profileNo" id="profileNo">NO.01</div>
-          <img id="nameImg" class="nameImg" src="" alt="">
-          <div id="metaText" class="profileMeta"></div>
+          <div class="charRuby" id="charRuby"></div>
+          <h2 class="charName" id="charName"></h2>
+          <div class="charAge" id="charAge"></div>
+          <div class="profileMeta" id="metaText"></div>
+          <div class="profileText" id="descText"></div>
+
+          <div class="seasonBtns">
+            <button id="btnS1" class="seasonBtn active" type="button">S1</button>
+            <button id="btnS2" class="seasonBtn" type="button">S2</button>
+          </div>
         </div>
 
         <div class="profileHero" id="profileHero">
           <img id="heroImg" class="profileHeroImg" src="" alt="">
         </div>
-      </div>
-
-      <div id="descText" class="profileText"></div>
-
-      <div class="seasonBtns">
-        <button id="btnS1" class="seasonBtn active" type="button">S1</button>
-        <button id="btnS2" class="seasonBtn" type="button">S2</button>
       </div>
     </div>
   </section>
@@ -658,10 +781,11 @@ footer{
 <script>
 const characterSelect=document.getElementById("characterSelect");
 const profileArea=document.getElementById("profileArea");
-const profileCard=document.getElementById("profileCard");
 const profileNo=document.getElementById("profileNo");
 const heroImg=document.getElementById("heroImg");
-const nameImg=document.getElementById("nameImg");
+const charRuby=document.getElementById("charRuby");
+const charName=document.getElementById("charName");
+const charAge=document.getElementById("charAge");
 const descText=document.getElementById("descText");
 const metaText=document.getElementById("metaText");
 const btnMain=document.getElementById("btnMain");
@@ -677,217 +801,170 @@ const pwStatus=document.getElementById("pwStatus");
 const selectImages=Array.from({length:14},(_,i)=>`/images/character/select/select${String(i+1).padStart(2,"0")}.webp`);
 const heroS1=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s1.webp`);
 const heroS2=Array.from({length:14},(_,i)=>`/images/profile/hero/${String(i+1).padStart(2,"0")}_s2.webp`);
-const nameImgs=Array.from({length:14},(_,i)=>`/images/profile/name/${String(i+1).padStart(2,"0")}.png`);
 
 const accents=[
  "#4fbfc2","#c24f4f","#e0a038","#80a87d","#7d92a8","#941c34","#50e65d",
  "#05079c","#6cbecc","#e83a83","#499151","#e0e0e0","#ae76db","#c9a824"
 ];
+
 const passcodes=["1023","1124","1203","0312","0211","0224","0528","0528","0718","1228","0114","0521","0807","0122"];
+
+const names=[
+  {ruby:"ことぶき　すい",jp:"琴吹 翠"},
+  {ruby:"ことぶき　れい",jp:"琴吹 零"},
+  {ruby:"らいのせ　きいれ",jp:"来ノ瀬 季依恋"},
+  {ruby:"あきはら　はり",jp:"秋原 羽璃"},
+  {ruby:"いすみ　ゆうぎり",jp:"伊澄 夕霧"},
+  {ruby:"らいのせ　れいね",jp:"来ノ瀬 零音"},
+  {ruby:"ななせ　ゆり",jp:"七瀬 結莉"},
+  {ruby:"ひいらぎ　ゆめ",jp:"柊 優芽"},
+  {ruby:"よばな　れと",jp:"世花 怜冬"},
+  {ruby:"かわはら　はな",jp:"河原 白花"},
+  {ruby:"なまかわ　ゆきな",jp:"生川 雪那"},
+  {ruby:"",jp:"アンジェラ"},
+  {ruby:"",jp:"ねむる"},
+  {ruby:"",jp:"あきは"}
+];
 
 const profiles = [
   {
     s1: {
-      desc: `本作の主人公。
-以前まで度重なる不幸に
-見舞われ闇を抱えていたがアンジェラにおまじないをかけられ、本来の明るさを取り戻すように。
-取り戻してからは克服したのか、メンタルが図太くなりいい意味でも悪い意味でもちょっとしたことでは折れなくなった。
-アンジェラに助けられてから「自分も私みたいな人を救いたい」と思い、悩んでいる人々の想いを解決したいと日々行動している。`,
-      meta: `年齢：17歳 / 性別：女 / 種族：人間
-身長：156cm / 誕生日：10月23日`
+      desc: `本作の主人公。以前まで度重なる不幸に見舞われ闇を抱えていたがアンジェラにおまじないをかけられ、本来の明るさを取り戻すように。取り戻してからは克服したのか、メンタルが図太くなりいい意味でも悪い意味でもちょっとしたことでは折れなくなった。アンジェラに助けられてから「自分も私みたいな人を救いたい」と思い、悩んでいる人々の想いを解決したいと日々行動している。`,
+      meta: `年齢：17歳 / 性別：女 / 種族：人間 / 身長：156cm / 誕生日：10月23日`
     },
     s2: {
       desc: `20歳の誕生日に起きた交通事故により、現在も病院で眠り続けている少女。以前と変わらず誰かを救いたいという優しさを持ったまま、彼女の時間だけがあの日で止まっている。仲間たちは今もなお、彼女が再び目を覚ます日を信じ続けている。`,
-      meta: `年齢：22歳 / 性別：女 / 種族：人間
-身長：158cm / 職業：映像クリエイター / 誕生日：10月23日`
+      meta: `年齢：22歳 / 性別：女 / 種族：人間 / 身長：158cm / 職業：映像クリエイター / 誕生日：10月23日`
     }
   },
   {
     s1: {
-      desc: `翠が抱えていた負の感情だけを受け継いで生まれたクローン体。
-希死念慮を持っており、自分を生まれさせた翠を恨んでいるが、
-翠に「絶対に生きてる方が楽しいって思わせてあげる！」と言われ、渋々それに付き合っている。`,
-      meta: `年齢：17歳 / 性別：女 / 種族：人間
-身長：156cm / 誕生日：11月24日`
+      desc: `翠が抱えていた負の感情だけを受け継いで生まれたクローン体。希死念慮を持っており、自分を生まれさせた翠を恨んでいるが、翠に「絶対に生きてる方が楽しいって思わせてあげる！」と言われ、渋々それに付き合っている。`,
+      meta: `年齢：17歳 / 性別：女 / 種族：人間 / 身長：156cm / 誕生日：11月24日`
     },
     s2: {
-      desc: `念願だった洋菓子店でパティシエとして働き始め、穏やかな日々を送っていた。 しかし、翠の事故をきっかけに彼女の日常は少しずつ変わり始める。 大切な人を失いたくないという想いは以前よりも強くなり、その優しさは時に自分自身を苦しめることにもなる。`,
-      meta: `年齢：22歳 / 性別：女 / 種族：人間
-身長：163cm / 職業：パティシエ / 誕生日：11月24日`
+      desc: `念願だった洋菓子店でパティシエとして働き始め、穏やかな日々を送っていた。しかし、翠の事故をきっかけに彼女の日常は少しずつ変わり始める。大切な人を失いたくないという想いは以前よりも強くなり、その優しさは時に自分自身を苦しめることにもなる。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：人間 / 身長：163cm / 職業：パティシエ / 誕生日：11月24日`
     }
   },
   {
     s1: {
-      desc: `水ヶ丘高校に通う女子高校生。
-天使である事によって周りから迫害を受け続けて来たが、同じクラスの羽璃に助けられる。
-そこから羽璃とは親友のような関係性になるが、季依恋は羽璃に親友とは別の想いを抱えている。`,
-      meta: `年齢：17歳 / 性別：女 / 種族：天使
-身長：153cm / 誕生日：12月3日`
+      desc: `水ヶ丘高校に通う女子高校生。天使である事によって周りから迫害を受け続けて来たが、同じクラスの羽璃に助けられる。そこから羽璃とは親友のような関係性になるが、季依恋は羽璃に親友とは別の想いを抱えている。`,
+      meta: `年齢：17歳 / 性別：女 / 種族：天使 / 身長：153cm / 誕生日：12月3日`
     },
     s2: {
-      desc: `短大卒業後はカメラマンとして活動し、怜冬との同棲生活も始まった。 ようやく手に入れた穏やかな幸せの中で、これからも二人で歩んでいけると信じていた。 だが、その平穏は思いもよらない出来事によって静かに揺らぎ始める。`,
-      meta: `年齢：22歳 / 性別：女 / 種族：天使
-身長：155cm / 職業：カメラマン / 誕生日：12月3日`
+      desc: `短大卒業後はカメラマンとして活動し、怜冬との同棲生活も始まった。ようやく手に入れた穏やかな幸せの中で、これからも二人で歩んでいけると信じていた。だが、その平穏は思いもよらない出来事によって静かに揺らぎ始める。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：天使 / 身長：155cm / 職業：カメラマン / 誕生日：12月3日`
     }
   },
   {
     s1: {
-      desc: `水ヶ丘高校に通う心優しい女子高校生。
-神の子であるが故に周りからおだてられており、「もっとちゃんと自分を見て欲しい」と思っている。
-陸上部のマネージャーをしており、陸上部の1つ上の先輩である夕霧に片思い中。`,
-      meta: `年齢：17歳 / 性別：女 / 種族：神の子
-身長：149cm / 誕生日：3月12日`
+      desc: `水ヶ丘高校に通う心優しい女子高校生。神の子であるが故に周りからおだてられており、「もっとちゃんと自分を見て欲しい」と思っている。陸上部のマネージャーをしており、陸上部の1つ上の先輩である夕霧に片思い中。`,
+      meta: `年齢：17歳 / 性別：女 / 種族：神の子 / 身長：149cm / 誕生日：3月12日`
     },
     s2: {
-      desc: `神社で巫女としての役目を果たしながら、幼い頃から憧れていたネイリストとしても働いている。 神の子としてではなく、一人の女性として自分らしく生きられるようになった。 しかし、その平穏な日々にも、新たな存在が影を落としていく。`,
-      meta: `年齢：22歳 / 性別：女 / 種族：神の子
-身長：150cm / 職業：ネイリスト兼巫女 / 誕生日：3月12日`
+      desc: `神社で巫女としての役目を果たしながら、幼い頃から憧れていたネイリストとしても働いている。神の子としてではなく、一人の女性として自分らしく生きられるようになった。しかし、その平穏な日々にも、新たな存在が影を落としていく。`,
+      meta: `年齢：22歳 / 性別：女 / 種族：神の子 / 身長：150cm / 職業：ネイリスト兼巫女 / 誕生日：3月12日`
     }
   },
   {
     s1: {
-      desc: `水ヶ丘高校に通う男子高校生。
-常にうるさくふざけている為、歩く救急車サイレンと呼ばれている。
-陸上部に入っており、練習中は見違えたように真剣になる。
-おちゃらけてはいるが、やる時はやる男。`,
-      meta: `年齢：18歳 / 性別：男 / 種族：人間
-身長：171cm / 誕生日：2月11日`
+      desc: `水ヶ丘高校に通う男子高校生。常にうるさくふざけている為、歩く救急車サイレンと呼ばれている。陸上部に入っており、練習中は見違えたように真剣になる。おちゃらけてはいるが、やる時はやる男。`,
+      meta: `年齢：18歳 / 性別：男 / 種族：人間 / 身長：171cm / 誕生日：2月11日`
     },
     s2: {
-      desc: `陸上選手として海外で活動し、夢だった舞台へと辿り着いた青年。 離れて暮らしながらも羽璃との関係は続いており、多忙な毎日を送りながら競技に打ち込んでいる。 それでも、大切な人を守れない距離にもどかしさを感じることがある。`,
-      meta: `年齢：23歳 / 性別：男 / 種族：人間
-身長：178cm / 職業：陸上選手 / 誕生日：2月11日`
+      desc: `陸上選手として海外で活動し、夢だった舞台へと辿り着いた青年。離れて暮らしながらも羽璃との関係は続いており、多忙な毎日を送りながら競技に打ち込んでいる。それでも、大切な人を守れない距離にもどかしさを感じることがある。`,
+      meta: `年齢：23歳 / 性別：男 / 種族：人間 / 身長：178cm / 職業：陸上選手 / 誕生日：2月11日`
     }
   },
   {
     s1: {
-      desc: `季依恋の姉。
-家庭的な事情で高校に通えておらず、せめてでも季依恋に高校へ行かせてあげたいと思っている為、
-日々バイトをして季依恋の学費と生活費を稼いでいる。
-親に捨てられてからは季依恋に対して過保護な面も見られるが、誰よりも季依恋を大事に思っている。`,
-      meta: `年齢：18歳 / 性別：女 / 種族：天使
-身長：164cm / 誕生日：2月24日`
+      desc: `季依恋の姉。家庭的な事情で高校に通えておらず、せめてでも季依恋に高校へ行かせてあげたいと思っている為、日々バイトをして季依恋の学費と生活費を稼いでいる。親に捨てられてからは季依恋に対して過保護な面も見られるが、誰よりも季依恋を大事に思っている。`,
+      meta: `年齢：18歳 / 性別：女 / 種族：天使 / 身長：164cm / 誕生日：2月24日`
     },
     s2: {
-      desc: `保育士として子どもたちに囲まれながら、自分らしい毎日を過ごしている。 親の束縛から解放され、ようやく一人の女性として人生を歩み始めた。 周囲との関係も少しずつ変わる中で、自分自身の恋心とも向き合うことになる。`,
-      meta: `年齢：23歳 / 性別：女 / 種族：天使
-身長：167cm / 職業：保育士 / 誕生日：2月24日`
+      desc: `保育士として子どもたちに囲まれながら、自分らしい毎日を過ごしている。親の束縛から解放され、ようやく一人の女性として人生を歩み始めた。周囲との関係も少しずつ変わる中で、自分自身の恋心とも向き合うことになる。`,
+      meta: `年齢：23歳 / 性別：女 / 種族：天使 / 身長：167cm / 職業：保育士 / 誕生日：2月24日`
     }
   },
   {
     s1: {
-      desc: `聖愛女学院高等学校に通う女子高校生。
-親の為に成績上位を取り、常に優等生として生活している。
-親からの期待に応える日々も、いつしか限界を迎える。
-そんな時に、幼馴染である優芽とバッタリ出会い…？`,
-      meta: `年齢：16歳 / 性別：女 / 種族：人間
-身長：157cm / 誕生日：5月28日`
+      desc: `聖愛女学院高等学校に通う女子高校生。親の為に成績上位を取り、常に優等生として生活している。親からの期待に応える日々も、いつしか限界を迎える。そんな時に、幼馴染である優芽とバッタリ出会い…？`,
+      meta: `年齢：16歳 / 性別：女 / 種族：人間 / 身長：157cm / 誕生日：5月28日`
     },
     s2: {
-      desc: `大学進学後に演劇の才能を見出され、女優として華々しい活躍を続けている。 幼い頃から積み重ねてきた努力が実を結び、多くの人々から支持される存在となった。 それでも、心の奥底には今も消えない想いを抱えている。`,
-      meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：159cm / 職業：女優 / 誕生日：5月28日`
+      desc: `大学進学後に演劇の才能を見出され、女優として華々しい活躍を続けている。幼い頃から積み重ねてきた努力が実を結び、多くの人々から支持される存在となった。それでも、心の奥底には今も消えない想いを抱えている。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間 / 身長：159cm / 職業：女優 / 誕生日：5月28日`
     }
   },
   {
     s1: {
-      desc: `聖愛女学院高等学校に通う無口な女子高校生。
-ボーイッシュなスタイルを好み、服装をメンズに合わせることが多い。
-その為周りから非常にモテている。
-兄との関係が悪く、5年ぶりに兄が帰省してきた日にとある事件が起こる。`,
-      meta: `年齢：16歳 / 性別：女 / 種族：人間
-身長：162cm / 誕生日：5月28日`
+      desc: `聖愛女学院高等学校に通う無口な女子高校生。ボーイッシュなスタイルを好み、服装をメンズに合わせることが多い。その為周りから非常にモテている。兄との関係が悪く、5年ぶりに兄が帰省してきた日にとある事件が起こる。`,
+      meta: `年齢：16歳 / 性別：女 / 種族：人間 / 身長：162cm / 誕生日：5月28日`
     },
     s2: {
-      desc: `スタイリストとして活動し、その独自のセンスは多くの芸能人から高く評価されている。 人を輝かせる仕事に誇りを持ち、仲間たちの活動も陰から支えている。 昔より笑顔は増えたが、大切な人のことになると不器用な一面は今も変わらない。`,
-      meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：168cm / 職業：スタイリスト / 誕生日：5月28日`
+      desc: `スタイリストとして活動し、その独自のセンスは多くの芸能人から高く評価されている。人を輝かせる仕事に誇りを持ち、仲間たちの活動も陰から支えている。昔より笑顔は増えたが、大切な人のことになると不器用な一面は今も変わらない。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間 / 身長：168cm / 職業：スタイリスト / 誕生日：5月28日`
     }
   },
   {
     s1: {
-      desc: `世花財閥のお嬢様。
-そして今作一番のクズである。
-違法BARで接客をしており、色んな女性と関係を持っている。
-浮気を悪い事だと思っておらず、倫理観が著しく欠けている史上最悪の女。`,
-      meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：173cm / 誕生日：7月18日`
+      desc: `世花財閥のお嬢様。そして今作一番のクズである。違法BARで接客をしており、色んな女性と関係を持っている。浮気を悪い事だと思っておらず、倫理観が著しく欠けている史上最悪の女。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間 / 身長：173cm / 誕生日：7月18日`
     },
     s2: {
-      desc: `かつての奔放な生き方を改め、現在は正規のBARで働いている。 季依恋との交際をきっかけに少しずつ人として成長し、自分なりに誰かを大切にすることを覚え始めた。 それでも昔からの悪い癖は完全には抜け切っていない。`,
-      meta: `年齢：26歳 / 性別：女 / 種族：人間
-身長：173cm / 職業：バーテンダー / 誕生日：7月18日`
+      desc: `かつての奔放な生き方を改め、現在は正規のBARで働いている。季依恋との交際をきっかけに少しずつ人として成長し、自分なりに誰かを大切にすることを覚え始めた。それでも昔からの悪い癖は完全には抜け切っていない。`,
+      meta: `年齢：26歳 / 性別：女 / 種族：人間 / 身長：173cm / 職業：バーテンダー / 誕生日：7月18日`
     }
   },
   {
     s1: {
-      desc: `聖愛女学院高等学校に通うアイドル的大人気女子高校生。
-演劇部に所属しており、演技が大好きでこの先もずっと演劇で生きていきたいと思っている。
-明るく交友関係も良好で、幸せな高校生活を送っている。
-…はずだったのだが、中学最後の全国大会で最悪な出来事が起こってしまう。`,
-      meta: `年齢：16歳 / 性別：女 / 種族：人間
-身長：151cm / 誕生日：12月28日`
+      desc: `聖愛女学院高等学校に通うアイドル的大人気女子高校生。演劇部に所属しており、演技が大好きでこの先もずっと演劇で生きていきたいと思っている。明るく交友関係も良好で、幸せな高校生活を送っている。…はずだったのだが、中学最後の全国大会で最悪な出来事が起こってしまう。`,
+      meta: `年齢：16歳 / 性別：女 / 種族：人間 / 身長：151cm / 誕生日：12月28日`
     },
     s2: {
-      desc: `女優として活動する傍ら、アイドルとしても高い人気を誇る存在となった。 幼い頃から憧れていた夢を次々と叶え、誰もが羨む華やかな人生を歩んでいる。 しかし、その笑顔の裏側では誰にも見せられない葛藤を抱え続けている。`,
-      meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：154cm / 職業：アイドル / 誕生日：12月28日`
+      desc: `女優として活動する傍ら、アイドルとしても高い人気を誇る存在となった。幼い頃から憧れていた夢を次々と叶え、誰もが羨む華やかな人生を歩んでいる。しかし、その笑顔の裏側では誰にも見せられない葛藤を抱え続けている。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間 / 身長：154cm / 職業：アイドル / 誕生日：12月28日`
     }
   },
   {
     s1: {
-      desc: `怜冬と同じ違法BARで働く大学生。
-諸事情から白花と同棲している。
-将来的に警察になりたいと強く思っており、仕事と両立しながら資格の勉強もこなしている。
-怜冬とは高校時代の同級生だが、とある事件をきっかけに現在も非常に仲が悪い。`,
-      meta: `年齢：21歳 / 性別：女 / 種族：人間
-身長：172cm / 誕生日：1月14日`
+      desc: `怜冬と同じ違法BARで働く大学生。諸事情から白花と同棲している。将来的に警察になりたいと強く思っており、仕事と両立しながら資格の勉強もこなしている。怜冬とは高校時代の同級生だが、とある事件をきっかけに現在も非常に仲が悪い。`,
+      meta: `年齢：21歳 / 性別：女 / 種族：人間 / 身長：172cm / 誕生日：1月14日`
     },
     s2: {
-      desc: `幾度もの挫折を乗り越え、念願だった警察官となった。 忙しい日々を送りながらも、昔から変わらず困っている人を助けたいという信念を貫いている。 大切な人との未来を守るため、今日も職務に励んでいる。`,
-      meta: `年齢：26歳 / 性別：女 / 種族：人間
-身長：173cm / 職業：警察官 / 誕生日：1月14日`
+      desc: `幾度もの挫折を乗り越え、念願だった警察官となった。忙しい日々を送りながらも、昔から変わらず困っている人を助けたいという信念を貫いている。大切な人との未来を守るため、今日も職務に励んでいる。`,
+      meta: `年齢：26歳 / 性別：女 / 種族：人間 / 身長：173cm / 職業：警察官 / 誕生日：1月14日`
     }
   },
   {
     s1: {
-      desc: `天空世界にいたあきはの遣いの天使。
-とある復讐を果たすために地上へ降りてきた。
-それと同時に、自殺をしようとしていた翠を助けた張本人でもある。
-しかし、アンジェラには違う目的があるようで…。`,
-      meta: `年齢：??歳 / 性別：男 / 種族：天使
-身長：168cm / 誕生日：5月21日`
+      desc: `天空世界にいたあきはの遣いの天使。とある復讐を果たすために地上へ降りてきた。それと同時に、自殺をしようとしていた翠を助けた張本人でもある。しかし、アンジェラには違う目的があるようで…。`,
+      meta: `年齢：??歳 / 性別：男 / 種族：天使 / 身長：168cm / 誕生日：5月21日`
     },
     s2: {
-      desc: `裁判官として人々を裁く立場となり、人間としての人生を歩み続けている。 かつて抱いていた復讐心は薄れ、自分なりの正義を見つけようとしていた。 しかし、その平穏は再び神によって大きく揺さぶられることになる。`,
-      meta: `年齢：??歳 / 性別：男 / 種族：人間
-身長：168cm / 職業：裁判官 / 誕生日：5月21日`
+      desc: `裁判官として人々を裁く立場となり、人間としての人生を歩み続けている。かつて抱いていた復讐心は薄れ、自分なりの正義を見つけようとしていた。しかし、その平穏は再び神によって大きく揺さぶられることになる。`,
+      meta: `年齢：??歳 / 性別：男 / 種族：人間 / 身長：168cm / 職業：裁判官 / 誕生日：5月21日`
     }
   },
   {
     s1: {
-      desc: `あきはによって創られたお助けロボット。
-ロボットとは思えない程人間に近い容姿や動きをする。
-自我を持ち、自分自身で自由に行動できるが、最新は少し体の調子が悪いようで…。`,
-      meta: `年齢：?? / 性別：無 / 種族：ロボット
-身長：154cm / 誕生日：?月?日`
+      desc: `あきはによって創られたお助けロボット。ロボットとは思えない程人間に近い容姿や動きをする。自我を持ち、自分自身で自由に行動できるが、最新は少し体の調子が悪いようで…。`,
+      meta: `年齢：?? / 性別：無 / 種族：ロボット / 身長：154cm / 誕生日：?月?日`
     },
     s2: {
-      desc: `決まった仕事には就かず、その時々で様々な仕事を転々としながら生活している。 翠の事故以来は病室へ通い続け、翠の介護に専念している。。 `,
-      meta: `年齢：28歳 / 性別：女性 / 種族：人間
-身長：154cm / 職業：フリーター / 誕生日：8月7日`
+      desc: `決まった仕事には就かず、その時々で様々な仕事を転々としながら生活している。翠の事故以来は病室へ通い続け、翠の介護に専念している。`,
+      meta: `年齢：28歳 / 性別：女性 / 種族：人間 / 身長：154cm / 職業：フリーター / 誕生日：8月7日`
     }
   },
   {
     s1: {
       desc: `この世界を創った創造主。…らしい。自称神。翠が親に捨てられ路頭に迷っていた時に保護し、共に生活している。ポンコツ気味で明るく騒がしいが、誰かが危険な行動をしようとすると凄い剣幕で阻止する。`,
-      meta: `年齢：?? / 性別：女 / 種族：神
-身長：152cm / 誕生日：?月?日`
+      meta: `年齢：?? / 性別：女 / 種族：神 / 身長：152cm / 誕生日：?月?日`
     },
     s2: {
-      desc: `現実世界では高校教師として働き、かつての自分たちのような子どもを救いたいと願っている。 騒がしく自由奔放な性格は変わらないが、以前よりも人を導く立場としての責任感を身につけた。 それでも、彼女の物語はまだ終わってはいない。`,
-      meta: `年齢：28歳 / 性別：女 / 種族：人間
-身長：157cm / 職業：高校教師 / 誕生日：1月22日`
+      desc: `現実世界では高校教師として働き、かつての自分たちのような子どもを救いたいと願っている。騒がしく自由奔放な性格は変わらないが、以前よりも人を導く立場としての責任感を身につけた。それでも、彼女の物語はまだ終わってはいない。`,
+      meta: `年齢：28歳 / 性別：女 / 種族：人間 / 身長：157cm / 職業：高校教師 / 誕生日：1月22日`
     }
   }
 ];
@@ -904,10 +981,12 @@ function renderMain(){
     </button>
   `).join("");
 }
+
 function renderSub(){
   characterSelect.innerHTML=`<div class="subPreparing" style="grid-column:1/-1;">SUBは準備中です</div>`;
   profileArea.classList.remove("open");
 }
+
 renderMain();
 
 btnMain.onclick=()=>{
@@ -915,6 +994,7 @@ btnMain.onclick=()=>{
   btnSub.classList.remove("active");
   renderMain();
 };
+
 btnSub.onclick=()=>{
   btnSub.classList.add("active");
   btnMain.classList.remove("active");
@@ -926,25 +1006,53 @@ function openLock(){
   lockBox.classList.add("open");
   document.body.style.overflow="hidden";
 }
+
 function closeLock(){
   lockOverlay.classList.remove("open");
   lockBox.classList.remove("open");
   document.body.style.overflow="";
 }
+
 function applyAccent(idx){
   const a=accents[idx]||"#4fbfc2";
   profileArea.style.setProperty("--accent",a);
-  document.querySelectorAll(".selectBtn").forEach(btn=>btn.classList.remove("active"));
+
+  document.querySelectorAll(".selectBtn").forEach(btn=>{
+    btn.classList.remove("active");
+    btn.style.removeProperty("--accent");
+  });
+
   const active=document.querySelector(`.selectBtn[data-index="${idx}"]`);
   if(active){
     active.style.setProperty("--accent",a);
     active.classList.add("active");
   }
 }
+
 function setSeasonButtons(){
   btnS1.classList.toggle("active",currentSeason==="s1");
   btnS2.classList.toggle("active",currentSeason==="s2");
 }
+
+function parseMeta(meta){
+  const parts=meta.split("/").map(v=>v.trim());
+  const result={age:"",rows:[]};
+
+  parts.forEach(part=>{
+    const [label,...rest]=part.split("：");
+    const value=rest.join("：").trim();
+    const cleanLabel=label.trim();
+
+    if(cleanLabel==="年齢"){
+      result.age=value;
+    }else{
+      result.rows.push({label:cleanLabel,value});
+    }
+  });
+
+  return result;
+}
+
 async function switchHero(src){
   heroImg.classList.remove("enter");
   heroImg.classList.add("exit");
@@ -954,56 +1062,82 @@ async function switchHero(src){
   void heroImg.offsetWidth;
   heroImg.classList.add("enter");
 }
+
 function loadCharacter(idx,season="s1",animate=true){
   currentIndex=idx;
   currentSeason=season;
+
   const data=(profiles[idx]&&profiles[idx][season])?profiles[idx][season]:profiles[0][season];
   const no=String(idx+1).padStart(2,"0");
+  const name=names[idx]||names[0];
+  const meta=parseMeta(data.meta);
 
   applyAccent(idx);
   setSeasonButtons();
+
   profileArea.classList.add("open");
   profileArea.setAttribute("aria-hidden","false");
 
   profileNo.textContent=`NO.${no}`;
-  nameImg.src=nameImgs[idx];
-  metaText.textContent=data.meta;
+  charRuby.textContent=name.ruby;
+  charName.textContent=name.jp;
+  charAge.textContent=meta.age || "";
+
+  metaText.innerHTML=meta.rows.map(row=>`
+    <div class="metaRow">
+      <span class="metaLabel">${row.label}</span>
+      <span>${row.value}</span>
+    </div>
+  `).join("");
+
   descText.textContent=data.desc;
 
   const src=season==="s2"?heroS2[idx]:heroS1[idx];
-  if(animate){switchHero(src);}
-  else{
+
+  if(animate){
+    switchHero(src);
+  }else{
     heroImg.src=src;
     heroImg.classList.add("enter");
   }
 }
+
 async function playPassword(idx){
   if(animRunning)return;
   animRunning=true;
+
   pwText.textContent="";
   pwStatus.textContent="…";
   pwStatus.className="lockStatus";
+
   openLock();
   await sleep(180);
+
   const code=passcodes[idx]||"0000";
   for(const c of code){
     pwText.textContent+=c;
     await sleep(95);
   }
+
   await sleep(120);
   pwStatus.textContent="COMPLETE";
   pwStatus.classList.add("ok");
+
   await sleep(260);
   closeLock();
+
   await sleep(120);
   loadCharacter(idx,"s1",true);
+
   animRunning=false;
 }
+
 characterSelect.addEventListener("click",e=>{
   const btn=e.target.closest(".selectBtn");
   if(!btn)return;
   playPassword(Number(btn.dataset.index));
 });
+
 btnS1.onclick=()=>loadCharacter(currentIndex,"s1",true);
 btnS2.onclick=()=>loadCharacter(currentIndex,"s2",true);
 
@@ -1021,15 +1155,23 @@ function openMap(){
     document.body.style.overflow="hidden";
   },420);
 }
+
 function closeMap(){
   mapOverlay.classList.remove("open");
   mapOverlay.setAttribute("aria-hidden","true");
   document.body.style.overflow="";
 }
+
 menuBtn.onclick=openMap;
 mapClose.onclick=closeMap;
-mapOverlay.addEventListener("click",e=>{if(e.target===mapOverlay)closeMap()});
-window.addEventListener("keydown",e=>{if(e.key==="Escape")closeMap()});
+
+mapOverlay.addEventListener("click",e=>{
+  if(e.target===mapOverlay)closeMap();
+});
+
+window.addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeMap();
+});
 
 document.querySelectorAll(".mapLink").forEach(link=>{
   link.addEventListener("click",e=>{
