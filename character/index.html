@@ -460,46 +460,55 @@ body.glitching::after{
   text-align:left;
   margin:16px 0 0;
 }
-.profileHero{
-  position:relative;
-  min-height:610px;
-  overflow:hidden;
-  border-radius:16px;
-}
-.profileHero img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  position:relative;
-}
-
-.profileHero img.s1Zoom{
-  width:100%;
-  left:0;
-}
-
-.profileHero img.s2Zoom{
-  width:118%;
-  left:-8%;
-}
 .profileHeroImg{
+  --zoom:1;
+  --shift:0%;
   opacity:0;
-  transform:translateX(-32px);
+  transform:translateX(var(--shift)) scale(var(--zoom));
+  transform-origin:center center;
 }
+
+.profileHeroImg.s1Zoom{
+  --zoom:1;
+  --shift:0%;
+}
+
+.profileHeroImg.s2Zoom{
+  --zoom:1.3;
+  --shift:-12%;
+}
+
 .profileHeroImg.enter{
   animation:heroIn .42s ease both;
 }
+
 .profileHeroImg.exit{
   animation:heroOut .3s ease both;
 }
+
 @keyframes heroIn{
-  from{opacity:0;transform:translateX(-42px);filter:blur(4px)}
-  to{opacity:1;transform:translateX(0);filter:blur(0)}
+  from{
+    opacity:0;
+    transform:translateX(calc(var(--shift) - 42px)) scale(var(--zoom));
+    filter:blur(4px);
+  }
+  to{
+    opacity:1;
+    transform:translateX(var(--shift)) scale(var(--zoom));
+    filter:blur(0);
+  }
 }
+
 @keyframes heroOut{
-  from{opacity:1;transform:translateX(0)}
-  to{opacity:0;transform:translateX(44px);filter:blur(4px)}
+  from{
+    opacity:1;
+    transform:translateX(var(--shift)) scale(var(--zoom));
+  }
+  to{
+    opacity:0;
+    transform:translateX(calc(var(--shift) + 44px)) scale(var(--zoom));
+    filter:blur(4px);
+  }
 }
 .seasonBtns{
   display:flex;
