@@ -1090,6 +1090,13 @@ function loadCharacter(idx,season="s1",animate=true){
   profileNo.textContent=`NO.${no}`;
   charRuby.textContent=name.ruby;
   charName.textContent=name.jp;
+  charName.classList.remove("smallName","xsmallName");
+
+if(idx===11){
+  charName.classList.add("xsmallName");
+}else if(idx===2 || idx===5){
+  charName.classList.add("smallName");
+}
   charAge.textContent=meta.age || "";
 
   metaText.innerHTML=meta.rows.map(row=>`
