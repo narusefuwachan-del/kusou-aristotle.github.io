@@ -1092,9 +1092,11 @@ function loadCharacter(idx,season="s1",animate=true){
   charName.textContent=name.jp;
   charName.classList.remove("smallName","xsmallName");
 
-if(idx===11){
+if(idx === 11){
+  // アンジェラ
   charName.classList.add("xsmallName");
-}else if(idx===2 || idx===5){
+}else if([2,3,4,5,6,9,10].includes(idx)){
+  // 4文字の名前
   charName.classList.add("smallName");
 }
   charAge.textContent=meta.age || "";
