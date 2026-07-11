@@ -454,7 +454,6 @@ body.glitching::after{
 }
 .profileText{
   color:color-mix(in srgb,var(--accent) 76%,white 24%);
-.profileText{
   font-size:clamp(13px,2vw,19px);
   line-height:1.75;
   letter-spacing:.05em;
@@ -1175,7 +1174,7 @@ function loadCharacter(idx,season="s1",animate=true){
 
 if(idx === 11){
   charName.classList.add("xsmallName");
-}else if([2,4,5,8,9,10].includes(idx)){
+}else if([3,4,6,8,9,10].includes(idx)){
   charName.classList.add("smallName");
 }
   charAge.textContent=meta.age || "";
