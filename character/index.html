@@ -562,22 +562,96 @@ body.glitching::after{
   to{opacity:1;transform:translateY(0)}
 }
 
-footer{
-  padding:48px 16px 56px;
+.footer{
+  position:relative;
+  z-index:5;
+  padding:44px 16px 56px;
   text-align:center;
   background:rgba(0,0,0,.35);
-  border-top:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-top:1px solid rgba(255,255,255,.10);
 }
+
+.footer-inner{
+  max-width:960px;
+  margin:0 auto;
+}
+
 .footer-logo{
-  width:min(260px,70vw);
-  margin:0 auto 18px;
+  width:min(64vw,260px);
+  height:auto;
   display:block;
+  margin:0 auto 18px;
+  opacity:.92;
+  filter:drop-shadow(0 8px 28px rgba(0,0,0,.45));
 }
+
+.footer-title{
+  margin:0 0 10px;
+  font-weight:800;
+  letter-spacing:.08em;
+  font-size:13px;
+  color:rgba(255,255,255,.78);
+}
+
+.footer-sns{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+  margin:12px 0 6px;
+}
+
+.share{
+  margin:10px 0 18px;
+  display:grid;
+  gap:10px;
+  justify-items:center;
+}
+
+.share-row{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.sns-btn{
+  width:44px;
+  height:44px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  text-decoration:none;
+  transition:transform .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.sns-btn:active{
+  transform:scale(.98);
+}
+
+.sns-btn:hover{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.28);
+}
+
+.icon-img{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  display:block;
+  opacity:.92;
+}
+
 .footer-note{
+  margin-top:18px;
   font-size:12px;
-  opacity:.6;
-  line-height:1.7;
-  letter-spacing:.06em;
+  color:rgba(255,255,255,.60);
+  letter-spacing:.03em;
 }
 
 /* password */
@@ -857,11 +931,44 @@ footer{
   </section>
 </main>
 
-<footer>
-  <img src="/images/logo.png" class="footer-logo" alt="">
-  <div class="footer-note">
-    © 空想世界アリストテレス<br>
-    当サイトの内容・文章・画像等の無断使用を固く禁じます。
+<footer class="footer" aria-label="フッター">
+  <div class="footer-inner">
+    <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
+
+    <div class="share" aria-label="シェア">
+      <div class="footer-title">SHARE</div>
+
+      <div class="share-row">
+        <a class="sns-btn" id="shareX" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
+          <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+        </a>
+
+        <a class="sns-btn" id="shareLINE" href="#" target="_blank" rel="noopener" aria-label="LINEでシェア">
+          <img class="icon-img" src="/images/icons/line.png" alt="" aria-hidden="true">
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-title">OFFICIAL</div>
+
+    <div class="footer-sns" aria-label="公式SNS">
+      <a class="sns-btn" href="https://x.com/passion_fruit_k" target="_blank" rel="noopener" aria-label="X">
+        <img class="icon-img" src="/images/icons/x.png" alt="" aria-hidden="true">
+      </a>
+
+      <a class="sns-btn" href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo" target="_blank" rel="noopener" aria-label="YouTube">
+        <img class="icon-img" src="/images/icons/youtube.png" alt="" aria-hidden="true">
+      </a>
+
+      <a class="sns-btn" href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927" target="_blank" rel="noopener" aria-label="Nola">
+        <img class="icon-img" src="/images/icons/nola.png" alt="" aria-hidden="true">
+      </a>
+    </div>
+
+    <div class="footer-note">
+      © 空想世界アリストテレス<br>
+      当サイトに掲載されている文章・画像等の無断転載、無断使用を固く禁じます。
+    </div>
   </div>
 </footer>
 
@@ -878,6 +985,21 @@ footer{
 </section>
 
 <script>
+  (() => {
+  const url = encodeURIComponent(location.href);
+  const title = encodeURIComponent(document.title);
+
+  const shareX = document.getElementById("shareX");
+  const shareLINE = document.getElementById("shareLINE");
+
+  if(shareX){
+    shareX.href = `https://x.com/intent/tweet?text=${title}&url=${url}`;
+  }
+
+  if(shareLINE){
+    shareLINE.href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+  }
+})();
 const characterSelect=document.getElementById("characterSelect");
 const profileArea=document.getElementById("profileArea");
 const profileInfo=document.getElementById("profileInfo");
