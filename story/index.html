@@ -1,55 +1,74 @@
-'<!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Story | 空想世界アリストテレス</title>
 
   <link rel="icon" href="/favicon.png">
   <link rel="icon" href="/images/favicon.png" type="image/png">
 
-  <!-- ===== Kazuki Reiwa Light (LOCAL) ===== -->
   <style>
     @font-face{
-      font-family: "Kazuki Reiwa";
-      src: url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
+      font-family:"Kazuki Reiwa";
+      src:url("/fonts/KazukiReiwa-Light.ttf") format("truetype");
+      font-weight:300;
+      font-style:normal;
+      font-display:swap;
     }
-  </style>
 
-  <style>
-    *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; }
+    *{
+      box-sizing:border-box;
+    }
+
+    html,
     body{
-      font-family:"Kazuki Reiwa", serif;
+      margin:0;
+      padding:0;
+    }
+
+    body,
+    button{
+      font-family:"Kazuki Reiwa","Shippori Mincho","Yu Mincho",serif;
+    }
+
+    body{
       line-height:1.85;
       color:#fff;
       background:#0b0b0f;
       overflow-x:hidden;
+      animation:pageFade .45s ease both;
+    }
+
+    @keyframes pageFade{
+      from{opacity:0}
+      to{opacity:1}
     }
 
     /* ===== header ===== */
+
     .header{
-      position: sticky;
-      top: 0;
-      z-index: 60;
+      position:sticky;
+      top:0;
+      z-index:60;
       display:flex;
       justify-content:space-between;
       align-items:center;
       padding:12px 16px;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
+
     .site-title{
       font-size:18px;
       letter-spacing:.08em;
       color:#fff;
       text-decoration:none;
     }
+
     .menu-btn{
       font-size:22px;
       background:none;
@@ -60,71 +79,388 @@
       border-radius:10px;
     }
 
-    /* ===== overlay/menu ===== */
-    .overlay{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .25s ease;
-      z-index: 1000;
+    .menu-btn:active{
+      transform:scale(.98);
     }
-    .overlay.open{ opacity:1; pointer-events:auto; }
 
-    .menu{
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 340px;
-      max-width: 78vw;
-      height: 100vh;
-      background: rgba(0,0,0,.86);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 18px 16px;
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1001;
-      overflow-y:auto;
-      -webkit-overflow-scrolling:touch;
-      touch-action: pan-y;
+    /* ===== 神殿案内図 ===== */
+
+    .mapOverlay{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      background:rgba(0,0,0,.76);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .35s ease;
+      display:grid;
+      place-items:center;
+      padding:18px;
     }
-    .menu.open{ transform: translateX(0); }
 
-    .menu-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding-bottom:10px;
-      border-bottom: 1px solid rgba(255,255,255,.14);
-      margin-bottom:8px;
+    .mapOverlay.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .mapPanel{
+      position:relative;
+      width:min(96vw,720px);
+      aspect-ratio:1 / 1;
+      opacity:0;
+      transform:scale(.96);
+      transition:
+        opacity .42s ease,
+        transform .42s ease;
+      filter:drop-shadow(0 24px 80px rgba(0,0,0,.75));
+    }
+
+    .mapOverlay.open .mapPanel{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .mapBase,
+    .mapSandou{
+      position:absolute;
+      pointer-events:none;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    .mapBase{
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      z-index:1;
+    }
+
+    .mapSandou{
+      left:50%;
+      top:50%;
+      width:30%;
+      height:auto;
+      transform:translate(-50%,-50%);
+      z-index:4;
+      opacity:.96;
+      filter:drop-shadow(0 0 16px rgba(255,255,255,.22));
+    }
+
+    .mapCross{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:54%;
+      height:54%;
+      transform:translate(-50%,-50%);
+      z-index:2;
+      pointer-events:none;
+    }
+
+    .mapCross::before,
+    .mapCross::after{
+      content:"";
+      position:absolute;
+      background:rgba(255,255,255,.78);
+      box-shadow:0 0 16px rgba(255,255,255,.55);
+      border-radius:999px;
+    }
+
+    .mapCross::before{
+      left:50%;
+      top:0;
+      width:2px;
+      height:100%;
+      transform:translateX(-50%);
+    }
+
+    .mapCross::after{
+      left:0;
+      top:50%;
+      width:100%;
+      height:2px;
+      transform:translateY(-50%);
+    }
+
+    .mapCrossCenter{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:3;
+      width:28px;
+      height:28px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(255,255,255,.72);
+      box-shadow:0 0 16px rgba(255,255,255,.45);
+      pointer-events:none;
+    }
+
+    .mapTitleFrame{
+      position:absolute;
+      left:50%;
+      top:4%;
+      transform:translateX(-50%);
+      z-index:20;
+      min-width:48%;
+      padding:6px 16px 7px;
+      border:1px solid rgba(255,255,255,.42);
+      background:rgba(0,0,0,.34);
+      box-shadow:
+        0 0 18px rgba(255,255,255,.12),
+        inset 0 0 18px rgba(255,255,255,.06);
+      text-align:center;
+      pointer-events:none;
+    }
+
+    .mapTitle{
+      font-size:clamp(16px,3.8vw,28px);
+      letter-spacing:.18em;
+      text-shadow:0 0 16px rgba(255,255,255,.35);
+      white-space:nowrap;
+    }
+
+    .mapNote{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:5.5%;
+      z-index:20;
+      text-align:center;
+      font-size:clamp(10px,2.5vw,14px);
+      letter-spacing:.08em;
+      opacity:.78;
+      pointer-events:none;
+      text-shadow:0 0 12px rgba(0,0,0,.9);
+    }
+
+    .mapClose{
+      position:fixed;
+      top:14px;
+      right:16px;
+      z-index:1010;
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.45);
       color:#fff;
-    }
-    .menu-title{ letter-spacing:.14em; }
-    .close-btn{
       font-size:20px;
-      background:none;
-      border:none;
       cursor:pointer;
-      padding:8px 10px;
-      border-radius:10px;
-      color:#fff;
     }
-    .menu a{
+
+    .placeLabel{
+      position:absolute;
+      z-index:22;
+      min-width:90px;
+      padding:6px 10px 7px;
+      border:1px solid rgba(255,255,255,.38);
+      background:rgba(0,0,0,.42);
+      box-shadow:
+        0 0 14px rgba(255,255,255,.10),
+        inset 0 0 12px rgba(255,255,255,.05);
+      text-align:center;
+      pointer-events:none;
+      backdrop-filter:blur(4px);
+      -webkit-backdrop-filter:blur(4px);
+    }
+
+    .placeLabel .en{
       display:block;
-      padding:14px 6px;
-      letter-spacing:.12em;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      color:#fff;
-      text-decoration:none;
+      font-size:11px;
+      letter-spacing:.18em;
+      opacity:.68;
+      line-height:1.15;
+    }
+
+    .placeLabel .jp{
+      display:block;
+      margin-top:2px;
+      font-size:15px;
+      letter-spacing:.16em;
+      line-height:1.2;
+    }
+
+    .label-story{
+      left:50%;
+      top:31%;
+      transform:translate(-50%,-50%);
+    }
+
+    .label-character{
+      left:22%;
+      top:64%;
+      transform:translate(-50%,-50%);
+    }
+
+    .label-guide{
+      left:78%;
+      top:64%;
+      transform:translate(-50%,-50%);
+    }
+
+    .label-home{
+      left:50%;
+      top:84%;
+      transform:translate(-50%,-50%);
+    }
+
+    .mapLink{
+      position:absolute;
+      z-index:30;
+      display:block;
+      border-radius:999px;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .mapLink::after{
+      content:"";
+      position:absolute;
+      inset:10%;
+      border-radius:999px;
+      opacity:0;
+      box-shadow:0 0 30px rgba(255,255,255,.9);
+      transition:
+        opacity .18s ease,
+        transform .18s ease;
+      transform:scale(.9);
+    }
+
+    .mapLink:hover::after,
+    .mapLink:active::after{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .mapLink.current::before{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      background:#d51d2a;
+      box-shadow:0 0 18px rgba(255,0,0,.95);
+      left:50%;
+      top:72%;
+      transform:translate(-50%,-50%);
+      z-index:3;
+    }
+
+    .mapLink.home{
+      left:39%;
+      top:63%;
+      width:22%;
+      height:22%;
+    }
+
+    .mapLink.character{
+      left:7%;
+      top:37%;
+      width:24%;
+      height:28%;
+    }
+
+    .mapLink.story{
+      left:38%;
+      top:13%;
+      width:24%;
+      height:24%;
+    }
+
+    .mapLink.guide{
+      right:7%;
+      top:37%;
+      width:24%;
+      height:26%;
+    }
+
+    .mapLink.loading::after{
+      opacity:1;
+      transform:scale(1.12);
+      box-shadow:0 0 42px rgba(255,255,255,.95);
+    }
+
+    /* ===== glitch ===== */
+
+    body.glitching::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:999;
+      pointer-events:none;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,0,80,.22),
+          transparent 32%,
+          rgba(0,255,255,.18)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,.20) 0px,
+          rgba(255,255,255,.20) 1px,
+          transparent 2px,
+          transparent 6px
+        );
+      mix-blend-mode:screen;
+      animation:realGlitch .38s steps(2,end) 1;
+    }
+
+    body.glitching::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      pointer-events:none;
+      background:rgba(0,0,0,.28);
+      animation:glitchDark .38s steps(2,end) 1;
+    }
+
+    @keyframes realGlitch{
+      0%{
+        opacity:0;
+        transform:translate(0,0);
+      }
+
+      18%{
+        opacity:.95;
+        transform:translate(-6px,2px);
+      }
+
+      34%{
+        opacity:.45;
+        transform:translate(7px,-2px);
+      }
+
+      52%{
+        opacity:.85;
+        transform:translate(-3px,-4px);
+      }
+
+      72%{
+        opacity:.55;
+        transform:translate(4px,3px);
+      }
+
+      100%{
+        opacity:0;
+        transform:translate(0,0);
+      }
+    }
+
+    @keyframes glitchDark{
+      0%{opacity:0}
+      30%{opacity:.7}
+      60%{opacity:.3}
+      100%{opacity:0}
     }
 
     /* ===== page wrapper ===== */
+
     .box{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px 16px 56px;
+      max-width:980px;
+      margin:0 auto;
+      padding:22px 16px 56px;
       text-align:center;
     }
 
@@ -135,6 +471,7 @@
       margin-top:22px;
       margin-bottom:6px;
     }
+
     h1{
       margin:0 0 14px;
       font-size:42px;
@@ -144,6 +481,7 @@
     }
 
     /* ===== S1/S2 switch ===== */
+
     .switch{
       margin:22px auto 18px;
       display:flex;
@@ -151,33 +489,37 @@
       border-radius:999px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.05);
+      background:rgba(255,255,255,.05);
     }
+
     .switch button{
       flex:1;
       border:none;
       padding:12px 0;
       font-size:16px;
       background:none;
-      color:white;
+      color:#fff;
       cursor:pointer;
-      font-family: inherit;
+      font-family:inherit;
       letter-spacing:.22em;
     }
+
     .switch button.active{
       background:#1aa5a5;
       color:#000;
     }
 
     /* ===== visual ===== */
+
     .visual{
-      width:min(560px, 92vw);
+      width:min(560px,92vw);
       margin:18px auto 16px;
       border:1px solid rgba(255,255,255,.20);
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
       overflow:hidden;
       border-radius:14px;
     }
+
     .visual img{
       width:100%;
       display:block;
@@ -185,18 +527,21 @@
     }
 
     /* ===== summary ===== */
+
     .summary{
-      width:min(560px, 92vw);
-      margin: 14px auto 18px;
-      line-height:2.0;
+      width:min(560px,92vw);
+      margin:14px auto 18px;
+      line-height:2;
       opacity:.88;
       letter-spacing:.04em;
       text-align:left;
-      white-space: pre-wrap;
+      white-space:pre-wrap;
     }
 
     /* ===== buttons ===== */
-    .readBtn, .backTopBtn{
+
+    .readBtn,
+    .backTopBtn{
       background:#1aa5a5;
       border:none;
       padding:14px 30px;
@@ -206,25 +551,29 @@
       margin:18px 0 0;
       border-radius:999px;
       letter-spacing:.18em;
-      font-family: inherit;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-      -webkit-tap-highlight-color: transparent;
+      font-family:inherit;
+      box-shadow:0 18px 50px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color:transparent;
     }
+
     .backTopBtn{
       margin-top:22px;
       display:inline-flex;
       align-items:center;
       gap:10px;
     }
+
     .backTopBtn span{
       letter-spacing:0;
     }
 
     /* ===== chapter page ===== */
+
     .chapterPage{
       display:none;
       padding-top:18px;
     }
+
     .seasonTitle{
       margin-top:22px;
       font-size:34px;
@@ -233,9 +582,9 @@
     }
 
     .chapterList{
-      width:min(620px, 92vw);
-      margin: 18px auto 0;
-      padding-bottom: 20px;
+      width:min(620px,92vw);
+      margin:18px auto 0;
+      padding-bottom:20px;
     }
 
     .chapterRow{
@@ -243,18 +592,16 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding: 14px 14px;
-      margin: 12px 0;
+      padding:14px;
+      margin:12px 0;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.04);
-
+      background:rgba(255,255,255,.04);
       opacity:0;
       transform:translateX(-38px);
       animation:slideFade .62s ease forwards;
     }
 
-    /* 左からフェード＆スワイプ（ページ開いた瞬間） */
     @keyframes slideFade{
       to{
         opacity:1;
@@ -269,23 +616,25 @@
       min-width:0;
       text-align:left;
     }
+
     .chapterNo{
       font-size:18px;
       letter-spacing:.12em;
       opacity:.78;
-      flex: 0 0 auto;
-      white-space: nowrap;
+      flex:0 0 auto;
+      white-space:nowrap;
     }
+
     .chapterName{
       font-size:20px;
       letter-spacing:.10em;
       overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
 
     .chapterRow button{
-      background: rgba(255,255,255,.06);
+      background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.16);
       color:#fff;
       font-size:14px;
@@ -293,189 +642,568 @@
       padding:10px 14px;
       border-radius:999px;
       letter-spacing:.14em;
-      font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
+      font-family:inherit;
+      -webkit-tap-highlight-color:transparent;
     }
+
     .chapterRow button:hover{
-      background: rgba(255,255,255,.10);
+      background:rgba(255,255,255,.10);
     }
 
     /* ===== footer ===== */
+
     .footer{
-      position: relative;
-      z-index: 5;
-      padding: 44px 16px 56px;
-      text-align: center;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      border-top: 1px solid rgba(255,255,255,.10);
-      margin-top: 30px;
+      position:relative;
+      z-index:5;
+      padding:44px 16px 56px;
+      text-align:center;
+      background:rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      border-top:1px solid rgba(255,255,255,.10);
+      margin-top:30px;
     }
+
     .footer-inner{
-      max-width: 960px;
-      margin: 0 auto;
+      max-width:960px;
+      margin:0 auto;
     }
+
     .footer-logo{
-      width: min(64vw, 260px);
-      margin: 0 auto 18px;
-      display: block;
+      width:min(64vw,260px);
+      height:auto;
+      display:block;
+      margin:0 auto 18px;
+      opacity:.92;
+      filter:drop-shadow(0 8px 28px rgba(0,0,0,.45));
     }
+
     .footer-title{
-      font-size: 13px;
-      letter-spacing: .08em;
-      opacity: .8;
-      margin: 12px 0;
-      color:#fff;
+      margin:0 0 10px;
+      font-weight:800;
+      letter-spacing:.08em;
+      font-size:13px;
+      color:rgba(255,255,255,.78);
     }
-    .footer-sns, .share-row{
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
+
+    .share{
+      margin:10px 0 18px;
+      display:grid;
+      gap:10px;
+      justify-items:center;
     }
+
+    .share-row,
+    .footer-sns{
+      display:flex;
+      justify-content:center;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .footer-sns{
+      margin:12px 0 6px;
+    }
+
     .sns-btn{
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-    }
-    .icon-img{ width:22px; height:22px; }
-    .footer-note{
-      margin-top: 18px;
-      font-size: 12px;
-      opacity: .6;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
       color:#fff;
-      letter-spacing:.06em;
+      text-decoration:none;
+      transition:
+        transform .12s ease,
+        background .12s ease,
+        border-color .12s ease;
+    }
+
+    .sns-btn:active{
+      transform:scale(.98);
+    }
+
+    .sns-btn:hover{
+      background:rgba(255,255,255,.10);
+      border-color:rgba(255,255,255,.28);
+    }
+
+    .icon-img{
+      width:22px;
+      height:22px;
+      object-fit:contain;
+      display:block;
+      opacity:.92;
+    }
+
+    .footer-note{
+      margin-top:18px;
+      font-size:12px;
+      color:rgba(255,255,255,.60);
+      letter-spacing:.03em;
+      line-height:1.7;
+    }
+
+    /* ===== smartphone ===== */
+
+    @media(max-width:520px){
+      .site-title{
+        font-size:16px;
+      }
+
+      h1{
+        font-size:34px;
+      }
+
+      .mapPanel{
+        width:min(98vw,620px);
+      }
+
+      .mapTitleFrame{
+        top:4%;
+        min-width:48%;
+        padding:5px 12px 6px;
+      }
+
+      .placeLabel{
+        min-width:76px;
+        padding:5px 8px 6px;
+      }
+
+      .label-story{
+        top:31%;
+      }
+
+      .label-character{
+        left:21%;
+        top:65%;
+      }
+
+      .label-guide{
+        left:79%;
+        top:65%;
+      }
+
+      .label-home{
+        top:85%;
+      }
+
+      .mapNote{
+        bottom:4.6%;
+      }
+
+      .mapSandou{
+        width:31%;
+      }
+
+      .mapCross{
+        width:55%;
+        height:55%;
+      }
+
+      .summary{
+        font-size:14px;
+        line-height:1.9;
+      }
+
+      .chapterName{
+        font-size:18px;
+      }
+
+      .chapterNo{
+        font-size:16px;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <header class="header">
     <a href="/" class="site-title">空想世界アリストテレス</a>
-    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">☰</button>
+
+    <button
+      class="menu-btn"
+      id="menuBtn"
+      type="button"
+      aria-label="神殿案内図を開く"
+    >
+      ☰
+    </button>
   </header>
+
+  <!-- ===== 神殿案内図 ===== -->
+
+  <div
+    id="mapOverlay"
+    class="mapOverlay"
+    aria-hidden="true"
+  >
+    <button
+      class="mapClose"
+      id="mapClose"
+      type="button"
+      aria-label="神殿案内図を閉じる"
+    >
+      ✕
+    </button>
+
+    <div
+      class="mapPanel"
+      role="dialog"
+      aria-modal="true"
+      aria-label="神殿案内図"
+    >
+      <img
+        class="mapBase"
+        src="/images/chizu/chizu.webp"
+        alt=""
+      >
+
+      <div
+        class="mapCross"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="mapCrossCenter"
+        aria-hidden="true"
+      ></div>
+
+      <img
+        class="mapSandou"
+        src="/images/chizu/sandou.webp"
+        alt=""
+      >
+
+      <div class="mapTitleFrame">
+        <div class="mapTitle">神殿案内図</div>
+      </div>
+
+      <div class="placeLabel label-story">
+        <span class="en">Story</span>
+        <span class="jp">聖堂</span>
+      </div>
+
+      <div class="placeLabel label-character">
+        <span class="en">Character</span>
+        <span class="jp">名簿録</span>
+      </div>
+
+      <div class="placeLabel label-guide">
+        <span class="en">Guide</span>
+        <span class="jp">資料庫</span>
+      </div>
+
+      <div class="placeLabel label-home">
+        <span class="en">Home</span>
+        <span class="jp">神殿入口</span>
+      </div>
+
+      <a
+        class="mapLink home"
+        href="/"
+        aria-label="神殿入口 Home"
+      ></a>
+
+      <a
+        class="mapLink character"
+        href="/character/"
+        aria-label="名簿録 Character"
+      ></a>
+
+      <a
+        class="mapLink story current"
+        href="/story/"
+        aria-label="聖堂 Story"
+      ></a>
+
+      <a
+        class="mapLink guide"
+        href="/guide/"
+        aria-label="資料庫 Guide"
+      ></a>
+
+      <div class="mapNote">
+        ※アイコンを選択するとページへ移動します
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Story ===== -->
 
   <main class="box">
     <div class="title-ruby">story</div>
+
     <h1>Story</h1>
 
-    <!-- ===== switch ===== -->
-    <div class="switch" id="switchBar">
-      <button id="s1Btn" class="active">S1</button>
-      <button id="s2Btn">S2</button>
+    <div
+      class="switch"
+      id="switchBar"
+    >
+      <button
+        id="s1Btn"
+        class="active"
+        type="button"
+      >
+        S1
+      </button>
+
+      <button
+        id="s2Btn"
+        type="button"
+      >
+        S2
+      </button>
     </div>
 
-    <!-- ===== main view ===== -->
-    <div class="visual" id="visualBox">
-      <img id="storyImg" src="/images/story/s1.webp" alt="">
+    <div
+      class="visual"
+      id="visualBox"
+    >
+      <img
+        id="storyImg"
+        src="/images/story/s1.webp"
+        alt="Story S1"
+      >
     </div>
 
-    <div id="summary" class="summary"></div>
+    <div
+      id="summary"
+      class="summary"
+    ></div>
 
-    <button class="readBtn" id="readBtn" type="button">本編を読む</button>
+    <button
+      class="readBtn"
+      id="readBtn"
+      type="button"
+    >
+      本編を読む
+    </button>
 
-    <!-- ===== chapters ===== -->
-    <section id="chapters" class="chapterPage" aria-hidden="true">
-      <div class="seasonTitle" id="seasonTitle">1 期</div>
-      <div class="chapterList" id="chapterList"></div>
+    <section
+      id="chapters"
+      class="chapterPage"
+      aria-hidden="true"
+    >
+      <div
+        class="seasonTitle"
+        id="seasonTitle"
+      >
+        1 期
+      </div>
 
-      <button class="backTopBtn" id="backTopBtn" type="button">
-        <span>←</span> 戻る
+      <div
+        class="chapterList"
+        id="chapterList"
+      ></div>
+
+      <button
+        class="backTopBtn"
+        id="backTopBtn"
+        type="button"
+      >
+        <span>←</span>
+        戻る
       </button>
     </section>
   </main>
 
-  <div id="overlay" class="overlay" aria-hidden="true"></div>
-
-  <nav id="menu" class="menu" aria-hidden="true">
-    <div class="menu-top">
-      <div class="menu-title">MENU</div>
-      <button class="close-btn" id="closeBtn" aria-label="メニューを閉じる">✕</button>
-    </div>
-    <a href="/">Home</a>
-    <a href="/character/">Character</a>
-    <a href="/story/">Story</a>
-    <a href="/guide/">Guide</a>
-  </nav>
-
   <!-- ===== footer ===== -->
-  <footer class="footer" aria-label="フッター">
-    <div class="footer-inner">
-      <img class="footer-logo" src="/images/logo.png" alt="空想世界アリストテレス">
 
-      <div class="share-row">
-        <a class="sns-btn" href="#" aria-label="Xでシェア">
-          <img class="icon-img" src="/images/icons/x.png" alt="">
-        </a>
-        <a class="sns-btn" href="#" aria-label="LINEでシェア">
-          <img class="icon-img" src="/images/icons/line.png" alt="">
-        </a>
+  <footer
+    class="footer"
+    aria-label="フッター"
+  >
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="/images/logo.png"
+        alt="空想世界アリストテレス"
+      >
+
+      <div
+        class="share"
+        aria-label="シェア"
+      >
+        <div class="footer-title">SHARE</div>
+
+        <div class="share-row">
+          <a
+            class="sns-btn"
+            id="shareX"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            aria-label="Xでシェア"
+          >
+            <img
+              class="icon-img"
+              src="/images/icons/x.png"
+              alt=""
+              aria-hidden="true"
+            >
+          </a>
+
+          <a
+            class="sns-btn"
+            id="shareLINE"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            aria-label="LINEでシェア"
+          >
+            <img
+              class="icon-img"
+              src="/images/icons/line.png"
+              alt=""
+              aria-hidden="true"
+            >
+          </a>
+        </div>
       </div>
 
       <div class="footer-title">OFFICIAL</div>
-      <div class="footer-sns">
-        <a class="sns-btn" href="https://x.com/passion_kwski" target="_blank" rel="noopener">
-          <img class="icon-img" src="/images/icons/x.png" alt="">
+
+      <div
+        class="footer-sns"
+        aria-label="公式SNS"
+      >
+        <a
+          class="sns-btn"
+          href="https://x.com/passion_fruit_k"
+          target="_blank"
+          rel="noopener"
+          aria-label="公式X"
+        >
+          <img
+            class="icon-img"
+            src="/images/icons/x.png"
+            alt=""
+            aria-hidden="true"
+          >
         </a>
-        <a class="sns-btn" href="https://youtube.com/@sui_umbrella" target="_blank" rel="noopener">
-          <img class="icon-img" src="/images/icons/youtube.png" alt="">
+
+        <a
+          class="sns-btn"
+          href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo"
+          target="_blank"
+          rel="noopener"
+          aria-label="公式YouTube"
+        >
+          <img
+            class="icon-img"
+            src="/images/icons/youtube.png"
+            alt=""
+            aria-hidden="true"
+          >
         </a>
-        <a class="sns-btn" href="https://story.nola-novel.com/" target="_blank" rel="noopener">
-          <img class="icon-img" src="/images/icons/nola.png" alt="">
+
+        <a
+          class="sns-btn"
+          href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927"
+          target="_blank"
+          rel="noopener"
+          aria-label="Nola"
+        >
+          <img
+            class="icon-img"
+            src="/images/icons/nola.png"
+            alt=""
+            aria-hidden="true"
+          >
         </a>
       </div>
 
-      <div class="footer-note">© 空想世界アリストテレス</div>
+      <div class="footer-note">
+        © 空想世界アリストテレス<br>
+        当サイトに掲載されている文章・画像等の無断転載、無断使用を固く禁じます。
+      </div>
     </div>
   </footer>
 
   <script>
-    /* =========================
-       HAMBURGER (元コード維持)
-    ========================= */
-    const menu = document.getElementById("menu");
-    const overlay = document.getElementById("overlay");
-    const menuBtn = document.getElementById("menuBtn");
-    const closeBtn = document.getElementById("closeBtn");
+    /* ===== SHARE ===== */
 
-    const openMenu = () => {
-      menu.classList.add("open");
-      overlay.classList.add("open");
-      menu.setAttribute("aria-hidden", "false");
-    };
-    const closeMenu = () => {
-      menu.classList.remove("open");
-      overlay.classList.remove("open");
-      menu.setAttribute("aria-hidden", "true");
-    };
+    (() => {
+      const url = encodeURIComponent(location.href);
+      const title = encodeURIComponent(document.title);
 
-    menuBtn.addEventListener("click", openMenu);
-    closeBtn.addEventListener("click", closeMenu);
-    overlay.addEventListener("click", closeMenu);
-    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+      const shareX = document.getElementById("shareX");
+      const shareLINE = document.getElementById("shareLINE");
 
-    let sx=0, sy=0, tracking=false;
-    menu.addEventListener("touchstart", e=>{
-      const t=e.touches[0]; sx=t.clientX; sy=t.clientY; tracking=true;
-    }, {passive:true});
-    menu.addEventListener("touchmove", e=>{
-      if(!tracking) return;
-      const t=e.touches[0];
-      const dx=t.clientX-sx, dy=t.clientY-sy;
-      if(Math.abs(dx)>Math.abs(dy)){
-        e.preventDefault();
-        if(dx < -60){ closeMenu(); tracking=false; }
+      if(shareX){
+        shareX.href =
+          `https://x.com/intent/tweet?text=${title}&url=${url}`;
       }
-    }, {passive:false});
-    menu.addEventListener("touchend", ()=>{ tracking=false; }, {passive:true});
 
-    /* =========================
-       STORY LOGIC
-    ========================= */
+      if(shareLINE){
+        shareLINE.href =
+          `https://social-plugins.line.me/lineit/share?url=${url}`;
+      }
+    })();
+
+    /* ===== 神殿案内図 ===== */
+
+    const menuBtn = document.getElementById("menuBtn");
+    const mapOverlay = document.getElementById("mapOverlay");
+    const mapClose = document.getElementById("mapClose");
+
+    function openMap(){
+      document.body.classList.add("glitching");
+
+      setTimeout(() => {
+        document.body.classList.remove("glitching");
+
+        mapOverlay.classList.add("open");
+        mapOverlay.setAttribute("aria-hidden","false");
+
+        document.body.style.overflow = "hidden";
+      },420);
+    }
+
+    function closeMap(){
+      mapOverlay.classList.remove("open");
+      mapOverlay.setAttribute("aria-hidden","true");
+
+      document.body.style.overflow = "";
+    }
+
+    menuBtn.addEventListener("click",openMap);
+    mapClose.addEventListener("click",closeMap);
+
+    mapOverlay.addEventListener("click",(event) => {
+      if(event.target === mapOverlay){
+        closeMap();
+      }
+    });
+
+    window.addEventListener("keydown",(event) => {
+      if(
+        event.key === "Escape" &&
+        mapOverlay.classList.contains("open")
+      ){
+        closeMap();
+      }
+    });
+
+    document.querySelectorAll(".mapLink").forEach((link) => {
+      link.addEventListener("click",(event) => {
+        event.preventDefault();
+
+        const href = link.getAttribute("href");
+
+        link.classList.add("loading");
+
+        setTimeout(() => {
+          location.href = href;
+        },220);
+      });
+    });
+
+    /* ===== STORY ===== */
 
     const summaries = {
       s1: `不幸体質の少女・琴吹翠は、
@@ -495,25 +1223,25 @@
 記された一通の手紙だった。`
     };
 
-    // 章（表示用）
     const chapters = {
-      s1: [
-        { no: "壱", title: "分裂" },
-        { no: "弐", title: "運命" },
-        { no: "参", title: "逃避行" },
-        { no: "肆", title: "傷跡" },
-        { no: "伍", title: "将来" },
-        { no: "陸", title: "殺戮" },
-        { no: "漆", title: "空想世界" }
+      s1:[
+        {no:"壱",title:"分裂"},
+        {no:"弐",title:"運命"},
+        {no:"参",title:"逃避行"},
+        {no:"肆",title:"傷跡"},
+        {no:"伍",title:"将来"},
+        {no:"陸",title:"殺戮"},
+        {no:"漆",title:"空想世界"}
       ],
-      s2: [
-        { no: "John", title: "病状" },
-        { no: "Acts", title: "福音" },
-        { no: "Rom", title: "申告" },
-        { no: "Cor", title: "崩壊" },
-        { no: "Gal", title: "狂会" },
-        { no: "Jude", title: "美学" },
-        { no: "Rev", title: "アリストテレス" }
+
+      s2:[
+        {no:"John",title:"病状"},
+        {no:"Acts",title:"福音"},
+        {no:"Rom",title:"申告"},
+        {no:"Cor",title:"崩壊"},
+        {no:"Gal",title:"狂会"},
+        {no:"Jude",title:"美学"},
+        {no:"Rev",title:"アリストテレス"}
       ]
     };
 
@@ -521,8 +1249,9 @@
 
     const s1Btn = document.getElementById("s1Btn");
     const s2Btn = document.getElementById("s2Btn");
+
     const summaryEl = document.getElementById("summary");
-    const img = document.getElementById("storyImg");
+    const storyImg = document.getElementById("storyImg");
 
     const visualBox = document.getElementById("visualBox");
     const switchBar = document.getElementById("switchBar");
@@ -535,19 +1264,23 @@
 
     function updateMain(){
       summaryEl.textContent = summaries[season];
-      img.src = `/images/story/${season}.webp`;
-      img.alt = `Story ${season.toUpperCase()}`;
+
+      storyImg.src = `/images/story/${season}.webp`;
+      storyImg.alt = `Story ${season.toUpperCase()}`;
     }
 
-    function setSeason(next){
-      season = next;
-      if(season === "s1"){
-        s1Btn.classList.add("active");
-        s2Btn.classList.remove("active");
-      }else{
-        s2Btn.classList.add("active");
-        s1Btn.classList.remove("active");
-      }
+    function setSeason(nextSeason){
+      season = nextSeason;
+
+      s1Btn.classList.toggle(
+        "active",
+        season === "s1"
+      );
+
+      s2Btn.classList.toggle(
+        "active",
+        season === "s2"
+      );
 
       if(chaptersSec.style.display === "block"){
         renderChapters();
@@ -556,8 +1289,13 @@
       }
     }
 
-    s1Btn.addEventListener("click", ()=> setSeason("s1"));
-    s2Btn.addEventListener("click", ()=> setSeason("s2"));
+    s1Btn.addEventListener("click",() => {
+      setSeason("s1");
+    });
+
+    s2Btn.addEventListener("click",() => {
+      setSeason("s2");
+    });
 
     function openChapters(){
       visualBox.style.display = "none";
@@ -569,27 +1307,45 @@
       chaptersSec.setAttribute("aria-hidden","false");
 
       renderChapters();
-      window.scrollTo({ top: 0, behavior: "instant" });
+
+      window.scrollTo({
+        top:0,
+        behavior:"instant"
+      });
     }
 
     function renderChapters(){
-      seasonTitle.textContent = (season === "s1") ? "1 期" : "2 期";
+      seasonTitle.textContent =
+        season === "s1" ? "1 期" : "2 期";
+
       chapterList.innerHTML = "";
 
-      const arr = chapters[season];
-
-      arr.forEach((ch, i) => {
+      chapters[season].forEach((chapter,index) => {
         const row = document.createElement("div");
+
         row.className = "chapterRow";
-        row.style.animationDelay = `${0.08 + i * 0.08}s`;
+        row.style.animationDelay =
+          `${0.08 + index * 0.08}s`;
 
         row.innerHTML = `
           <div class="chapterLeft">
-            <div class="chapterNo">${ch.no}</div>
-            <div class="chapterName">${ch.title}</div>
+            <div class="chapterNo">
+              ${chapter.no}
+            </div>
+
+            <div class="chapterName">
+              ${chapter.title}
+            </div>
           </div>
-          <button type="button" data-idx="${i}">読む</button>
+
+          <button
+            type="button"
+            data-idx="${index}"
+          >
+            読む
+          </button>
         `;
+
         chapterList.appendChild(row);
       });
     }
@@ -604,21 +1360,32 @@
       switchBar.style.display = "";
 
       updateMain();
-      window.scrollTo({ top: 0, behavior: "instant" });
+
+      window.scrollTo({
+        top:0,
+        behavior:"instant"
+      });
     }
 
-    readBtn.addEventListener("click", openChapters);
-    backTopBtn.addEventListener("click", backToTop);
+    readBtn.addEventListener("click",openChapters);
+    backTopBtn.addEventListener("click",backToTop);
+
+    chapterList.addEventListener("click",(event) => {
+      const button = event.target.closest("button");
+
+      if(!button){
+        return;
+      }
+
+      const index = Number(button.dataset.idx);
+      const chapter = chapters[season][index];
+
+      alert(
+        `${season.toUpperCase()} / ${chapter.no} ${chapter.title}（準備中です）`
+      );
+    });
 
     updateMain();
-
-    chapterList.addEventListener("click", (e)=>{
-      const btn = e.target.closest("button");
-      if(!btn) return;
-      const idx = Number(btn.dataset.idx);
-
-      alert(`${season.toUpperCase()} / ${chapters[season][idx].no} ${chapters[season][idx].title}（準備中です）`);
-    });
   </script>
 </body>
 </html>
