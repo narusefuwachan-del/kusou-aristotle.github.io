@@ -634,6 +634,7 @@
     }
 
     .chapterRow button{
+      flex:0 0 auto;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.16);
       color:#fff;
@@ -641,13 +642,179 @@
       cursor:pointer;
       padding:10px 14px;
       border-radius:999px;
-      letter-spacing:.14em;
+      letter-spacing:.12em;
       font-family:inherit;
       -webkit-tap-highlight-color:transparent;
     }
 
     .chapterRow button:hover{
       background:rgba(255,255,255,.10);
+    }
+
+    .chapterRow button:disabled{
+      cursor:default;
+      opacity:.38;
+      background:transparent;
+    }
+
+    /* ==========================================
+       NOVEL
+    ========================================== */
+
+    .novelPage{
+      display:none;
+      width:min(700px,100%);
+      margin:0 auto;
+      padding:8px 0 40px;
+      text-align:left;
+      animation:novelFade .55s ease both;
+    }
+
+    @keyframes novelFade{
+      from{
+        opacity:0;
+        transform:translateY(8px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .novelBreadcrumb{
+      margin:10px 0 36px;
+      font-size:11px;
+      letter-spacing:.14em;
+      color:rgba(255,255,255,.48);
+    }
+
+    .novelArchive{
+      margin-bottom:12px;
+      font-size:10px;
+      letter-spacing:.34em;
+      color:rgba(255,255,255,.44);
+    }
+
+    .novelChapter{
+      margin:0;
+      font-size:19px;
+      font-weight:300;
+      letter-spacing:.18em;
+      color:rgba(255,255,255,.72);
+    }
+
+    .novelTitle{
+      margin:9px 0 0;
+      font-size:36px;
+      font-weight:300;
+      letter-spacing:.16em;
+      line-height:1.45;
+    }
+
+    .novelDate{
+      margin-top:16px;
+      font-size:11px;
+      letter-spacing:.28em;
+      color:rgba(255,255,255,.46);
+    }
+
+    .novelDivider{
+      position:relative;
+      height:1px;
+      margin:40px 0 42px;
+      background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.28) 12%,
+        rgba(255,255,255,.28) 88%,
+        transparent
+      );
+    }
+
+    .novelDivider::after{
+      content:"✦";
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      padding:0 12px;
+      background:#0b0b0f;
+      color:rgba(255,255,255,.62);
+      font-size:12px;
+    }
+
+    .novelBody{
+      font-size:16px;
+      line-height:2.25;
+      letter-spacing:.045em;
+      color:rgba(255,255,255,.91);
+      word-break:normal;
+      overflow-wrap:anywhere;
+    }
+
+    .novelBody p{
+      margin:0 0 2em;
+    }
+
+    .novelBody .sceneBreak{
+      margin:42px 0;
+      text-align:center;
+      letter-spacing:.5em;
+      color:rgba(255,255,255,.35);
+    }
+
+    .novelBottomDivider{
+      height:1px;
+      margin:54px 0 24px;
+      background:rgba(255,255,255,.14);
+    }
+
+    .novelNav{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:10px;
+    }
+
+    .novelNav button{
+      min-height:48px;
+      border:none;
+      background:none;
+      color:#fff;
+      cursor:pointer;
+      font-family:inherit;
+      font-size:14px;
+      letter-spacing:.12em;
+      padding:10px 4px;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .novelNav button:first-child{
+      text-align:left;
+    }
+
+    .novelNav button:last-child{
+      text-align:right;
+    }
+
+    .novelNav button:disabled{
+      opacity:.22;
+      cursor:default;
+    }
+
+    .novelIndexBtn{
+      position:relative;
+    }
+
+    .novelIndexBtn::after{
+      content:"";
+      position:absolute;
+      left:16%;
+      right:16%;
+      bottom:5px;
+      height:1px;
+      background:rgba(26,165,165,.75);
     }
 
     /* ===== footer ===== */
@@ -749,8 +916,13 @@
     /* ===== smartphone ===== */
 
     @media(max-width:520px){
+      .header{
+        padding:10px 14px;
+      }
+
       .site-title{
-        font-size:16px;
+        font-size:15px;
+        letter-spacing:.06em;
       }
 
       h1{
@@ -815,6 +987,84 @@
       .chapterNo{
         font-size:16px;
       }
+
+      .chapterRow{
+        padding:13px 12px;
+      }
+
+      .chapterRow button{
+        font-size:12px;
+        padding:9px 12px;
+      }
+
+      /* ===== novel smartphone ===== */
+
+      .box.novelMode{
+        padding-left:20px;
+        padding-right:20px;
+      }
+
+      .novelPage{
+        padding-top:4px;
+      }
+
+      .novelBreadcrumb{
+        margin-top:8px;
+        margin-bottom:32px;
+        font-size:10px;
+        line-height:1.7;
+      }
+
+      .novelArchive{
+        font-size:9px;
+        line-height:1.8;
+        margin-bottom:14px;
+      }
+
+      .novelChapter{
+        font-size:15px;
+        letter-spacing:.16em;
+      }
+
+      .novelTitle{
+        margin-top:8px;
+        font-size:29px;
+        letter-spacing:.13em;
+        line-height:1.5;
+      }
+
+      .novelDate{
+        margin-top:15px;
+        font-size:10px;
+        letter-spacing:.22em;
+      }
+
+      .novelDivider{
+        margin:34px 0 36px;
+      }
+
+      .novelBody{
+        font-size:15px;
+        line-height:2.2;
+        letter-spacing:.035em;
+      }
+
+      .novelBody p{
+        margin-bottom:1.9em;
+      }
+
+      .novelBottomDivider{
+        margin-top:46px;
+      }
+
+      .novelNav{
+        gap:4px;
+      }
+
+      .novelNav button{
+        font-size:12px;
+        letter-spacing:.08em;
+      }
     }
   </style>
 </head>
@@ -822,7 +1072,9 @@
 <body>
 
   <header class="header">
-    <a href="/" class="site-title">空想世界アリストテレス</a>
+    <a href="/" class="site-title">
+      空想世界アリストテレス
+    </a>
 
     <button
       class="menu-btn"
@@ -879,7 +1131,9 @@
       >
 
       <div class="mapTitleFrame">
-        <div class="mapTitle">神殿案内図</div>
+        <div class="mapTitle">
+          神殿案内図
+        </div>
       </div>
 
       <div class="placeLabel label-story">
@@ -934,54 +1188,66 @@
 
   <!-- ===== Story ===== -->
 
-  <main class="box">
-    <div class="title-ruby">story</div>
+  <main
+    class="box"
+    id="mainBox"
+  >
 
-    <h1>Story</h1>
+    <!-- ===== Story TOP ===== -->
 
-    <div
-      class="switch"
-      id="switchBar"
-    >
+    <div id="storyTop">
+      <div class="title-ruby">
+        story
+      </div>
+
+      <h1>Story</h1>
+
+      <div
+        class="switch"
+        id="switchBar"
+      >
+        <button
+          id="s1Btn"
+          class="active"
+          type="button"
+        >
+          S1
+        </button>
+
+        <button
+          id="s2Btn"
+          type="button"
+        >
+          S2
+        </button>
+      </div>
+
+      <div
+        class="visual"
+        id="visualBox"
+      >
+        <img
+          id="storyImg"
+          src="/images/story/s1.webp"
+          alt="Story S1"
+        >
+      </div>
+
+      <div
+        id="summary"
+        class="summary"
+      ></div>
+
       <button
-        id="s1Btn"
-        class="active"
+        class="readBtn"
+        id="readBtn"
         type="button"
       >
-        S1
-      </button>
-
-      <button
-        id="s2Btn"
-        type="button"
-      >
-        S2
+        本編を読む
       </button>
     </div>
 
-    <div
-      class="visual"
-      id="visualBox"
-    >
-      <img
-        id="storyImg"
-        src="/images/story/s1.webp"
-        alt="Story S1"
-      >
-    </div>
-
-    <div
-      id="summary"
-      class="summary"
-    ></div>
-
-    <button
-      class="readBtn"
-      id="readBtn"
-      type="button"
-    >
-      本編を読む
-    </button>
+    <!-- ===== Chapter List ===== -->
 
     <section
       id="chapters"
@@ -1009,6 +1275,86 @@
         戻る
       </button>
     </section>
+
+    <!-- ===== Novel ===== -->
+
+    <article
+      id="novelPage"
+      class="novelPage"
+      aria-hidden="true"
+    >
+      <div
+        class="novelBreadcrumb"
+        id="novelBreadcrumb"
+      >
+        STORY ＞ S1 ＞ 壱 分裂
+      </div>
+
+      <div
+        class="novelArchive"
+        id="novelArchive"
+      >
+        ARCHIVE 01 / STORY RECORD
+      </div>
+
+      <h2
+        class="novelChapter"
+        id="novelChapter"
+      >
+        壱　分裂
+      </h2>
+
+      <h3
+        class="novelTitle"
+        id="novelTitle"
+      >
+        分裂
+      </h3>
+
+      <div
+        class="novelDate"
+        id="novelDate"
+      >
+        2023.10.23 AM 5:12
+      </div>
+
+      <div class="novelDivider"></div>
+
+      <div
+        class="novelBody"
+        id="novelBody"
+      ></div>
+
+      <div class="novelBottomDivider"></div>
+
+      <nav
+        class="novelNav"
+        aria-label="小説ナビゲーション"
+      >
+        <button
+          id="prevNovelBtn"
+          type="button"
+        >
+          ← 前話
+        </button>
+
+        <button
+          id="novelIndexBtn"
+          class="novelIndexBtn"
+          type="button"
+        >
+          章一覧
+        </button>
+
+        <button
+          id="nextNovelBtn"
+          type="button"
+        >
+          次話 →
+        </button>
+      </nav>
+    </article>
+
   </main>
 
   <!-- ===== footer ===== -->
@@ -1018,6 +1364,7 @@
     aria-label="フッター"
   >
     <div class="footer-inner">
+
       <img
         class="footer-logo"
         src="/images/logo.png"
@@ -1028,9 +1375,12 @@
         class="share"
         aria-label="シェア"
       >
-        <div class="footer-title">SHARE</div>
+        <div class="footer-title">
+          SHARE
+        </div>
 
         <div class="share-row">
+
           <a
             class="sns-btn"
             id="shareX"
@@ -1062,15 +1412,19 @@
               aria-hidden="true"
             >
           </a>
+
         </div>
       </div>
 
-      <div class="footer-title">OFFICIAL</div>
+      <div class="footer-title">
+        OFFICIAL
+      </div>
 
       <div
         class="footer-sns"
         aria-label="公式SNS"
       >
+
         <a
           class="sns-btn"
           href="https://x.com/passion_fruit_k"
@@ -1115,24 +1469,32 @@
             aria-hidden="true"
           >
         </a>
+
       </div>
 
       <div class="footer-note">
         © 空想世界アリストテレス<br>
         当サイトに掲載されている文章・画像等の無断転載、無断使用を固く禁じます。
       </div>
+
     </div>
   </footer>
 
   <script>
-    /* ===== SHARE ===== */
+
+    /* ==========================================
+       SHARE
+    ========================================== */
 
     (() => {
       const url = encodeURIComponent(location.href);
       const title = encodeURIComponent(document.title);
 
-      const shareX = document.getElementById("shareX");
-      const shareLINE = document.getElementById("shareLINE");
+      const shareX =
+        document.getElementById("shareX");
+
+      const shareLINE =
+        document.getElementById("shareLINE");
 
       if(shareX){
         shareX.href =
@@ -1145,67 +1507,127 @@
       }
     })();
 
-    /* ===== 神殿案内図 ===== */
 
-    const menuBtn = document.getElementById("menuBtn");
-    const mapOverlay = document.getElementById("mapOverlay");
-    const mapClose = document.getElementById("mapClose");
+    /* ==========================================
+       神殿案内図
+    ========================================== */
+
+    const menuBtn =
+      document.getElementById("menuBtn");
+
+    const mapOverlay =
+      document.getElementById("mapOverlay");
+
+    const mapClose =
+      document.getElementById("mapClose");
+
 
     function openMap(){
+
       document.body.classList.add("glitching");
 
       setTimeout(() => {
+
         document.body.classList.remove("glitching");
 
         mapOverlay.classList.add("open");
-        mapOverlay.setAttribute("aria-hidden","false");
 
-        document.body.style.overflow = "hidden";
+        mapOverlay.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+        document.body.style.overflow =
+          "hidden";
+
       },420);
     }
 
-    function closeMap(){
-      mapOverlay.classList.remove("open");
-      mapOverlay.setAttribute("aria-hidden","true");
 
-      document.body.style.overflow = "";
+    function closeMap(){
+
+      mapOverlay.classList.remove("open");
+
+      mapOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      document.body.style.overflow =
+        "";
     }
 
-    menuBtn.addEventListener("click",openMap);
-    mapClose.addEventListener("click",closeMap);
 
-    mapOverlay.addEventListener("click",(event) => {
-      if(event.target === mapOverlay){
-        closeMap();
+    menuBtn.addEventListener(
+      "click",
+      openMap
+    );
+
+
+    mapClose.addEventListener(
+      "click",
+      closeMap
+    );
+
+
+    mapOverlay.addEventListener(
+      "click",
+      (event) => {
+
+        if(event.target === mapOverlay){
+          closeMap();
+        }
+
       }
-    });
+    );
 
-    window.addEventListener("keydown",(event) => {
-      if(
-        event.key === "Escape" &&
-        mapOverlay.classList.contains("open")
-      ){
-        closeMap();
+
+    window.addEventListener(
+      "keydown",
+      (event) => {
+
+        if(
+          event.key === "Escape" &&
+          mapOverlay.classList.contains("open")
+        ){
+          closeMap();
+        }
+
       }
-    });
+    );
 
-    document.querySelectorAll(".mapLink").forEach((link) => {
-      link.addEventListener("click",(event) => {
-        event.preventDefault();
 
-        const href = link.getAttribute("href");
+    document
+      .querySelectorAll(".mapLink")
+      .forEach((link) => {
 
-        link.classList.add("loading");
+        link.addEventListener(
+          "click",
+          (event) => {
 
-        setTimeout(() => {
-          location.href = href;
-        },220);
+            event.preventDefault();
+
+            const href =
+              link.getAttribute("href");
+
+            link.classList.add("loading");
+
+            setTimeout(() => {
+              location.href = href;
+            },220);
+
+          }
+        );
+
       });
-    });
 
-    /* ===== STORY ===== */
+
+    /* ==========================================
+       STORY DATA
+    ========================================== */
 
     const summaries = {
+
       s1: `不幸体質の少女・琴吹翠は、
 限界を迎えて命を絶とうとしていた。
 その時に現れた“天使”に
@@ -1221,55 +1643,254 @@
 変わり果てた翠の家と、
 「翠を助けてくれ」と
 記された一通の手紙だった。`
+
     };
 
+
+    /*
+      published:true
+      にすると「読む」ボタンが有効になる。
+    */
+
     const chapters = {
+
       s1:[
-        {no:"壱",title:"分裂"},
-        {no:"弐",title:"運命"},
-        {no:"参",title:"逃避行"},
-        {no:"肆",title:"傷跡"},
-        {no:"伍",title:"将来"},
-        {no:"陸",title:"殺戮"},
-        {no:"漆",title:"空想世界"}
+        {
+          no:"壱",
+          title:"分裂",
+          published:true
+        },
+
+        {
+          no:"弐",
+          title:"運命",
+          published:false
+        },
+
+        {
+          no:"参",
+          title:"逃避行",
+          published:false
+        },
+
+        {
+          no:"肆",
+          title:"傷跡",
+          published:false
+        },
+
+        {
+          no:"伍",
+          title:"将来",
+          published:false
+        },
+
+        {
+          no:"陸",
+          title:"殺戮",
+          published:false
+        },
+
+        {
+          no:"漆",
+          title:"空想世界",
+          published:false
+        }
       ],
 
       s2:[
-        {no:"John",title:"病状"},
-        {no:"Acts",title:"福音"},
-        {no:"Rom",title:"申告"},
-        {no:"Cor",title:"崩壊"},
-        {no:"Gal",title:"狂会"},
-        {no:"Jude",title:"美学"},
-        {no:"Rev",title:"アリストテレス"}
+        {
+          no:"John",
+          title:"病状",
+          published:false
+        },
+
+        {
+          no:"Acts",
+          title:"福音",
+          published:false
+        },
+
+        {
+          no:"Rom",
+          title:"申告",
+          published:false
+        },
+
+        {
+          no:"Cor",
+          title:"崩壊",
+          published:false
+        },
+
+        {
+          no:"Gal",
+          title:"狂会",
+          published:false
+        },
+
+        {
+          no:"Jude",
+          title:"美学",
+          published:false
+        },
+
+        {
+          no:"Rev",
+          title:"アリストテレス",
+          published:false
+        }
       ]
+
     };
 
+
+    /* ==========================================
+       小説本文
+       
+       ★基本的にここを書き換えればOK
+    ========================================== */
+
+    const novels = {
+
+      s1:{
+
+        0:{
+          archive:"ARCHIVE 01 / STORY RECORD",
+
+          chapter:"壱　分裂",
+
+          title:"分裂",
+
+          date:"2023.10.23 AM 5:12",
+
+          body:`
+            <p>
+              ここに分裂編の本文を入れてください。
+            </p>
+
+            <p>
+              段落ごとに &lt;p&gt; と &lt;/p&gt; で囲むと、
+              このように間隔を空けて表示されます。
+            </p>
+
+            <p>
+              ここを、現在書いている小説本文に
+              そのまま差し替えればOKです。
+            </p>
+
+            <div class="sceneBreak">＊　＊　＊</div>
+
+            <p>
+              場面転換を入れたい場合は、
+              sceneBreak を使えます。
+            </p>
+          `
+        }
+
+      }
+
+    };
+
+
+    /* ==========================================
+       STORY UI
+    ========================================== */
+
     let season = "s1";
+    let currentNovelIndex = null;
 
-    const s1Btn = document.getElementById("s1Btn");
-    const s2Btn = document.getElementById("s2Btn");
 
-    const summaryEl = document.getElementById("summary");
-    const storyImg = document.getElementById("storyImg");
+    const mainBox =
+      document.getElementById("mainBox");
 
-    const visualBox = document.getElementById("visualBox");
-    const switchBar = document.getElementById("switchBar");
-    const readBtn = document.getElementById("readBtn");
+    const storyTop =
+      document.getElementById("storyTop");
 
-    const chaptersSec = document.getElementById("chapters");
-    const chapterList = document.getElementById("chapterList");
-    const seasonTitle = document.getElementById("seasonTitle");
-    const backTopBtn = document.getElementById("backTopBtn");
+    const s1Btn =
+      document.getElementById("s1Btn");
+
+    const s2Btn =
+      document.getElementById("s2Btn");
+
+    const summaryEl =
+      document.getElementById("summary");
+
+    const storyImg =
+      document.getElementById("storyImg");
+
+    const switchBar =
+      document.getElementById("switchBar");
+
+    const readBtn =
+      document.getElementById("readBtn");
+
+    const chaptersSec =
+      document.getElementById("chapters");
+
+    const chapterList =
+      document.getElementById("chapterList");
+
+    const seasonTitle =
+      document.getElementById("seasonTitle");
+
+    const backTopBtn =
+      document.getElementById("backTopBtn");
+
+
+    /* ===== novel elements ===== */
+
+    const novelPage =
+      document.getElementById("novelPage");
+
+    const novelBreadcrumb =
+      document.getElementById("novelBreadcrumb");
+
+    const novelArchive =
+      document.getElementById("novelArchive");
+
+    const novelChapter =
+      document.getElementById("novelChapter");
+
+    const novelTitle =
+      document.getElementById("novelTitle");
+
+    const novelDate =
+      document.getElementById("novelDate");
+
+    const novelBody =
+      document.getElementById("novelBody");
+
+    const prevNovelBtn =
+      document.getElementById("prevNovelBtn");
+
+    const nextNovelBtn =
+      document.getElementById("nextNovelBtn");
+
+    const novelIndexBtn =
+      document.getElementById("novelIndexBtn");
+
+
+    /* ==========================================
+       Story top
+    ========================================== */
 
     function updateMain(){
-      summaryEl.textContent = summaries[season];
 
-      storyImg.src = `/images/story/${season}.webp`;
-      storyImg.alt = `Story ${season.toUpperCase()}`;
+      summaryEl.textContent =
+        summaries[season];
+
+      storyImg.src =
+        `/images/story/${season}.webp`;
+
+      storyImg.alt =
+        `Story ${season.toUpperCase()}`;
+
     }
 
+
     function setSeason(nextSeason){
+
       season = nextSeason;
 
       s1Btn.classList.toggle(
@@ -1282,29 +1903,55 @@
         season === "s2"
       );
 
-      if(chaptersSec.style.display === "block"){
-        renderChapters();
-      }else{
-        updateMain();
-      }
+      updateMain();
+
     }
 
-    s1Btn.addEventListener("click",() => {
-      setSeason("s1");
-    });
 
-    s2Btn.addEventListener("click",() => {
-      setSeason("s2");
-    });
+    s1Btn.addEventListener(
+      "click",
+      () => {
+        setSeason("s1");
+      }
+    );
+
+
+    s2Btn.addEventListener(
+      "click",
+      () => {
+        setSeason("s2");
+      }
+    );
+
+
+    /* ==========================================
+       Chapter list
+    ========================================== */
 
     function openChapters(){
-      visualBox.style.display = "none";
-      summaryEl.style.display = "none";
-      readBtn.style.display = "none";
-      switchBar.style.display = "none";
 
-      chaptersSec.style.display = "block";
-      chaptersSec.setAttribute("aria-hidden","false");
+      storyTop.style.display =
+        "none";
+
+      novelPage.style.display =
+        "none";
+
+      chaptersSec.style.display =
+        "block";
+
+      chaptersSec.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      novelPage.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      mainBox.classList.remove(
+        "novelMode"
+      );
 
       renderChapters();
 
@@ -1312,52 +1959,94 @@
         top:0,
         behavior:"instant"
       });
+
     }
 
+
     function renderChapters(){
+
       seasonTitle.textContent =
-        season === "s1" ? "1 期" : "2 期";
+        season === "s1"
+          ? "1 期"
+          : "2 期";
 
       chapterList.innerHTML = "";
 
-      chapters[season].forEach((chapter,index) => {
-        const row = document.createElement("div");
 
-        row.className = "chapterRow";
-        row.style.animationDelay =
-          `${0.08 + index * 0.08}s`;
+      chapters[season].forEach(
+        (chapter,index) => {
 
-        row.innerHTML = `
-          <div class="chapterLeft">
-            <div class="chapterNo">
-              ${chapter.no}
+          const row =
+            document.createElement("div");
+
+          row.className =
+            "chapterRow";
+
+          row.style.animationDelay =
+            `${0.08 + index * 0.08}s`;
+
+
+          const buttonText =
+            chapter.published
+              ? "読む"
+              : "準備中";
+
+
+          row.innerHTML = `
+            <div class="chapterLeft">
+
+              <div class="chapterNo">
+                ${chapter.no}
+              </div>
+
+              <div class="chapterName">
+                ${chapter.title}
+              </div>
+
             </div>
 
-            <div class="chapterName">
-              ${chapter.title}
-            </div>
-          </div>
+            <button
+              type="button"
+              data-idx="${index}"
+              ${chapter.published ? "" : "disabled"}
+            >
+              ${buttonText}
+            </button>
+          `;
 
-          <button
-            type="button"
-            data-idx="${index}"
-          >
-            読む
-          </button>
-        `;
 
-        chapterList.appendChild(row);
-      });
+          chapterList.appendChild(row);
+
+        }
+      );
+
     }
 
-    function backToTop(){
-      chaptersSec.style.display = "none";
-      chaptersSec.setAttribute("aria-hidden","true");
 
-      visualBox.style.display = "";
-      summaryEl.style.display = "";
-      readBtn.style.display = "";
-      switchBar.style.display = "";
+    function backToTop(){
+
+      chaptersSec.style.display =
+        "none";
+
+      novelPage.style.display =
+        "none";
+
+      storyTop.style.display =
+        "";
+
+      chaptersSec.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      novelPage.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      mainBox.classList.remove(
+        "novelMode"
+      );
 
       updateMain();
 
@@ -1365,27 +2054,260 @@
         top:0,
         behavior:"instant"
       });
+
     }
 
-    readBtn.addEventListener("click",openChapters);
-    backTopBtn.addEventListener("click",backToTop);
 
-    chapterList.addEventListener("click",(event) => {
-      const button = event.target.closest("button");
+    readBtn.addEventListener(
+      "click",
+      openChapters
+    );
 
-      if(!button){
+
+    backTopBtn.addEventListener(
+      "click",
+      backToTop
+    );
+
+
+    /* ==========================================
+       Open novel
+    ========================================== */
+
+    function openNovel(index){
+
+      const chapter =
+        chapters[season][index];
+
+      const novel =
+        novels[season]?.[index];
+
+
+      if(
+        !chapter ||
+        !chapter.published ||
+        !novel
+      ){
         return;
       }
 
-      const index = Number(button.dataset.idx);
-      const chapter = chapters[season][index];
 
-      alert(
-        `${season.toUpperCase()} / ${chapter.no} ${chapter.title}（準備中です）`
+      currentNovelIndex =
+        index;
+
+
+      storyTop.style.display =
+        "none";
+
+      chaptersSec.style.display =
+        "none";
+
+      novelPage.style.display =
+        "block";
+
+
+      chaptersSec.setAttribute(
+        "aria-hidden",
+        "true"
       );
-    });
+
+      novelPage.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+
+      mainBox.classList.add(
+        "novelMode"
+      );
+
+
+      novelBreadcrumb.textContent =
+        `STORY ＞ ${season.toUpperCase()} ＞ ${chapter.no} ${chapter.title}`;
+
+
+      novelArchive.textContent =
+        novel.archive;
+
+
+      novelChapter.textContent =
+        novel.chapter;
+
+
+      novelTitle.textContent =
+        novel.title;
+
+
+      novelDate.textContent =
+        novel.date;
+
+
+      novelBody.innerHTML =
+        novel.body;
+
+
+      updateNovelNavigation();
+
+
+      window.scrollTo({
+        top:0,
+        behavior:"instant"
+      });
+
+    }
+
+
+    /* ==========================================
+       Novel navigation
+    ========================================== */
+
+    function getPublishedIndex(
+      startIndex,
+      direction
+    ){
+
+      let index =
+        startIndex + direction;
+
+
+      while(
+        index >= 0 &&
+        index < chapters[season].length
+      ){
+
+        if(
+          chapters[season][index].published &&
+          novels[season]?.[index]
+        ){
+          return index;
+        }
+
+        index += direction;
+
+      }
+
+
+      return null;
+
+    }
+
+
+    function updateNovelNavigation(){
+
+      const prevIndex =
+        getPublishedIndex(
+          currentNovelIndex,
+          -1
+        );
+
+      const nextIndex =
+        getPublishedIndex(
+          currentNovelIndex,
+          1
+        );
+
+
+      prevNovelBtn.disabled =
+        prevIndex === null;
+
+      nextNovelBtn.disabled =
+        nextIndex === null;
+
+
+      prevNovelBtn.dataset.index =
+        prevIndex ?? "";
+
+      nextNovelBtn.dataset.index =
+        nextIndex ?? "";
+
+    }
+
+
+    prevNovelBtn.addEventListener(
+      "click",
+      () => {
+
+        if(
+          prevNovelBtn.disabled
+        ){
+          return;
+        }
+
+        openNovel(
+          Number(
+            prevNovelBtn.dataset.index
+          )
+        );
+
+      }
+    );
+
+
+    nextNovelBtn.addEventListener(
+      "click",
+      () => {
+
+        if(
+          nextNovelBtn.disabled
+        ){
+          return;
+        }
+
+        openNovel(
+          Number(
+            nextNovelBtn.dataset.index
+          )
+        );
+
+      }
+    );
+
+
+    novelIndexBtn.addEventListener(
+      "click",
+      openChapters
+    );
+
+
+    /* ==========================================
+       Chapter button
+    ========================================== */
+
+    chapterList.addEventListener(
+      "click",
+      (event) => {
+
+        const button =
+          event.target.closest("button");
+
+
+        if(
+          !button ||
+          button.disabled
+        ){
+          return;
+        }
+
+
+        const index =
+          Number(
+            button.dataset.idx
+          );
+
+
+        openNovel(index);
+
+      }
+    );
+
+
+    /* ==========================================
+       Initial
+    ========================================== */
 
     updateMain();
+
   </script>
+
 </body>
 </html>
