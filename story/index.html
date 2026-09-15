@@ -657,9 +657,7 @@
       background:transparent;
     }
 
-    /* ==========================================
-       NOVEL
-    ========================================== */
+    /* ===== novel ===== */
 
     .novelPage{
       display:none;
@@ -712,13 +710,6 @@
       line-height:1.45;
     }
 
-    .novelDate{
-      margin-top:16px;
-      font-size:11px;
-      letter-spacing:.28em;
-      color:rgba(255,255,255,.46);
-    }
-
     .novelDivider{
       position:relative;
       height:1px;
@@ -755,13 +746,16 @@
 
     .novelBody p{
       margin:0 0 2em;
+      white-space:pre-wrap;
     }
 
-    .novelBody .sceneBreak{
-      margin:42px 0;
+    .novelLoading,
+    .novelError{
+      padding:50px 0;
       text-align:center;
-      letter-spacing:.5em;
-      color:rgba(255,255,255,.35);
+      font-size:13px;
+      letter-spacing:.12em;
+      color:rgba(255,255,255,.55);
     }
 
     .novelBottomDivider{
@@ -1033,12 +1027,6 @@
         line-height:1.5;
       }
 
-      .novelDate{
-        margin-top:15px;
-        font-size:10px;
-        letter-spacing:.22em;
-      }
-
       .novelDivider{
         margin:34px 0 36px;
       }
@@ -1286,37 +1274,24 @@
       <div
         class="novelBreadcrumb"
         id="novelBreadcrumb"
-      >
-        STORY ＞ S1 ＞ 壱 分裂
-      </div>
+      ></div>
 
       <div
         class="novelArchive"
         id="novelArchive"
       >
-        ARCHIVE 01 / STORY RECORD
+        STORY RECORD
       </div>
 
       <h2
         class="novelChapter"
         id="novelChapter"
-      >
-        壱　分裂
-      </h2>
+      ></h2>
 
       <h3
         class="novelTitle"
         id="novelTitle"
-      >
-        分裂
-      </h3>
-
-      <div
-        class="novelDate"
-        id="novelDate"
-      >
-        2023.10.23 AM 5:12
-      </div>
+      ></h3>
 
       <div class="novelDivider"></div>
 
@@ -1482,9 +1457,7 @@
 
   <script>
 
-    /* ==========================================
-       SHARE
-    ========================================== */
+    /* ===== SHARE ===== */
 
     (() => {
       const url = encodeURIComponent(location.href);
@@ -1508,9 +1481,7 @@
     })();
 
 
-    /* ==========================================
-       神殿案内図
-    ========================================== */
+    /* ===== 神殿案内図 ===== */
 
     const menuBtn =
       document.getElementById("menuBtn");
@@ -1622,9 +1593,7 @@
       });
 
 
-    /* ==========================================
-       STORY DATA
-    ========================================== */
+    /* ===== STORY DATA ===== */
 
     const summaries = {
 
@@ -1649,7 +1618,10 @@
 
     /*
       published:true
-      にすると「読む」ボタンが有効になる。
+      → 読める
+
+      file
+      → 読み込む本文txtファイル
     */
 
     const chapters = {
@@ -1658,43 +1630,50 @@
         {
           no:"壱",
           title:"分裂",
-          published:true
+          published:true,
+          file:"/novels/s1-01.txt"
         },
 
         {
           no:"弐",
           title:"運命",
-          published:false
+          published:false,
+          file:"/novels/s1-02.txt"
         },
 
         {
           no:"参",
           title:"逃避行",
-          published:false
+          published:false,
+          file:"/novels/s1-03.txt"
         },
 
         {
           no:"肆",
           title:"傷跡",
-          published:false
+          published:false,
+          file:"/novels/s1-04.txt"
         },
 
         {
           no:"伍",
           title:"将来",
-          published:false
+          published:false,
+          file:"/novels/s1-05.txt"
         },
 
         {
           no:"陸",
           title:"殺戮",
-          published:false
+          published:false,
+          file:"/novels/s1-06.txt"
         },
 
         {
           no:"漆",
           title:"空想世界",
-          published:false
+          published:false,
+          file:"/novels/s1-07.txt"
         }
       ],
 
@@ -1702,100 +1681,57 @@
         {
           no:"John",
           title:"病状",
-          published:false
+          published:false,
+          file:"/novels/s2-01.txt"
         },
 
         {
           no:"Acts",
           title:"福音",
-          published:false
+          published:false,
+          file:"/novels/s2-02.txt"
         },
 
         {
           no:"Rom",
           title:"申告",
-          published:false
+          published:false,
+          file:"/novels/s2-03.txt"
         },
 
         {
           no:"Cor",
           title:"崩壊",
-          published:false
+          published:false,
+          file:"/novels/s2-04.txt"
         },
 
         {
           no:"Gal",
           title:"狂会",
-          published:false
+          published:false,
+          file:"/novels/s2-05.txt"
         },
 
         {
           no:"Jude",
           title:"美学",
-          published:false
+          published:false,
+          file:"/novels/s2-06.txt"
         },
 
         {
           no:"Rev",
           title:"アリストテレス",
-          published:false
+          published:false,
+          file:"/novels/s2-07.txt"
         }
       ]
 
     };
 
 
-    /* ==========================================
-       小説本文
-       
-       ★基本的にここを書き換えればOK
-    ========================================== */
-
-    const novels = {
-
-      s1:{
-
-        0:{
-          archive:"ARCHIVE 01 / STORY RECORD",
-
-          chapter:"壱　分裂",
-
-          title:"分裂",
-
-          date:"2023.10.23 AM 5:12",
-
-          body:`
-            <p>
-              ここに分裂編の本文を入れてください。
-            </p>
-
-            <p>
-              段落ごとに &lt;p&gt; と &lt;/p&gt; で囲むと、
-              このように間隔を空けて表示されます。
-            </p>
-
-            <p>
-              ここを、現在書いている小説本文に
-              そのまま差し替えればOKです。
-            </p>
-
-            <div class="sceneBreak">＊　＊　＊</div>
-
-            <p>
-              場面転換を入れたい場合は、
-              sceneBreak を使えます。
-            </p>
-          `
-        }
-
-      }
-
-    };
-
-
-    /* ==========================================
-       STORY UI
-    ========================================== */
+    /* ===== STORY UI ===== */
 
     let season = "s1";
     let currentNovelIndex = null;
@@ -1819,9 +1755,6 @@
     const storyImg =
       document.getElementById("storyImg");
 
-    const switchBar =
-      document.getElementById("switchBar");
-
     const readBtn =
       document.getElementById("readBtn");
 
@@ -1838,7 +1771,7 @@
       document.getElementById("backTopBtn");
 
 
-    /* ===== novel elements ===== */
+    /* ===== NOVEL ELEMENTS ===== */
 
     const novelPage =
       document.getElementById("novelPage");
@@ -1855,9 +1788,6 @@
     const novelTitle =
       document.getElementById("novelTitle");
 
-    const novelDate =
-      document.getElementById("novelDate");
-
     const novelBody =
       document.getElementById("novelBody");
 
@@ -1871,9 +1801,7 @@
       document.getElementById("novelIndexBtn");
 
 
-    /* ==========================================
-       Story top
-    ========================================== */
+    /* ===== Story top ===== */
 
     function updateMain(){
 
@@ -1924,9 +1852,7 @@
     );
 
 
-    /* ==========================================
-       Chapter list
-    ========================================== */
+    /* ===== Chapter list ===== */
 
     function openChapters(){
 
@@ -2070,23 +1996,54 @@
     );
 
 
-    /* ==========================================
-       Open novel
-    ========================================== */
+    /* ===== TXT → 本文表示 ===== */
 
-    function openNovel(index){
+    function renderNovelText(text){
+
+      novelBody.innerHTML = "";
+
+      const normalized =
+        text.replace(/\r\n/g,"\n");
+
+
+      /*
+        空行で段落を分ける。
+        txt側は普通に文章を書くだけでOK。
+      */
+
+      const paragraphs =
+        normalized
+          .split(/\n\s*\n/)
+          .map(text => text.trim())
+          .filter(Boolean);
+
+
+      paragraphs.forEach(text => {
+
+        const p =
+          document.createElement("p");
+
+        p.textContent = text;
+
+        novelBody.appendChild(p);
+
+      });
+
+    }
+
+
+    /* ===== Open novel ===== */
+
+    async function openNovel(index){
 
       const chapter =
         chapters[season][index];
-
-      const novel =
-        novels[season]?.[index];
 
 
       if(
         !chapter ||
         !chapter.published ||
-        !novel
+        !chapter.file
       ){
         return;
       }
@@ -2127,23 +2084,22 @@
 
 
       novelArchive.textContent =
-        novel.archive;
+        `ARCHIVE ${String(index + 1).padStart(2,"0")} / STORY RECORD`;
 
 
       novelChapter.textContent =
-        novel.chapter;
+        `${chapter.no}　${chapter.title}`;
 
 
       novelTitle.textContent =
-        novel.title;
+        chapter.title;
 
 
-      novelDate.textContent =
-        novel.date;
-
-
-      novelBody.innerHTML =
-        novel.body;
+      novelBody.innerHTML = `
+        <div class="novelLoading">
+          読み込み中…
+        </div>
+      `;
 
 
       updateNovelNavigation();
@@ -2154,12 +2110,42 @@
         behavior:"instant"
       });
 
+
+      try{
+
+        const response =
+          await fetch(chapter.file);
+
+
+        if(!response.ok){
+          throw new Error(
+            "本文を読み込めませんでした"
+          );
+        }
+
+
+        const text =
+          await response.text();
+
+
+        renderNovelText(text);
+
+      }catch(error){
+
+        console.error(error);
+
+        novelBody.innerHTML = `
+          <div class="novelError">
+            本文を読み込めませんでした。
+          </div>
+        `;
+
+      }
+
     }
 
 
-    /* ==========================================
-       Novel navigation
-    ========================================== */
+    /* ===== Novel navigation ===== */
 
     function getPublishedIndex(
       startIndex,
@@ -2176,8 +2162,7 @@
       ){
 
         if(
-          chapters[season][index].published &&
-          novels[season]?.[index]
+          chapters[season][index].published
         ){
           return index;
         }
@@ -2227,11 +2212,10 @@
       "click",
       () => {
 
-        if(
-          prevNovelBtn.disabled
-        ){
+        if(prevNovelBtn.disabled){
           return;
         }
+
 
         openNovel(
           Number(
@@ -2247,11 +2231,10 @@
       "click",
       () => {
 
-        if(
-          nextNovelBtn.disabled
-        ){
+        if(nextNovelBtn.disabled){
           return;
         }
+
 
         openNovel(
           Number(
@@ -2269,9 +2252,7 @@
     );
 
 
-    /* ==========================================
-       Chapter button
-    ========================================== */
+    /* ===== Chapter button ===== */
 
     chapterList.addEventListener(
       "click",
@@ -2301,9 +2282,7 @@
     );
 
 
-    /* ==========================================
-       Initial
-    ========================================== */
+    /* ===== Initial ===== */
 
     updateMain();
 
