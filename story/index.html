@@ -801,23 +801,6 @@
     .novelBody p{
       margin:0 0 2em;
       white-space:pre-wrap;
-      scroll-margin-top:90px;
-    }
-
-    .novelBody p.bookmarkedParagraph{
-      position:relative;
-    }
-
-    .novelBody p.bookmarkedParagraph::before{
-      content:"";
-      position:absolute;
-      left:-14px;
-      top:.45em;
-      width:3px;
-      height:1.2em;
-      border-radius:999px;
-      background:#1aa5a5;
-      box-shadow:0 0 10px rgba(26,165,165,.7);
     }
 
     .novelLoading,
@@ -1125,8 +1108,6 @@
         padding:9px 12px;
       }
 
-      /* ===== novel smartphone ===== */
-
       .box.novelMode{
         padding-left:20px;
         padding-right:20px;
@@ -1322,10 +1303,7 @@
 
   <!-- ===== Story ===== -->
 
-  <main
-    class="box"
-    id="mainBox"
-  >
+  <main class="box" id="mainBox">
 
     <!-- ===== Story TOP ===== -->
 
@@ -1337,10 +1315,7 @@
 
       <h1>Story</h1>
 
-      <div
-        class="switch"
-        id="switchBar"
-      >
+      <div class="switch">
         <button
           id="s1Btn"
           class="active"
@@ -1357,10 +1332,7 @@
         </button>
       </div>
 
-      <div
-        class="visual"
-        id="visualBox"
-      >
+      <div class="visual">
         <img
           id="storyImg"
           src="/images/story/s1.webp"
@@ -1446,12 +1418,13 @@
 
       <div class="novelDivider"></div>
 
-      <!-- ===== saved bookmark ===== -->
+      <!-- ===== Bookmark Resume ===== -->
 
       <div
         class="bookmarkResume"
         id="bookmarkResume"
       >
+
         <div class="bookmarkResumeTitle">
           BOOKMARK
         </div>
@@ -1459,9 +1432,7 @@
         <div
           class="bookmarkResumeInfo"
           id="bookmarkResumeInfo"
-        >
-          前回のしおりがあります
-        </div>
+        ></div>
 
         <div class="bookmarkResumeActions">
 
@@ -1481,6 +1452,7 @@
           </button>
 
         </div>
+
       </div>
 
       <div
@@ -1523,13 +1495,12 @@
 
   </main>
 
-  <!-- ===== floating bookmark ===== -->
+  <!-- ===== Floating Bookmark ===== -->
 
   <button
     class="bookmarkBtn"
     id="bookmarkBtn"
     type="button"
-    aria-label="現在の位置にしおりを挟む"
   >
     <span>🔖</span>
     しおり
@@ -1556,10 +1527,8 @@
         alt="空想世界アリストテレス"
       >
 
-      <div
-        class="share"
-        aria-label="シェア"
-      >
+      <div class="share">
+
         <div class="footer-title">
           SHARE
         </div>
@@ -1572,13 +1541,11 @@
             href="#"
             target="_blank"
             rel="noopener"
-            aria-label="Xでシェア"
           >
             <img
               class="icon-img"
               src="/images/icons/x.png"
               alt=""
-              aria-hidden="true"
             >
           </a>
 
@@ -1588,40 +1555,34 @@
             href="#"
             target="_blank"
             rel="noopener"
-            aria-label="LINEでシェア"
           >
             <img
               class="icon-img"
               src="/images/icons/line.png"
               alt=""
-              aria-hidden="true"
             >
           </a>
 
         </div>
+
       </div>
 
       <div class="footer-title">
         OFFICIAL
       </div>
 
-      <div
-        class="footer-sns"
-        aria-label="公式SNS"
-      >
+      <div class="footer-sns">
 
         <a
           class="sns-btn"
           href="https://x.com/passion_fruit_k"
           target="_blank"
           rel="noopener"
-          aria-label="公式X"
         >
           <img
             class="icon-img"
             src="/images/icons/x.png"
             alt=""
-            aria-hidden="true"
           >
         </a>
 
@@ -1630,13 +1591,11 @@
           href="https://youtube.com/@sui_umbrella?si=X8r31ZXZss5eDUuo"
           target="_blank"
           rel="noopener"
-          aria-label="公式YouTube"
         >
           <img
             class="icon-img"
             src="/images/icons/youtube.png"
             alt=""
-            aria-hidden="true"
           >
         </a>
 
@@ -1645,13 +1604,11 @@
           href="https://story.nola-novel.com/user/U-07607a98-c293-4543-b10c-e61e6c90f927"
           target="_blank"
           rel="noopener"
-          aria-label="Nola"
         >
           <img
             class="icon-img"
             src="/images/icons/nola.png"
             alt=""
-            aria-hidden="true"
           >
         </a>
 
@@ -1687,18 +1644,13 @@
 
 
       if(shareX){
-
         shareX.href =
           `https://x.com/intent/tweet?text=${title}&url=${url}`;
-
       }
 
-
       if(shareLINE){
-
         shareLINE.href =
           `https://social-plugins.line.me/lineit/share?url=${url}`;
-
       }
 
     })();
@@ -1723,7 +1675,6 @@
       document.body.classList.add(
         "glitching"
       );
-
 
       setTimeout(() => {
 
@@ -1779,7 +1730,7 @@
 
     mapOverlay.addEventListener(
       "click",
-      (event) => {
+      event => {
 
         if(event.target === mapOverlay){
           closeMap();
@@ -1791,7 +1742,7 @@
 
     window.addEventListener(
       "keydown",
-      (event) => {
+      event => {
 
         if(
           event.key === "Escape" &&
@@ -1806,11 +1757,11 @@
 
     document
       .querySelectorAll(".mapLink")
-      .forEach((link) => {
+      .forEach(link => {
 
         link.addEventListener(
           "click",
-          (event) => {
+          event => {
 
             event.preventDefault();
 
@@ -1821,10 +1772,10 @@
               "loading"
             );
 
-
             setTimeout(() => {
 
-              location.href = href;
+              location.href =
+                href;
 
             },220);
 
@@ -1840,7 +1791,7 @@
 
     const summaries = {
 
-      s1: `不幸体質の少女・琴吹翠は、
+      s1:`不幸体質の少女・琴吹翠は、
 限界を迎えて命を絶とうとしていた。
 その時に現れた“天使”に
 「苦しみを消して生きるか」と問われ、
@@ -1849,7 +1800,7 @@
 帰宅した翠を待っていたのは、
 2階から聞こえる“もう一人の気配”だった。`,
 
-      s2: `再び空想世界へ戻ったあきはに、
+      s2:`再び空想世界へ戻ったあきはに、
 神は“神になる選択”を迫る。
 それを拒んだ彼女を待っていたのは、
 変わり果てた翠の家と、
@@ -1986,13 +1937,16 @@
 
 
     /* ==========================================
-       STORY UI
+       VARIABLES
     ========================================== */
 
     let season =
       "s1";
 
     let currentNovelIndex =
+      null;
+
+    let toastTimer =
       null;
 
 
@@ -2030,8 +1984,6 @@
       document.getElementById("backTopBtn");
 
 
-    /* ===== novel ===== */
-
     const novelPage =
       document.getElementById("novelPage");
 
@@ -2060,8 +2012,6 @@
       document.getElementById("novelIndexBtn");
 
 
-    /* ===== bookmark ===== */
-
     const bookmarkBtn =
       document.getElementById("bookmarkBtn");
 
@@ -2079,10 +2029,6 @@
 
     const deleteBookmarkBtn =
       document.getElementById("deleteBookmarkBtn");
-
-
-    let toastTimer =
-      null;
 
 
     /* ==========================================
@@ -2105,10 +2051,11 @@
 
       try{
 
+        const key =
+          getBookmarkKey(chapter);
+
         const raw =
-          localStorage.getItem(
-            getBookmarkKey(chapter)
-          );
+          localStorage.getItem(key);
 
 
         if(!raw){
@@ -2116,7 +2063,35 @@
         }
 
 
-        return JSON.parse(raw);
+        const data =
+          JSON.parse(raw);
+
+
+        /*
+          version 2 = スクロール位置方式
+
+          古い段落方式のしおりは
+          自動で削除する。
+        */
+
+        if(data.version !== 2){
+
+          localStorage.removeItem(key);
+
+          return null;
+
+        }
+
+
+        if(
+          typeof data.progress !== "number"
+        ){
+          localStorage.removeItem(key);
+          return null;
+        }
+
+
+        return data;
 
       }catch(error){
 
@@ -2154,122 +2129,54 @@
     }
 
 
-    function getCurrentParagraphIndex(){
+    /*
+      画面上から42%地点を
+      「今読んでいる場所」と判断。
 
-      const paragraphs =
-        [...novelBody.querySelectorAll("p")];
+      その地点が本文全体の
+      何%にあるかを取得する。
+    */
+
+    function getReadingProgress(){
+
+      const rect =
+        novelBody.getBoundingClientRect();
 
 
-      if(!paragraphs.length){
+      const bodyTop =
+        rect.top +
+        window.scrollY;
+
+
+      const bodyHeight =
+        novelBody.offsetHeight;
+
+
+      if(bodyHeight <= 0){
         return 0;
       }
 
 
-      const targetY =
-        window.innerHeight * .42;
+      const readingPoint =
+        window.scrollY +
+        window.innerHeight * 0.42;
 
 
-      let closestIndex =
-        0;
-
-      let closestDistance =
-        Infinity;
-
-
-      paragraphs.forEach(
-        (paragraph,index) => {
-
-          const rect =
-            paragraph.getBoundingClientRect();
-
-          const center =
-            rect.top + rect.height / 2;
-
-          const distance =
-            Math.abs(
-              center - targetY
-            );
-
-
-          if(distance < closestDistance){
-
-            closestDistance =
-              distance;
-
-            closestIndex =
-              index;
-
-          }
-
-        }
-      );
-
-
-      return closestIndex;
-
-    }
-
-
-    function calculateProgress(
-      paragraphIndex
-    ){
-
-      const paragraphs =
-        novelBody.querySelectorAll("p");
-
-
-      if(!paragraphs.length){
-        return 0;
-      }
-
-
-      if(paragraphs.length === 1){
-        return 100;
-      }
-
-
-      return Math.round(
+      const progress =
         (
-          paragraphIndex /
-          (paragraphs.length - 1)
-        ) * 100
-      );
-
-    }
+          readingPoint -
+          bodyTop
+        ) /
+        bodyHeight;
 
 
-    function highlightBookmark(
-      paragraphIndex
-    ){
-
-      novelBody
-        .querySelectorAll(
-          ".bookmarkedParagraph"
+      return Math.min(
+        1,
+        Math.max(
+          0,
+          progress
         )
-        .forEach(element => {
-
-          element.classList.remove(
-            "bookmarkedParagraph"
-          );
-
-        });
-
-
-      const paragraphs =
-        novelBody.querySelectorAll("p");
-
-
-      const paragraph =
-        paragraphs[paragraphIndex];
-
-
-      if(paragraph){
-
-        paragraph.classList.add(
-          "bookmarkedParagraph"
-        );
-
-      }
+      );
 
     }
 
@@ -2292,22 +2199,22 @@
       }
 
 
-      const paragraphIndex =
-        getCurrentParagraphIndex();
-
-
       const progress =
-        calculateProgress(
-          paragraphIndex
+        getReadingProgress();
+
+
+      const percent =
+        Math.round(
+          progress * 100
         );
 
 
       const data = {
 
+        version:2,
+
         chapterId:
           chapter.id,
-
-        paragraphIndex,
 
         progress,
 
@@ -2325,19 +2232,16 @@
         );
 
 
-        highlightBookmark(
-          paragraphIndex
-        );
-
-
         updateBookmarkResume();
 
 
         showBookmarkToast(
-          `しおりを挟みました　${progress}%`
+          `しおりを挟みました　${percent}%`
         );
 
       }catch(error){
+
+        console.error(error);
 
         showBookmarkToast(
           "しおりを保存できませんでした"
@@ -2371,19 +2275,6 @@
       );
 
 
-      novelBody
-        .querySelectorAll(
-          ".bookmarkedParagraph"
-        )
-        .forEach(element => {
-
-          element.classList.remove(
-            "bookmarkedParagraph"
-          );
-
-        });
-
-
       updateBookmarkResume();
 
 
@@ -2406,6 +2297,7 @@
       const chapter =
         chapters[season][currentNovelIndex];
 
+
       const bookmark =
         getBookmark(chapter);
 
@@ -2415,29 +2307,62 @@
       }
 
 
-      const paragraphs =
-        novelBody.querySelectorAll("p");
+      const rect =
+        novelBody.getBoundingClientRect();
 
 
-      const target =
-        paragraphs[
-          bookmark.paragraphIndex
-        ];
+      const bodyTop =
+        rect.top +
+        window.scrollY;
 
 
-      if(!target){
-        return;
-      }
+      const bodyHeight =
+        novelBody.offsetHeight;
 
 
-      highlightBookmark(
-        bookmark.paragraphIndex
-      );
+      /*
+        保存された本文位置が
+        画面の42%地点に来るように
+        スクロールする。
+      */
+
+      const targetReadingPoint =
+        bodyTop +
+        bodyHeight *
+        bookmark.progress;
 
 
-      target.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
+      const targetScroll =
+        targetReadingPoint -
+        window.innerHeight * 0.42;
+
+
+      const maxScroll =
+        Math.max(
+          0,
+          document.documentElement.scrollHeight -
+          window.innerHeight
+        );
+
+
+      const finalScroll =
+        Math.min(
+          maxScroll,
+          Math.max(
+            0,
+            targetScroll
+          )
+        );
+
+
+      window.scrollTo({
+
+        top:
+          finalScroll,
+
+        behavior:
+          "smooth"
+
       });
 
     }
@@ -2461,6 +2386,7 @@
       const chapter =
         chapters[season][currentNovelIndex];
 
+
       const bookmark =
         getBookmark(chapter);
 
@@ -2476,17 +2402,18 @@
       }
 
 
+      const percent =
+        Math.round(
+          bookmark.progress * 100
+        );
+
+
       bookmarkResumeInfo.textContent =
-        `前回の位置：${bookmark.progress ?? 0}%`;
+        `前回の位置：${percent}%`;
 
 
       bookmarkResume.classList.add(
         "show"
-      );
-
-
-      highlightBookmark(
-        bookmark.paragraphIndex
       );
 
     }
@@ -2511,7 +2438,7 @@
 
 
     /* ==========================================
-       Story top
+       STORY TOP
     ========================================== */
 
     function updateMain(){
@@ -2519,8 +2446,10 @@
       summaryEl.textContent =
         summaries[season];
 
+
       storyImg.src =
         `/images/story/${season}.webp`;
+
 
       storyImg.alt =
         `Story ${season.toUpperCase()}`;
@@ -2572,7 +2501,7 @@
 
 
     /* ==========================================
-       Chapter list
+       CHAPTER LIST
     ========================================== */
 
     function openChapters(){
@@ -2605,6 +2534,11 @@
 
 
       bookmarkBtn.classList.remove(
+        "show"
+      );
+
+
+      bookmarkResume.classList.remove(
         "show"
       );
 
@@ -2735,6 +2669,15 @@
       );
 
 
+      bookmarkResume.classList.remove(
+        "show"
+      );
+
+
+      currentNovelIndex =
+        null;
+
+
       updateMain();
 
 
@@ -2759,7 +2702,7 @@
 
 
     /* ==========================================
-       TXT → 本文表示
+       TXT → 本文
     ========================================== */
 
     function renderNovelText(text){
@@ -2786,7 +2729,7 @@
 
 
       paragraphs.forEach(
-        (text,index) => {
+        text => {
 
           const p =
             document.createElement("p");
@@ -2794,10 +2737,6 @@
 
           p.textContent =
             text;
-
-
-          p.dataset.paragraph =
-            index;
 
 
           novelBody.appendChild(
@@ -2811,7 +2750,7 @@
 
 
     /* ==========================================
-       Open novel
+       OPEN NOVEL
     ========================================== */
 
     async function openNovel(
@@ -2934,6 +2873,13 @@
         updateBookmarkResume();
 
 
+        /*
+          「続きから」で開いた場合。
+
+          レイアウト計算が終わってから
+          しおり位置へ移動する。
+        */
+
         if(resumeAfterLoad){
 
           requestAnimationFrame(() => {
@@ -2950,9 +2896,7 @@
 
       }catch(error){
 
-        console.error(
-          error
-        );
+        console.error(error);
 
 
         bookmarkBtn.classList.remove(
@@ -2972,7 +2916,7 @@
 
 
     /* ==========================================
-       Novel navigation
+       NOVEL NAVIGATION
     ========================================== */
 
     function getPublishedIndex(
@@ -2981,7 +2925,8 @@
     ){
 
       let index =
-        startIndex + direction;
+        startIndex +
+        direction;
 
 
       while(
@@ -3090,12 +3035,12 @@
 
 
     /* ==========================================
-       Chapter button
+       CHAPTER BUTTON
     ========================================== */
 
     chapterList.addEventListener(
       "click",
-      (event) => {
+      event => {
 
         const button =
           event.target.closest(
@@ -3132,7 +3077,7 @@
 
 
     /* ==========================================
-       Initial
+       INITIAL
     ========================================== */
 
     updateMain();
